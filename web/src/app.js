@@ -517,6 +517,221 @@
     toast('ສັບລຳດັບແລ້ວ');
   });
 
+  // ---------------------------------------------------------------- ຂໍ້ສອບລອງທຳ Illustrator
+  if ($('.mq-list')) {
+    var LETTERS = ['ກ', 'ຂ', 'ຄ', 'ງ'];
+    var mx = load('aimock', { a: {}, w: {}, g: {} });
+    mx.a = mx.a || {}; mx.w = mx.w || {}; mx.g = mx.g || {};
+    var saveMx = function () { save('aimock', mx); };
+    var shuffleArr = function (arr) {
+      for (var i = arr.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+      }
+      return arr;
+    };
+    var shuffleOpts = function (card) {
+      var box = $('.mq-opts', card);
+      shuffleArr($$('.mq-o', box)).forEach(function (b, pos) {
+        box.appendChild(b);
+        $('.mq-l', b).textContent = LETTERS[pos];
+      });
+    };
+    var shuffleList = function (list) {
+      shuffleArr($$('.mq', list)).forEach(function (c, n) {
+        list.appendChild(c);
+        $('.mq-n', c).textContent = n + 1;
+      });
+    };
+    var cards = $$('.mq');
+    var total = cards.length;
+
+    var applyAnswer = function (card, i) {
+      var btns = $$('.mq-o', card);
+      var chosenBtn = null;
+      var okBtn = null;
+      btns.forEach(function (b) {
+        b.disabled = true;
+        if (b.dataset.i === String(i)) chosenBtn = b;
+        if (b.dataset.ok === '1') okBtn = b;
+      });
+      btns.forEach(function (b) {
+        b.classList.toggle('ok', b === okBtn);
+        b.classList.toggle('bad', b === chosenBtn && b !== okBtn);
+        b.setAttribute('aria-pressed', String(b === chosenBtn));
+      });
+      var right = chosenBtn && chosenBtn === okBtn;
+      card.classList.add('answered');
+      card.classList.toggle('is-right', !!right);
+      card.classList.toggle('is-wrong', !right);
+      var ex = $('.mq-ex', card);
+      ex.hidden = false;
+      $('.mq-res', ex).textContent = right
+        ? '✅ ຖືກຕ້ອງ! '
+        : '❌ ຍັງບໍ່ຖືກ — ຄຳຕອບທີ່ຖືກ: ' + $('.mq-t', okBtn).textContent + '. ';
+    };
+    var clearAnswer = function (card) {
+      card.classList.remove('answered', 'is-right', 'is-wrong');
+      $$('.mq-o', card).forEach(function (b) {
+        b.disabled = false;
+        b.classList.remove('ok', 'bad');
+        b.removeAttribute('aria-pressed');
+      });
+      $('.mq-ex', card).hidden = true;
+    };
+
+    var updateScore = function () {
+      var done = 0;
+      var ok = 0;
+      var wrong = [];
+      cards.forEach(function (c) {
+        if (!c.classList.contains('answered')) return;
+        done++;
+        if (c.classList.contains('is-right')) ok++;
+        else wrong.push(c);
+      });
+      var pct = total ? Math.round((ok / total) * 100) : 0;
+      $$('.mx-ok').forEach(function (el) { el.textContent = ok; });
+      $$('.mx-done').forEach(function (el) { el.textContent = done; });
+      $$('.mx-bad').forEach(function (el) { el.textContent = done - ok; });
+      $$('.mx-pct').forEach(function (el) { el.textContent = pct + '%'; });
+      $$('.mx-bar').forEach(function (el) { el.style.width = (done ? (ok / total) * 100 : 0) + '%'; });
+      var pill = $('.mx-pill');
+      if (pill) pill.textContent = '✔ ' + ok + ' · ✘ ' + (done - ok) + ' · ' + done + '/' + total;
+
+      var gt = $('.mx-grade-t');
+      var gd = $('.mx-grade-d');
+      var gi = $('.mx-grade-ic');
+      if (gt) {
+        if (done < total) {
+          gi.textContent = '📝';
+          gt.textContent = 'ຕອບແລ້ວ ' + done + ' / ' + total + ' ຂໍ້';
+          gd.textContent = 'ຕອບພາກ ກ ແລະ ຂ ໃຫ້ຄົບ ເພື່ອເບິ່ງຜົນລວມ · ຕອນນີ້ຖືກ ' + ok + ' ຂໍ້';
+        } else {
+          var lv = pct >= 90 ? ['🏆', 'ດີເລີດ'] : pct >= 75 ? ['👍', 'ດີ'] : pct >= 50 ? ['🙂', 'ຜ່ານ'] : ['📚', 'ຕ້ອງທົບທວນເພີ່ມ'];
+          gi.textContent = lv[0];
+          gt.textContent = lv[1] + ' — ' + ok + ' / ' + total + ' (' + pct + '%)';
+          gd.textContent = wrong.length ? 'ທົບທວນຂໍ້ທີ່ຜິດຂ້າງລຸ່ມ ແລ້ວກົດ "ເລີ່ມໃໝ່" ທຳອີກຮອບ' : 'ຖືກທຸກຂໍ້! ລອງເລີ່ມໃໝ່ເພື່ອຢືນຢັນວ່າຈື່ໄດ້ແທ້';
+        }
+      }
+      var wl = $('.mx-wrong-list');
+      if (wl) {
+        wl.innerHTML = '';
+        if (wrong.length) {
+          var h = document.createElement('p');
+          h.className = 'mx-wl-h';
+          h.textContent = 'ຂໍ້ທີ່ຕອບຜິດ (' + wrong.length + '):';
+          wl.appendChild(h);
+          var ul = document.createElement('ul');
+          wrong.forEach(function (c) {
+            var li = document.createElement('li');
+            var a = document.createElement('a');
+            a.href = '#' + c.id;
+            var part = c.dataset.q.charAt(0) === 'A' ? 'ກ' : 'ຂ';
+            a.textContent = 'ພາກ ' + part + ' ຂໍ້ ' + $('.mq-n', c).textContent + ': ' + $('.mq-q', c).textContent.trim();
+            li.appendChild(a);
+            if (c.dataset.ref) {
+              var r = document.createElement('a');
+              r.href = '/illustrator/#' + c.dataset.ref;
+              r.className = 'mx-ref';
+              r.textContent = 'ບົດຮຽນ →';
+              li.appendChild(r);
+            }
+            ul.appendChild(li);
+          });
+          wl.appendChild(ul);
+        }
+      }
+      var ws = $('.mx-written-sum');
+      if (ws) {
+        var cnt = { ok: 0, part: 0, no: 0 };
+        Object.keys(mx.g).forEach(function (k) { if (cnt[mx.g[k]] !== undefined) cnt[mx.g[k]]++; });
+        var nW = $$('.wq').length;
+        ws.textContent = 'ພາກ ຄ (ອັດຕະໄນ): ຕອບໄດ້ ' + cnt.ok + ' · ໄດ້ບາງສ່ວນ ' + cnt.part + ' · ຕອບບໍ່ໄດ້ ' + cnt.no + ' · ຍັງບໍ່ໄດ້ກວດ ' + (nW - cnt.ok - cnt.part - cnt.no) + ' ຈາກ ' + nW + ' ຂໍ້';
+      }
+    };
+
+    // ສັບຕົວເລືອກທຸກຄັ້ງທີ່ເປີດໜ້າ ແລ້ວຄືນຄຳຕອບທີ່ບັນທຶກໄວ້
+    cards.forEach(shuffleOpts);
+    Object.keys(mx.a).forEach(function (id) {
+      var c = document.getElementById('q-' + id);
+      if (c) applyAnswer(c, mx.a[id]);
+    });
+
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest('.mq-o');
+      if (!b || b.disabled) return;
+      var card = b.closest('.mq');
+      mx.a[card.dataset.q] = parseInt(b.dataset.i, 10);
+      saveMx();
+      applyAnswer(card, mx.a[card.dataset.q]);
+      updateScore();
+    });
+
+    var resetBtn2 = $('.mx-reset');
+    if (resetBtn2) resetBtn2.addEventListener('click', function () {
+      if (Object.keys(mx.a).length && !window.confirm('ລ້າງຄຳຕອບພາກ ກ ແລະ ຂ ທັງໝົດ ແລ້ວສັບຂໍ້ໃໝ່?')) return;
+      mx.a = {};
+      saveMx();
+      cards.forEach(clearAnswer);
+      $$('.mq-list').forEach(shuffleList);
+      cards.forEach(shuffleOpts);
+      updateScore();
+      var first = $('.mq-list');
+      if (first) first.closest('.sec').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      toast('ເລີ່ມໃໝ່ແລ້ວ — ສັບຂໍ້ ແລະ ຕົວເລືອກໃໝ່');
+    });
+
+    var wrongBtn = $('.mx-wrong');
+    if (wrongBtn) wrongBtn.addEventListener('click', function () {
+      var on = !document.body.classList.contains('mx-only-wrong');
+      document.body.classList.toggle('mx-only-wrong', on);
+      wrongBtn.setAttribute('aria-pressed', String(on));
+      wrongBtn.textContent = on ? 'ສະແດງທຸກຂໍ້' : 'ສະແດງສະເພາະຂໍ້ທີ່ຜິດ';
+      if (on && !$$('.mq.is-wrong').length) toast('ຍັງບໍ່ມີຂໍ້ທີ່ຕອບຜິດ');
+    });
+
+    // ອັດຕະໄນ: ບັນທຶກຄຳຕອບ, ເປີດຄຳຕອບຕົວຢ່າງ, ປະເມີນຕົນເອງ
+    $$('.wq').forEach(function (w) {
+      var n = w.dataset.w;
+      var ta = $('.wq-in', w);
+      if (mx.w[n]) ta.value = mx.w[n];
+      var timer;
+      ta.addEventListener('input', function () {
+        clearTimeout(timer);
+        timer = setTimeout(function () { mx.w[n] = ta.value; saveMx(); }, 400);
+      });
+      var reveal = function () {
+        $('.wq-ans', w).hidden = false;
+        $('.wq-grade', w).hidden = false;
+        $('.wq-show', w).hidden = true;
+      };
+      $('.wq-show', w).addEventListener('click', reveal);
+      var paint = function () {
+        $$('.wq-g', w).forEach(function (g) { g.setAttribute('aria-pressed', String(g.dataset.g === mx.g[n])); });
+      };
+      $$('.wq-g', w).forEach(function (g) {
+        g.addEventListener('click', function () {
+          mx.g[n] = mx.g[n] === g.dataset.g ? undefined : g.dataset.g;
+          if (!mx.g[n]) delete mx.g[n];
+          saveMx();
+          paint();
+          updateScore();
+        });
+      });
+      if (mx.g[n]) { reveal(); paint(); }
+    });
+
+    // ປ້າຍຄະແນນລອຍ (ສະແດງເມື່ອເລື່ອນລົງ)
+    var pill = document.createElement('div');
+    pill.className = 'mx-pill';
+    pill.setAttribute('aria-hidden', 'true');
+    pill.hidden = true;
+    document.body.appendChild(pill);
+    window.addEventListener('scroll', function () { pill.hidden = window.scrollY < 500; }, { passive: true });
+    updateScore();
+  }
+
   // ---------------------------------------------------------------- table of contents
   function buildToc() {
     var toc = data.toc || [];
@@ -595,7 +810,7 @@
   var input = $('#search-input');
   var results = $('#search-results');
   var index = null;
-  var pageNames = { summary: 'ສະຫຼຸບບົດທີ 1–6', login: 'Login.java', product: 'PanelProduct.java', illustrator: 'Illustrator', exam: 'ຂໍ້ສອບ 15 ຂໍ້' };
+  var pageNames = { summary: 'ສະຫຼຸບບົດທີ 1–6', login: 'Login.java', product: 'PanelProduct.java', illustrator: 'Illustrator', 'ai-exam': 'ຂໍ້ສອບລອງທຳ Illustrator', exam: 'ຂໍ້ສອບ 15 ຂໍ້' };
 
   function loadIndex() {
     if (index) return Promise.resolve(index);

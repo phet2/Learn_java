@@ -11,6 +11,7 @@ import bash from 'highlight.js/lib/languages/bash';
 import sql from 'highlight.js/lib/languages/sql';
 import { codeMaps } from './src/code-map.mjs';
 import { aiInclude } from './src/illustrator.mjs';
+import { aiExamInclude } from './src/ai-exam.mjs';
 
 hljs.registerLanguage('java', java);
 hljs.registerLanguage('bash', bash);
@@ -61,6 +62,16 @@ const pages = [
     title: 'ບົດຮຽນ Adobe Illustrator 2025',
     desc: 'ໜ້າຈໍຈຳລອງ ແຕະເບິ່ງໄດ້: Workspace, ເຄື່ອງມືທຸກອັນ, Panels, ເມນູ, New Document, ທິດສະດີ ແລະ ຝຶກຕອບ',
     quiz: true,
+  },
+  {
+    slug: 'ai-exam',
+    file: 'review/05_ILLUSTRATOR_MOCK_EXAM.md',
+    nav: 'ລອງສອບ Ai',
+    icon: 'quiz',
+    title: 'ຂໍ້ສອບລອງທຳ Illustrator',
+    desc: 'ປາລະໄນ 48 ຂໍ້ + ທາຍໄອຄອນ 10 ຂໍ້ ກວດໃຫ້ທັນທີ ພ້ອມຄະແນນ · ອັດຕະໄນ 10 ຂໍ້ ພ້ອມຄຳຕອບຕົວຢ່າງ',
+    inNav: false,
+    navParent: 'illustrator',
   },
   {
     slug: 'exam',
@@ -289,7 +300,7 @@ function includeHtml(text) {
   const m = /include:([\w:-]+)/.exec(text || '');
   if (!m) return null;
   if (m[1] === 'exercises') return exercisesHtml();
-  const html = aiInclude(m[1]);
+  const html = aiExamInclude(m[1]) ?? aiInclude(m[1]);
   if (html == null) throw new Error(`ບໍ່ຮູ້ຈັກ include: ${m[1]}`);
   return html;
 }
@@ -548,11 +559,13 @@ function buildCodeViewer(key, headingIds) {
 // ---------------------------------------------------------------- layout
 
 function navItems(active) {
-  const items = [{ slug: '', nav: 'ໜ້າຫຼັກ', icon: 'home' }, ...pages];
+  const cur = pages.find((p) => p.slug === active);
+  const activeNav = cur?.navParent || active;
+  const items = [{ slug: '', nav: 'ໜ້າຫຼັກ', icon: 'home' }, ...pages.filter((p) => p.inNav !== false)];
   return items
     .map((p) => {
       const href = p.slug ? `/${p.slug}/` : '/';
-      const on = p.slug === active;
+      const on = p.slug === activeNav;
       return `<a class="nav-item${on ? ' on' : ''}" href="${href}"${on ? ' aria-current="page"' : ''}>${icon(p.icon)}<span>${p.nav}</span></a>`;
     })
     .join('');
