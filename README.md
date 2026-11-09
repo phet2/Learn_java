@@ -8,6 +8,7 @@
 | `review/01_LOGIN_EXPLAINED.md` | ອະທິບາຍ `Login.java` ທີລະບັນທັດ |
 | `review/02_PANEL_PRODUCT_EXPLAINED.md` | ອະທິບາຍ `PanelProduct.java` ທີລະບັນທັດ (CRUD ສິນຄ້າ) |
 | `review/03_EXAM_QA.md` | ຄຳຖາມສອບເສັງ 15 ຂໍ້ ພ້ອມຄຳຕອບ ແລະ ຕົວຢ່າງໂຄ້ດ |
+| `review/04_ILLUSTRATOR.md` | ບົດຮຽນ Adobe Illustrator 2025: Workspace, Toolbar, Panels, ເມນູ, New Document, ທິດສະດີ, ຝຶກຕອບ (ໜ້າຈໍຈຳລອງຢູ່ໃນ `web/src/illustrator.mjs`) |
 | `exercises/chapter5/` | ຄຳຕອບ Exercise ບົດທີ 5 |
 
 ## ເວັບທົບທວນ (mobile first)

@@ -327,7 +327,7 @@
     revealTarget(el);
     requestAnimationFrame(function () {
       el.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
-      if (el.classList.contains('sub')) {
+      if (el.classList.contains('sub') || el.classList.contains('ai-tool')) {
         el.classList.remove('flash');
         void el.offsetWidth;
         el.classList.add('flash');
@@ -443,6 +443,80 @@
     });
   }
 
+  // ---------------------------------------------------------------- Illustrator: ແຕະໝາຍເລກເທິງໜ້າຈໍຈຳລອງ
+  $$('.hs-fig').forEach(function (fig) {
+    function activate(k, fromSvg) {
+      fig.classList.add('has-active');
+      $$('.hs', fig).forEach(function (g) { g.classList.toggle('active', g.getAttribute('data-hs') === k); });
+      $$('.hs-item', fig).forEach(function (li) {
+        var on = li.getAttribute('data-hs') === k;
+        li.classList.toggle('active', on);
+        if (on && fromSvg) li.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      });
+      if (!fromSvg) {
+        var wrap = $('.ws-wrap', fig);
+        var r = wrap.getBoundingClientRect();
+        if (r.top < 60 || r.bottom > window.innerHeight) wrap.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }
+    }
+    function handle(e) {
+      var t = e.target.closest('[data-hs]');
+      if (!t) return;
+      activate(t.getAttribute('data-hs'), !!e.target.closest('.hs'));
+    }
+    fig.addEventListener('click', handle);
+    fig.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handle(e); }
+    });
+  });
+
+  // ---------------------------------------------------------------- Illustrator: Toolbar ຈຳລອງ
+  $$('.ai-explorer').forEach(function (ex) {
+    var detail = $('.ai-detail', ex);
+    ex.addEventListener('click', function (e) {
+      var b = e.target.closest('.ai-tbtn');
+      if (!b) return;
+      if (b.dataset.goto) {
+        try { history.replaceState(null, '', '#' + b.dataset.goto); } catch (err) { /* ignore */ }
+        goTo(b.dataset.goto, true);
+        return;
+      }
+      var id = b.dataset.tool;
+      var src = document.getElementById('tool-' + id);
+      if (!src) return;
+      $$('.ai-tbtn', ex).forEach(function (x) { x.classList.toggle('on', x === b); });
+      var card = src.cloneNode(true);
+      card.removeAttribute('id');
+      detail.innerHTML = '';
+      detail.appendChild(card);
+      var more = document.createElement('a');
+      more.href = '#tool-' + id;
+      more.className = 'ai-more';
+      more.textContent = 'ເບິ່ງໃນລາຍການກຸ່ມ ↓';
+      detail.appendChild(more);
+    });
+  });
+
+  // ---------------------------------------------------------------- Illustrator: ສັບລຳດັບບັດຝຶກຕອບ
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('.qz-shuffle');
+    if (!b) return;
+    var grid = b.closest('.qz-tools').querySelector('.qz-grid');
+    var cards = Array.prototype.slice.call(grid.children);
+    for (var i = cards.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = cards[i]; cards[i] = cards[j]; cards[j] = tmp;
+    }
+    cards.forEach(function (c, n) {
+      grid.appendChild(c);
+      var no = $('.qz-no', c);
+      if (no) no.textContent = n + 1;
+      var a = $('.answer', c);
+      if (a) a.classList.remove('revealed');
+    });
+    toast('ສັບລຳດັບແລ້ວ');
+  });
+
   // ---------------------------------------------------------------- table of contents
   function buildToc() {
     var toc = data.toc || [];
@@ -521,7 +595,7 @@
   var input = $('#search-input');
   var results = $('#search-results');
   var index = null;
-  var pageNames = { summary: 'ສະຫຼຸບບົດທີ 1–6', login: 'Login.java', product: 'PanelProduct.java', exam: 'ຂໍ້ສອບ 15 ຂໍ້' };
+  var pageNames = { summary: 'ສະຫຼຸບບົດທີ 1–6', login: 'Login.java', product: 'PanelProduct.java', illustrator: 'Illustrator', exam: 'ຂໍ້ສອບ 15 ຂໍ້' };
 
   function loadIndex() {
     if (index) return Promise.resolve(index);

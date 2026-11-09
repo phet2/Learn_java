@@ -10,6 +10,7 @@ import java from 'highlight.js/lib/languages/java';
 import bash from 'highlight.js/lib/languages/bash';
 import sql from 'highlight.js/lib/languages/sql';
 import { codeMaps } from './src/code-map.mjs';
+import { aiInclude } from './src/illustrator.mjs';
 
 hljs.registerLanguage('java', java);
 hljs.registerLanguage('bash', bash);
@@ -51,6 +52,15 @@ const pages = [
     desc: 'CRUD ສິນຄ້າ: ເພີ່ມ, ສະແດງ/ຄົ້ນຫາ, ແກ້ໄຂ, ລຶບ — JOIN, barcode_old, error 1451',
     quiz: true,
     code: 'product',
+  },
+  {
+    slug: 'illustrator',
+    file: 'review/04_ILLUSTRATOR.md',
+    nav: 'Illustrator',
+    icon: 'vector',
+    title: 'ບົດຮຽນ Adobe Illustrator 2025',
+    desc: 'ໜ້າຈໍຈຳລອງ ແຕະເບິ່ງໄດ້: Workspace, ເຄື່ອງມືທຸກອັນ, Panels, ເມນູ, New Document, ທິດສະດີ ແລະ ຝຶກຕອບ',
+    quiz: true,
   },
   {
     slug: 'exam',
@@ -102,6 +112,7 @@ const icon = (name, cls = 'ic') => {
     lock: '<rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.5"/>',
     box: '<path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="m3 8 9 5 9-5M12 13v8"/>',
     quiz: '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 3v2h6V3"/><path d="m9 12 2 2 4-4"/><path d="M9 17h6"/>',
+    vector: '<path d="M4 19C7 8 17 8 20 19"/><path d="M4 19 9 6M20 19 15 6"/><rect x="2" y="17" width="4" height="4"/><rect x="18" y="17" width="4" height="4"/><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/>',
     search: '<circle cx="11" cy="11" r="7"/><path d="m20 20-4.2-4.2"/>',
     sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
     moon: '<path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/>',
@@ -273,6 +284,16 @@ function exercisesHtml() {
     .join('')}</div>`;
 }
 
+// <!-- include:xxx --> ໃນ markdown → HTML ພິເສດ (ແບບຝຶກຫັດ, ໜ້າຈໍຈຳລອງ Illustrator)
+function includeHtml(text) {
+  const m = /include:([\w:-]+)/.exec(text || '');
+  if (!m) return null;
+  if (m[1] === 'exercises') return exercisesHtml();
+  const html = aiInclude(m[1]);
+  if (html == null) throw new Error(`ບໍ່ຮູ້ຈັກ include: ${m[1]}`);
+  return html;
+}
+
 // ---------------------------------------------------------------- markdown → sections
 
 function makeMarked() {
@@ -324,8 +345,7 @@ function makeMarked() {
         return `<a href="${esc(t.href)}"${ext ? ' target="_blank" rel="noopener noreferrer"' : ''}>${text}</a>`;
       },
       html(t) {
-        if (t.text.includes('include:exercises')) return exercisesHtml();
-        return '';
+        return includeHtml(t.text) ?? '';
       },
     },
   });
@@ -396,10 +416,13 @@ function renderPage(page) {
       entry = { p: page.slug, u: `/${page.slug}/#${t._id}`, t: t._plain, c: t.depth > 2 ? h2title : '', x: '' };
       search.push(entry);
     } else if (entry && t.type !== 'heading') {
-      if (entry.x.length < 900) entry.x += ' ' + plain(t.raw || '');
+      // ເນື້ອຫາຈາກ include (ເຊັ່ນ ຊື່ເຄື່ອງມື Illustrator) ກໍຄົ້ນຫາໄດ້
+      const inc = t.type === 'html' ? includeHtml(t.text) : null;
+      const limit = inc ? 4000 : 900;
+      if (entry.x.length < limit) entry.x += ' ' + plain(inc ?? (t.raw || ''));
     }
   }
-  search.forEach((e) => (e.x = e.x.trim().slice(0, 900)));
+  search.forEach((e) => (e.x = e.x.trim().slice(0, 4000)));
 
   const headingIds = new Set(tokens.filter((t) => t.type === 'heading' && t._id).map((t) => t._id));
   const toc = [];
@@ -677,8 +700,8 @@ function homeBody(results) {
 <div class="hero home-hero">
   <p class="hero-kicker">ກຽມສອບ Java</p>
   <h1>ທົບທວນ Java ໃຫ້ພ້ອມສອບ</h1>
-  <p class="hero-desc">ສະຫຼຸບບົດທີ 1–6, ອະທິບາຍໂຄ້ດ Login ແລະ PanelProduct ທີລະບັນທັດ, ຄຳຖາມສອບເສັງ 15 ຂໍ້ ພ້ອມຄຳຕອບ</p>
-  <button class="search-fake search-open" type="button">${icon('search')}<span>ຄົ້ນຫາທຸກຫົວຂໍ້ ເຊັ່ນ JDBC, Constructor…</span></button>
+  <p class="hero-desc">ສະຫຼຸບບົດທີ 1–6, ອະທິບາຍໂຄ້ດ Login ແລະ PanelProduct ທີລະບັນທັດ, ຄຳຖາມສອບເສັງ 15 ຂໍ້ ແລະ ບົດຮຽນ Adobe Illustrator</p>
+  <button class="search-fake search-open" type="button">${icon('search')}<span>ຄົ້ນຫາທຸກຫົວຂໍ້ ເຊັ່ນ JDBC, Pen Tool…</span></button>
   <div class="overall">
     <div class="overall-top"><span>ຄວາມຄືບໜ້າທັງໝົດ</span><b class="overall-pct">0%</b></div>
     <div class="bar big"><span></span></div>
@@ -701,6 +724,7 @@ function homeBody(results) {
   <li><b>ອ່ານ ຂໍ້ສອບ 15 ຂໍ້ ໃນໂໝດອ່ານ</b><span>ເຂົ້າໃຈຄຳຕອບ ແລະ ຕົວຢ່າງໂຄ້ດ</span></li>
   <li><b>ຮຽນ Login ແລ້ວ PanelProduct</b><span>ເປີດແຖບ "ໂຄ້ດເຕັມ" ແລ້ວແຕະທີລະແຖວ</span></li>
   <li><b>ຝຶກຕອບ ຂໍ້ສອບ 15 ຂໍ້</b><span>ເປີດໂໝດຝຶກຕອບ ແລ້ວທວນຂໍ້ທີ່ຍັງຈື່ບໍ່ໄດ້ຈົນຄົບ</span></li>
+  <li><b>Illustrator: ຮຽນບົດ 1–3 ແລ້ວຝຶກບົດ 7–8</b><span>ແຕະໜ້າຈໍຈຳລອງ ແລະ Toolbar ທີລະອັນ ຈາກນັ້ນເປີດໂໝດຝຶກຕອບ ທາຍຊື່ເຄື່ອງມືຈາກໄອຄອນ</span></li>
 </ol>
 
 <h2 class="block-title">ວິທີໃຊ້</h2>
