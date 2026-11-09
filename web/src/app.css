@@ -103,6 +103,8 @@ html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   scroll-padding-top: calc(var(--appbar-h) + 12px);
+  /* ຈອງບ່ອນ scrollbar ໄວ້ ໜ້າສັ້ນ/ຍາວ ຈະບໍ່ຂະຫຍັບຊ້າຍຂວາ (ຄອມພິວເຕີ) */
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -399,6 +401,9 @@ pre {
   color: var(--muted);
   font-weight: 600;
 }
+/* ສະຖານະເລີ່ມຕົ້ນມາຈາກ class ຂອງ <html> (ຕັ້ງກ່ອນສະແດງຜົນ) → ບໍ່ກະພິບຕອນໂຫຼດ */
+:root:not(.quiz) .mode-btn[data-mode='read'],
+:root.quiz .mode-btn[data-mode='quiz'],
 .mode-btn[aria-pressed='true'] {
   background: var(--surface);
   color: var(--primary);
@@ -1775,6 +1780,21 @@ td > code {
   display: flex;
   align-items: center;
   gap: 12px;
+  /* ຈອງຄວາມສູງໄວ້ ສະຖານະ 1–2 ແຖວ ຫຼື ປຸ່ມຕິດຕັ້ງທີ່ໂຜ່ມາທີຫຼັງ ຈະບໍ່ດັນເນື້ອຫາລົງ */
+  min-height: 70px;
+}
+.oc-text {
+  flex: 1;
+}
+.oc-text .oc-status {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.oc-row .install-btn,
+.oc-row .install-done {
+  flex: none;
 }
 .oc-ic {
   flex: none;

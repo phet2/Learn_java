@@ -553,7 +553,7 @@ function layout({ slug, title, desc, body, data = {}, buildId }) {
 <link rel="apple-touch-icon" href="/assets/icon-192.png">
 <meta name="apple-mobile-web-app-title" content="${SITE_NAME}">
 <link rel="manifest" href="/manifest.webmanifest">
-<link rel="preload" href="/assets/fonts/noto-sans-lao-lao-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+${PRELOAD_FONTS.map((f) => `<link rel="preload" href="/assets/fonts/${f}" as="font" type="font/woff2" crossorigin>`).join('\n')}
 <link rel="stylesheet" href="/assets/app.css?v=${buildId}">
 <script>(function(){try{var d=document.documentElement,t=localStorage.getItem('${STORE_PREFIX}theme');if(t)d.setAttribute('data-theme',t);if(localStorage.getItem('${STORE_PREFIX}quiz')==='1')d.classList.add('quiz');}catch(e){}})();</script>
 </head>
@@ -687,10 +687,8 @@ function homeBody(results) {
     <div class="oc-row">
       <span class="oc-ic">${icon('wifiOff')}</span>
       <div class="oc-text"><b>ໃຊ້ງານ offline</b><span class="oc-status">ກຳລັງກວດສອບ…</span></div>
-    </div>
-    <div class="oc-actions">
-      <button class="btn btn-primary install-btn" type="button" hidden>${icon('download')} ຕິດຕັ້ງໃສ່ໜ້າຈໍ</button>
-      <span class="install-done" hidden>${icon('check')} ເປີດຈາກແອັບແລ້ວ</span>
+      <button class="btn btn-primary btn-sm install-btn" type="button" hidden>${icon('download')} ຕິດຕັ້ງ</button>
+      <span class="install-done" hidden>${icon('check')} ແອັບ</span>
     </div>
   </div>
 </div>
@@ -729,6 +727,24 @@ const FONTS = [
   { pkg: 'jetbrains-mono', family: 'JetBrains Mono', subset: 'latin', weights: [400, 600], range: 'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD' },
 ];
 
+// ຟອນທີ່ໃຊ້ໃນທຸກໜ້າ → preload ເພື່ອໃຫ້ພ້ອມກ່ອນສະແດງຜົນ
+const PRELOAD_FONTS = [400, 600, 700].flatMap((w) => [`noto-sans-lao-lao-${w}-normal.woff2`, `noto-sans-lao-latin-${w}-normal.woff2`]).concat('jetbrains-mono-latin-400-normal.woff2');
+
+// Cache-Control ສຳລັບ Cloudflare (ຄ່າເລີ່ມຕົ້ນ max-age=0 ເຮັດໃຫ້ຕ້ອງຖາມເຊີບເວີທຸກຄັ້ງທີ່ສະຫຼັບໜ້າ)
+const HEADERS_FILE = `# ຟອນ ແລະ CSS/JS (ມີ ?v=build-id) ບໍ່ປ່ຽນ → cache ໄວ້ 1 ປີ
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/app.css
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/app.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/icon*
+  Cache-Control: public, max-age=604800
+`;
+
 function copyFonts() {
   const files = [];
   let css = '';
@@ -739,7 +755,8 @@ function copyFonts() {
       mkdirSync(join(OUT, 'assets', 'fonts'), { recursive: true });
       copyFileSync(src, join(OUT, 'assets', 'fonts', name));
       files.push(`/assets/fonts/${name}`);
-      css += `@font-face{font-family:'${f.family}';font-style:normal;font-display:swap;font-weight:${w};src:url(/assets/fonts/${name}) format('woff2');unicode-range:${f.range}}\n`;
+      // optional = ບໍ່ສະຫຼັບຟອນກາງທາງ (ກັນຕົວໜັງສືຂະຫຍັບ) — ຟອນຖືກ preload ແລະ cache ໄວ້ດົນ ຈຶ່ງພ້ອມໃຊ້ທັນທີ
+      css += `@font-face{font-family:'${f.family}';font-style:normal;font-display:optional;font-weight:${w};src:url(/assets/fonts/${name}) format('woff2');unicode-range:${f.range}}\n`;
     }
   }
   return { css, files };
@@ -821,6 +838,7 @@ function main() {
   writeOut('assets/app.css', css);
   writeOut('assets/app.js', js.replace(/__STORE_PREFIX__/g, STORE_PREFIX));
   writeOut('search-index.json', JSON.stringify(searchIndex));
+  writeOut('_headers', HEADERS_FILE);
   for (const f of ['icon.svg', 'icon-192.png', 'icon-512.png']) {
     const src = join(SRC, 'assets', f);
     if (existsSync(src)) copyFileSync(src, join(OUT, 'assets', f));

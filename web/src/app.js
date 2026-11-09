@@ -692,7 +692,7 @@
       var n = res.filter(Boolean).length;
       var total = off.urls.length;
       if (n === total) {
-        setOfflineStatus('ready', 'ພ້ອມໃຊ້ offline ✓ — ເປີດໄດ້ແມ່ນບໍ່ມີອິນເຕີເນັດ');
+        setOfflineStatus('ready', 'ພ້ອມໃຊ້ offline ✓ ເປີດໄດ້ແມ່ນບໍ່ມີເນັດ');
         return;
       }
       checkTries++;
@@ -701,8 +701,8 @@
         return;
       }
       setOfflineStatus('loading', navigator.onLine === false
-        ? 'ຍັງບໍ່ພ້ອມໃຊ້ offline — ເປີດເວັບຕອນມີອິນເຕີເນັດ 1 ຄັ້ງ'
-        : 'ກຳລັງດາວໂຫຼດເກັບໄວ້ໃນເຄື່ອງ… ' + n + '/' + total);
+        ? 'ຍັງບໍ່ພ້ອມ — ເປີດເວັບຕອນມີເນັດ 1 ຄັ້ງ'
+        : 'ກຳລັງເກັບໄວ້ໃນເຄື່ອງ… ' + n + '/' + total);
       setTimeout(checkOffline, 1000);
     }).catch(function () {
       setOfflineStatus('error', 'ກວດສອບບໍ່ໄດ້ — browser ອາດປິດການເກັບຂໍ້ມູນ (ເຊັ່ນ ໂໝດ Private)');
