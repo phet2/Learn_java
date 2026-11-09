@@ -74,7 +74,7 @@ if (BCrypt.checkpw(txtPassword.getText(), storedHash)) {
 
 **ຄວາມສຳພັນ:** **JDK ⊃ JRE ⊃ JVM**
 
-```
+```diagram-jdk
 ┌───────────── JDK ─────────────┐
 │  javac, jar, javadoc ...      │
 │  ┌────────── JRE ──────────┐  │

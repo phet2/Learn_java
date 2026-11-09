@@ -205,6 +205,8 @@ for (int number = 1; number <= 10; number++) {
 
 Exercise 1–3 ເບິ່ງຄຳຕອບໃນ `exercises/chapter5/`
 
+<!-- include:exercises -->
+
 ---
 
 ## ບົດທີ 6 — Array ແລະ ArrayList

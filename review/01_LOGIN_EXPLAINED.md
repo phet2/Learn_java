@@ -9,7 +9,7 @@
 
 ໜ້າ Login ເປັນໜ້າທຳອິດຂອງ "ໂປຣແກຣມຂາຍເຄື່ອງໜ້າຮ້ານ" ໃຫ້ພະນັກງານປ້ອນ **ບັນຊີເຂົ້າໃຊ້ (username)** ແລະ **ລະຫັດຜ່ານ (password)** ແລ້ວກວດກັບຕາຕະລາງ `employee` ໃນ MySQL
 
-```
+```diagram-login-flow
 ເປີດໂປຣແກຣມ
    │
    ▼
@@ -107,12 +107,16 @@ ResultSet rs = null;            // ເກັບຜົນໄດ້ຮັບຈາ
 
 **Constructor** = ເມັດທອດພິເສດ ຊື່ດຽວກັບ class, ບໍ່ມີ return type, ເຮັດວຽກ **ອັດຕະໂນມັດຄັ້ງດຽວ** ຕອນ `new Login()` → ໃຊ້ກຽມໜ້າຈໍໃຫ້ພ້ອມ
 
+### 4.1 ສ້າງ component ກ່ອນ
+
 ```java
 public Login() {
     initComponents();
 ```
 - ເອີ້ນເມັດທອດທີ່ NetBeans ສ້າງໃຫ້ ເພື່ອ **ສ້າງປຸ່ມ ແລະ ຊ່ອງປ້ອນທັງໝົດ** (ເບິ່ງຫົວຂໍ້ 5)
 - ຕ້ອງເອີ້ນ **ກ່ອນ** ໃຊ້ `txtUsername`, `btnLogin` ... ບໍ່ດັ່ງນັ້ນມັນຍັງເປັນ `null` → `NullPointerException`
+
+### 4.2 ຕັ້ງຊື່ ແລະ ຕຳແໜ່ງໜ້າຕ່າງ
 
 ```java
     this.setTitle("ໂປຣແກຣມຂາຍເຄື່ອງໜ້າຮ້ານ");
@@ -123,6 +127,8 @@ public Login() {
 - `setTitle(...)` — ຂໍ້ຄວາມໃນແຖບຫົວຂອງໜ້າຕ່າງ
 - `setLocationRelativeTo(this)` — ຈັດໜ້າຕ່າງໄວ້ **ກາງຈໍ** (ຍ້ອນໜ້າຕ່າງຍັງບໍ່ສະແດງ Java ຈຶ່ງຈັດໄວ້ກາງຈໍ; ນິຍົມຂຽນ `setLocationRelativeTo(null)` ຈະຊັດເຈນກວ່າ)
 - `setResizable(false)` — ຫ້າມຜູ້ໃຊ້ຍືດ/ຫົດໜ້າຕ່າງ
+
+### 4.3 ໃສ່ໄອຄອນໂປຣແກຣມ (Windows / Linux / macOS)
 
 ```java
     try {
@@ -156,6 +162,8 @@ public Login() {
 ```
 - ຖ້າຜິດພາດ ໃຫ້ພິມຂໍ້ຄວາມໃນ Console ແລ້ວເຮັດວຽກຕໍ່
 
+### 4.4 ໂລໂກ້ ແລະ ສີ Title bar
+
 ```java
     sVGImage1.setSvgImage("images_svg/login-form.svg", 80, 80);
 ```
@@ -167,6 +175,8 @@ public Login() {
 ```
 - `putClientProperty(key, value)` = ວິທີຕັ້ງຄ່າພິເສດຂອງ FlatLaf
 - ປ່ຽນ **ສີພື້ນ** title bar ເປັນ RGB(28, 40, 51) ສີນ້ຳເງິນເຂັ້ມ ແລະ **ສີຕົວໜັງສື** ເປັນເກືອບຂາວ
+
+### 4.5 ຕົບແຕ່ງຊ່ອງປ້ອນ ແລະ ປຸ່ມ
 
 ```java
     txtUsername.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "ບັນຊີເຂົ້າໃຊ້");
@@ -212,7 +222,7 @@ private void initComponents() {
 - `@SuppressWarnings("unchecked")` — ບອກ compiler ບໍ່ຕ້ອງເຕືອນເລື່ອງ generic type
 - `private` — ເອີ້ນໄດ້ພາຍໃນ class ນີ້ເທົ່ານັ້ນ
 
-**5.1 ສ້າງ object ຂອງ component**
+### 5.1 ສ້າງ object ຂອງ component
 ```java
 sVGImage1 = new includeClass.SVGImage();
 txtUsername = new javax.swing.JTextField();
@@ -226,7 +236,7 @@ btnLogin = new javax.swing.JButton();
 | `txtPassword` | `JPasswordField` | ຊ່ອງພິມລະຫັດ — ສະແດງເປັນ ●●● |
 | `btnLogin` | `JButton` | ປຸ່ມກົດ |
 
-**5.2 ຕັ້ງຄ່າ ແລະ ຜູກ Event**
+### 5.2 ຕັ້ງຄ່າ ແລະ ຜູກ Event
 ```java
 setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 ```
@@ -248,7 +258,7 @@ btnLogin.addActionListener(this::btnLoginActionPerformed);
 ```
 - ປຸ່ມສີນ້ຳເງິນ, ຂໍ້ຄວາມ "ເຂົ້າໃຊ້ງານ", ກົດແລ້ວເອີ້ນ `btnLoginActionPerformed`
 
-**5.3 ຈັດວາງ (Layout)**
+### 5.3 ຈັດວາງ (Layout)
 ```java
 javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
 getContentPane().setLayout(layout);
@@ -283,7 +293,7 @@ private void txtPasswordActionPerformed(java.awt.event.ActionEvent evt) {
 
 ### 6.3 ກົດປຸ່ມ "ເຂົ້າໃຊ້ງານ" — ຫົວໃຈຂອງໜ້ານີ້ ❤️
 
-**ຂັ້ນທີ 1: ກວດວ່າປ້ອນຄົບບໍ**
+#### ຂັ້ນທີ 1: ກວດວ່າປ້ອນຄົບບໍ
 ```java
 if (txtUsername.getText().isBlank() || txtPassword.getText().isBlank()) {
     JOptionPane.showMessageDialog(this, "ກະລຸນາປ້ອນຂໍ້ມູນໃຫ້ຄົບຖ້ວນດ້ວຍ", "ຫວ່າງເປົ່າ", JOptionPane.WARNING_MESSAGE);
@@ -296,7 +306,7 @@ if (txtUsername.getText().isBlank() || txtPassword.getText().isBlank()) {
 - `showMessageDialog(parent, ຂໍ້ຄວາມ, ຫົວຂໍ້, ຊະນິດ)` — ກ່ອງແຈ້ງເຕືອນແບບ WARNING (ບົດທີ 4)
 - `return;` — **ອອກຈາກເມັດທອດທັນທີ** ບໍ່ເຮັດຄຳສັ່ງຂ້າງລຸ່ມ (ເອີ້ນວ່າ guard clause)
 
-**ຂັ້ນທີ 2: ເຊື່ອມຕໍ່ຖານຂໍ້ມູນ ແລະ ກຽມ SQL**
+#### ຂັ້ນທີ 2: ເຊື່ອມຕໍ່ຖານຂໍ້ມູນ ແລະ ກຽມ SQL
 ```java
 try {
     conn = MysqlConnect.connectDB();
@@ -331,7 +341,7 @@ try {
 - `setString(1, ...)` — ໃສ່ຄ່າ username ແທນ `?` **ຕົວທີ 1** (ນັບຈາກ 1 ບໍ່ແມ່ນ 0!)
 - ⭐ **ເປັນຫຍັງໃຊ້ `?` ບໍ່ຕໍ່ String ເອົາ?** ກັນ **SQL Injection** — ຖ້າຂຽນ `"... WHERE username='" + txt + "'"` ຜູ້ບໍ່ຫວັງດີພິມ `' OR '1'='1` ກໍເຂົ້າລະບົບໄດ້. `PreparedStatement` ຖືວ່າຄ່າທີ່ໃສ່ເປັນຂໍ້ມູນເທົ່ານັ້ນ ບໍ່ແມ່ນຄຳສັ່ງ SQL
 
-**ຂັ້ນທີ 3: ລັນ SQL ແລະ ກວດຜົນ**
+#### ຂັ້ນທີ 3: ລັນ SQL ແລະ ກວດຜົນ
 ```java
     rs = pst.executeQuery();
     if (rs.next()) {
@@ -339,7 +349,7 @@ try {
 - `executeQuery()` — ໃຊ້ກັບ **SELECT** ສົ່ງຄືນ `ResultSet`
 - `rs.next()` — ເລື່ອນໄປແຖວຖັດໄປ: `true` = ມີແຖວ (ພົບ username), `false` = ບໍ່ພົບ
 
-**ຂັ້ນທີ 4: ກວດລະຫັດຜ່ານດ້ວຍ BCrypt**
+#### ຂັ້ນທີ 4: ກວດລະຫັດຜ່ານດ້ວຍ BCrypt
 ```java
         String storedHash = rs.getString("password");
         if (BCrypt.checkpw(txtPassword.getText(), storedHash)) {
@@ -348,7 +358,7 @@ try {
 - **Hash ແມ່ນຫຍັງ?** ການແປງລະຫັດເປັນຂໍ້ຄວາມທີ່ **ແປງກັບຄືນບໍ່ໄດ້** ເຊັ່ນ `1234` → `$2a$10$N9qo8uLOickgx2ZMRZoMye...` ຖ້າຖານຂໍ້ມູນຮົ່ວ ຄົນອື່ນກໍບໍ່ຮູ້ລະຫັດແທ້
 - `BCrypt.checkpw(ລະຫັດທີ່ພິມ, hash)` — hash ລະຫັດທີ່ພິມແລ້ວປຽບທຽບ ກົງກັນ = `true`
 
-**ຂັ້ນທີ 5: ສຳເລັດ → ເປີດໜ້າ Main**
+#### ຂັ້ນທີ 5: ສຳເລັດ → ເປີດໜ້າ Main
 ```java
             Main m = new Main(rs.getString(1), rs.getString(2), rs.getString(3));
             m.setVisible(true);
@@ -358,7 +368,7 @@ try {
 - `setVisible(true)` — ສະແດງໜ້າ Main
 - `dispose()` — ປິດໜ້າ Login ແລະ ຄືນໜ່ວຍຄວາມຈຳ (ໂປຣແກຣມຍັງເຮັດວຽກຕໍ່ເພາະມີ Main ເປີດຢູ່)
 
-**ຂັ້ນທີ 6: ລົ້ມເຫຼວ**
+#### ຂັ້ນທີ 6: ລົ້ມເຫຼວ
 ```java
         } else {
             JOptionPane.showMessageDialog(this, "ບັນຊີເຂົ້າໃຊ້ ແລະ ລະຫັດຜ່ານບໍ່ຖືກຕ້ອງ", "ຜິດພາດ", JOptionPane.ERROR_MESSAGE);
@@ -370,7 +380,7 @@ try {
 - `else` ຊັ້ນໃນ = ພົບ username ແຕ່ລະຫັດຜິດ / `else` ຊັ້ນນອກ = ບໍ່ພົບ username
 - ⭐ ສັງເກດ: **ຂໍ້ຄວາມດຽວກັນ** ທັງ 2 ກໍລະນີ — ເປັນການອອກແບບທີ່ດີດ້ານ security: ຄົນບໍ່ຫວັງດີບໍ່ຮູ້ວ່າ username ໃດມີຢູ່ແທ້
 
-**ຂັ້ນທີ 7: ຈັບຂໍ້ຜິດພາດ**
+#### ຂັ້ນທີ 7: ຈັບຂໍ້ຜິດພາດ
 ```java
 } catch (Exception e) {
     JOptionPane.showMessageDialog(this, e);

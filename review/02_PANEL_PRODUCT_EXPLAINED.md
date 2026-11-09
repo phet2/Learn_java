@@ -16,7 +16,7 @@
 | **D**elete | ລຶບ | `DELETE` | `btnDeleteActionPerformed` |
 
 **ໂຄງສ້າງຖານຂໍ້ມູນ** (ອ່ານໄດ້ຈາກ SQL ໃນໂຄ້ດ):
-```
+```diagram-db
 brand                    product                       category
 ─────────────            ───────────────────           ───────────────
 brand_id   (PK) ◄─────── brand_id     (FK)             category_id (PK)
@@ -31,7 +31,7 @@ brand_name               category_id  (FK) ──────────► cat
 - ສິນຄ້າ 1 ລາຍການ ມີ 1 ຍີ່ຫໍ້ ແລະ 1 ປະເພດ
 
 **ໜ້າຈໍ** (ຈາກ `jPanel1`):
-```
+```diagram-product-ui
 ┌──────────────────── ຈັດການຂໍ້ມູນສິນຄ້າ ─────────────────────┐
 │ ລະຫັດບາໂຄ້ດ [txtBarcode]   ຈຳນວນຕ່ຳສຸດ [txtQuantity_min]  ຍີ່ຫໍ້ [txtBrand ▼]   │
 │ ລາຍການສິນຄ້າ [txtProduct]  ລາຄາຕົ້ນທຶນ [txtCost_price]    ປະເພດ [txtCategory ▼]│
@@ -311,7 +311,7 @@ private boolean checkInputs() {
 
 ໂຄ້ດສ່ວນນີ້ຍາວ ແຕ່ເຮັດແບບດຽວກັນຊ້ຳໆ — ຮຽນຮູ້ **ຮູບແບບ (pattern)** ກໍພຽງພໍ:
 
-**9.1 ⚠️ ກຸ່ມ component ທີ່ບໍ່ໄດ້ໃຊ້**
+### 9.1 ⚠️ ກຸ່ມ component ທີ່ບໍ່ໄດ້ໃຊ້
 ```java
 jPanel6 = new javax.swing.JPanel();
 jTextField9 ... jTextField15, jComboBox4 ... jComboBox6,
@@ -320,7 +320,7 @@ btnAdd1, btnEdit1, btnDelete1, btnCancel1, jLabel5, jLabel9, jLabel13 ... jLabel
 - `jPanel6` ແລະ component ຂ້າງໃນ **ບໍ່ໄດ້ຖືກເພີ່ມເຂົ້າ layout** (ບໍ່ມີ `addComponent(jPanel6)`) ແລະ ປຸ່ມບໍ່ມີ ActionListener
 - ໜ້າຈະເປັນ **ສຳເນົາເກົ່າ** ທີ່ copy ໄວ້ ແລ້ວລືມລຶບ → ບໍ່ສະແດງໃນໜ້າຈໍ ແຕ່ຍັງເປືອງໜ່ວຍຄວາມຈຳ → ຄວນລຶບໃນໜ້າ Design ຂອງ NetBeans
 
-**9.2 ກອບທີ່ໃຊ້ແທ້ `jPanel1`**
+### 9.2 ກອບທີ່ໃຊ້ແທ້ `jPanel1`
 ```java
 jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "ຈັດການຂໍ້ມູນສິນຄ້າ\n", ...));
 jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -328,7 +328,7 @@ jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 - `createTitledBorder` — ເສັ້ນຂອບມີຫົວຂໍ້ "ຈັດການຂໍ້ມູນສິນຄ້າ"
 - `AbsoluteLayout` — layout ຂອງ NetBeans ວາງ component ຕາມ **ພິກັດ x, y** ຄົງທີ່
 
-**9.3 ຮູບແບບການເພີ່ມ Label ແລະ TextField** (ຊ້ຳກັນທຸກຊ່ອງ)
+### 9.3 ຮູບແບບການເພີ່ມ Label ແລະ TextField (ຊ້ຳກັນທຸກຊ່ອງ)
 ```java
 jLabel1.setFont(new java.awt.Font("Lao_SomVang", 0, 12));
 jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
@@ -344,7 +344,7 @@ jPanel1.add(txtBarcode, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 5
   - `(120, 50, 130, -1)` = ວາງທີ່ x=120, y=50, ກວ້າງ 130px
 - `addActionListener` — ກົດ Enter → ເອີ້ນເມັດທອດ
 
-**9.4 ຊ່ອງຕົວເລກມີ KeyListener ເພີ່ມ**
+### 9.4 ຊ່ອງຕົວເລກມີ KeyListener ເພີ່ມ
 ```java
 txtQuantity.addKeyListener(new java.awt.event.KeyAdapter() {
     public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -356,13 +356,13 @@ txtQuantity.addKeyListener(new java.awt.event.KeyAdapter() {
 - `keyReleased` = ເຮັດວຽກທຸກຄັ້ງທີ່ **ປ່ອຍປຸ່ມຄີບອດ** → ໃສ່ `,` ໃຫ້ຕົວເລກທັນທີ
 - ມີໃນ `txtQuantity`, `txtQuantity_min`, `txtCost_price`, `txtRetail_price`, `txtSearch`
 
-**9.5 ComboBox ສະຖານະ**
+### 9.5 ComboBox ສະຖານະ
 ```java
 txtStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ມີ", "ບໍ່ມີ" }));
 ```
 - ກຳນົດລາຍການຄົງທີ່ 2 ອັນດ້ວຍ **array ຂອງ String**; `<>` = diamond operator (generic)
 
-**9.6 ປຸ່ມ** (ສີ ຕົວໜັງສື event)
+### 9.6 ປຸ່ມ (ສີ ຕົວໜັງສື event)
 ```java
 btnAdd.setBackground(new java.awt.Color(51, 51, 255));   // ສີນ້ຳເງິນ
 btnAdd.setText("ເພີ່ມ");
@@ -375,7 +375,7 @@ btnAdd.addActionListener(this::btnAddActionPerformed);
 | ລຶບ | (255, 0, 0) ແດງ ຕົວໜັງສືຂາວ | `btnDeleteActionPerformed` |
 | ຍົກເລີກ | (0, 255, 204) ຂຽວອ່ອນ | `btnCancelActionPerformed` |
 
-**9.7 ຕາຕະລາງ `jTable1`** ⭐ (ມີ Polymorphism ໃນນີ້)
+### 9.7 ຕາຕະລາງ `jTable1` ⭐ (ມີ Polymorphism ໃນນີ້)
 ```java
 jTable1.setModel(new javax.swing.table.DefaultTableModel(
     new Object [][] {
@@ -412,7 +412,9 @@ jScrollPane1.setViewportView(jTable1);
 - ຄລິກແຖວ → ເອີ້ນ `jTable1MouseClicked`
 - ໃສ່ຕາຕະລາງໃນ `JScrollPane` → ມີແຖບເລື່ອນເມື່ອຂໍ້ມູນຫຼາຍ ແລະ ສະແດງຫົວຖັນ
 
-**9.8 GroupLayout** — ຈັດ `jPanel7` (ທີ່ຫໍ່ `jPanel1`), `txtSearch`, `jScrollPane1` ລຽງຈາກເທິງລົງລຸ່ມ
+### 9.8 GroupLayout
+
+ຈັດ `jPanel7` (ທີ່ຫໍ່ `jPanel1`), `txtSearch`, `jScrollPane1` ລຽງຈາກເທິງລົງລຸ່ມ
 
 ---
 
@@ -459,7 +461,7 @@ private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {
 
 ## 13. ກົດ "ເພີ່ມ" (Create) ⭐
 
-**ຂັ້ນທີ 1: ຫ້າມເພີ່ມຖ້າກຳລັງເລືອກແຖວ**
+#### ຂັ້ນທີ 1: ຫ້າມເພີ່ມຖ້າກຳລັງເລືອກແຖວ
 ```java
 if (jTable1.getSelectedRow() >= 0) {
     JOptionPane.showMessageDialog(this, "ເມື່ອທ່ານເລືອກຂໍ້ມູນໃນຕາຕະລາງທ່ານບໍ່ສາມາດກົດປຸ່ມເພີ່ມໄດ້ ", "ຜິດພາດ", JOptionPane.ERROR_MESSAGE);
@@ -469,7 +471,7 @@ if (jTable1.getSelectedRow() >= 0) {
 - `getSelectedRow()` — ສົ່ງຄືນ index ແຖວທີ່ເລືອກ, **`-1` = ບໍ່ໄດ້ເລືອກ**
 - `>= 0` = ກຳລັງເລືອກແຖວ (ໂໝດແກ້ໄຂ) → ຫ້າມເພີ່ມ ເພື່ອກັນສັບສົນ
 
-**ຂັ້ນທີ 2: ກວດປ້ອນຄົບ**
+#### ຂັ້ນທີ 2: ກວດປ້ອນຄົບ
 ```java
 if (checkInputs()) {
     JOptionPane.showMessageDialog(this, "ກະລຸນາປ້ອນຂໍ້ມູນໃຫ້ຄົບຖ້ວນດ້ວຍ", "ແຈ້ງເຕືອນ", JOptionPane.WARNING_MESSAGE);
@@ -477,7 +479,7 @@ if (checkInputs()) {
 }
 ```
 
-**ຂັ້ນທີ 3: ກວດບາໂຄ້ດຊ້ຳ**
+#### ຂັ້ນທີ 3: ກວດບາໂຄ້ດຊ້ຳ
 ```java
 try {
     String sql = "SELECT *FROM Product WHERE barcode=?";
@@ -498,7 +500,7 @@ try {
 - ບາໂຄ້ດເປັນ PK ຖ້າບໍ່ກວດ MySQL ກໍຈະ error "Duplicate entry" — ການກວດກ່ອນເຮັດໃຫ້ຂໍ້ຄວາມເປັນມິດກັບຜູ້ໃຊ້
 - `return` ໃນ `catch` — ຖ້າກວດບໍ່ໄດ້ ກໍບໍ່ບັນທຶກຕໍ່
 
-**ຂັ້ນທີ 4: INSERT**
+#### ຂັ້ນທີ 4: INSERT
 ```java
 try {
     String sql = "INSERT INTO product VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -567,7 +569,7 @@ private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {
 
 ## 15. ກົດ "ແກ້ໄຂ" (Update) ⭐
 
-**ຂັ້ນທີ 1–2: ຕ້ອງເລືອກແຖວ ແລະ ປ້ອນຄົບ**
+#### ຂັ້ນທີ 1–2: ຕ້ອງເລືອກແຖວ ແລະ ປ້ອນຄົບ
 ```java
 if (jTable1.getSelectedRow() < 0) {
     JOptionPane.showMessageDialog(this, "ກະລຸນາເລືອກຂໍ້ມຼນໃນຕາຕະລາງກ່ອນ ", "ຜິດພາດ", JOptionPane.ERROR_MESSAGE);
@@ -577,7 +579,7 @@ if (checkInputs()) { ... return; }
 ```
 - ກົງກັນຂ້າມກັບປຸ່ມເພີ່ມ: `< 0` = ບໍ່ໄດ້ເລືອກ → ຫ້າມແກ້ໄຂ
 
-**ຂັ້ນທີ 3: ກວດບາໂຄ້ດໃໝ່ຊ້ຳກັບສິນຄ້າ "ອື່ນ" ບໍ**
+#### ຂັ້ນທີ 3: ກວດບາໂຄ້ດໃໝ່ຊ້ຳກັບສິນຄ້າ "ອື່ນ" ບໍ
 ```java
 String sql = "SELECT *FROM Product WHERE barcode=? && barcode != ?";
 pst.setString(1, txtBarcode.getText());   // ບາໂຄ້ດໃໝ່ (ທີ່ພິມໃນຊ່ອງ)
@@ -590,7 +592,7 @@ pst.setString(2, barcode_old);            // ບາໂຄ້ດເດີມ
   - ປ່ຽນເປັນ `002` → ພົບ B → "ຖືກນຳໃຊ້ແລ້ວ" ✘
 - ຖ້າບໍ່ມີ `barcode != ?` → ແກ້ໄຂໂດຍບໍ່ປ່ຽນບາໂຄ້ດຈະ **ແຈ້ງວ່າຊ້ຳກັບຕົວເອງ** ທຸກຄັ້ງ
 
-**ຂັ້ນທີ 4: UPDATE**
+#### ຂັ້ນທີ 4: UPDATE
 ```java
 String sql = """
              UPDATE product SET
@@ -610,7 +612,7 @@ pst.setString(11, barcode_old);
 
 ## 16. ກົດ "ລຶບ" (Delete) ⭐
 
-**ຂັ້ນທີ 1: ຕ້ອງເລືອກແຖວ**
+#### ຂັ້ນທີ 1: ຕ້ອງເລືອກແຖວ
 ```java
 if (jTable1.getSelectedRow() < 0) {
     JOptionPane.showMessageDialog(this, " ກະລຸນາເລືອກຂໍ້ມູນໃນຕາຕະລາງກ່ອນແກ້ໄຂດ້ວຍ", "ຜິດພາດ", JOptionPane.ERROR_MESSAGE);
@@ -619,7 +621,7 @@ if (jTable1.getSelectedRow() < 0) {
 ```
 - ⚠️ ຂໍ້ຄວາມຂຽນວ່າ "ກ່ອນ**ແກ້ໄຂ**" ແຕ່ຢູ່ໃນປຸ່ມ **ລຶບ** — ຄວນແກ້ເປັນ "ກ່ອນລຶບ"
 
-**ຂັ້ນທີ 2: ຖາມຢືນຢັນ**
+#### ຂັ້ນທີ 2: ຖາມຢືນຢັນ
 ```java
 int data = JOptionPane.showConfirmDialog(
         this,
@@ -638,7 +640,7 @@ if (data != 0) {
 - `data != 0` = ບໍ່ໄດ້ກົດ OK → ລ້າງຟອມ ແລ້ວອອກ (ອ່ານງ່າຍກວ່າຖ້າຂຽນ `data != JOptionPane.OK_OPTION`)
 - ເປັນຫຍັງຕ້ອງຢືນຢັນ? ການລຶບ **ກູ້ຄືນບໍ່ໄດ້** ກັນກົດຜິດ
 
-**ຂັ້ນທີ 3: DELETE**
+#### ຂັ້ນທີ 3: DELETE
 ```java
 try {
     String sql = "DELETE FROM product WHERE barcode=?";
@@ -652,7 +654,7 @@ try {
 ```
 - ລຶບແຖວທີ່ບາໂຄ້ດ = `barcode_old`
 
-**ຂັ້ນທີ 4: ຈັດການ error ຂອງ Foreign Key** ⭐
+#### ຂັ້ນທີ 4: ຈັດການ error ຂອງ Foreign Key ⭐
 ```java
 } catch (SQLException e) {
     if (e.getErrorCode() == 1451) {
@@ -696,7 +698,7 @@ private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {
 
 ## 18. ສະຫຼຸບການເຮັດວຽກທັງໝົດ
 
-```
+```diagram-product-flow
 ເປີດໜ້າ → Constructor
           ├─ initComponents()      ສ້າງ component
           ├─ ຕົບແຕ່ງຊ່ອງຄົ້ນຫາ, ຈັດຖັນກາງ
