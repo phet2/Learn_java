@@ -1730,6 +1730,188 @@ td > code {
   margin: 18px 0 0;
 }
 
+/* ---------- offline + install ---------- */
+
+.net-banner {
+  position: fixed;
+  top: var(--appbar-h);
+  left: 0;
+  right: 0;
+  z-index: 45;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: var(--warn-soft);
+  color: var(--warn);
+  border-bottom: 1px solid color-mix(in srgb, var(--warn) 35%, transparent);
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: center;
+}
+.net-banner[hidden] {
+  display: none;
+}
+.is-offline .main {
+  padding-top: 52px;
+}
+.net-banner .ic {
+  width: 18px;
+  height: 18px;
+}
+
+.offline-card {
+  margin-top: 10px;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: grid;
+  gap: 10px;
+}
+.oc-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.oc-ic {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: var(--surface-2);
+  color: var(--muted);
+}
+.oc-text {
+  display: grid;
+  line-height: 1.5;
+  min-width: 0;
+}
+.oc-text b {
+  font-size: 0.95rem;
+}
+.oc-text .oc-status {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.offline-card[data-state='ready'] {
+  border-color: color-mix(in srgb, var(--ok) 40%, var(--border));
+}
+.offline-card[data-state='ready'] .oc-ic {
+  background: var(--ok-soft);
+  color: var(--ok);
+}
+.offline-card[data-state='ready'] .oc-status {
+  color: var(--ok);
+  font-weight: 600;
+}
+.offline-card[data-state='loading'] .oc-ic {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+.offline-card[data-state='error'] .oc-status,
+.offline-card[data-state='na'] .oc-status {
+  color: var(--warn);
+}
+.oc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.oc-actions:not(:has(> :not([hidden]))) {
+  display: none;
+}
+.oc-actions .install-btn {
+  flex: 1;
+}
+.install-done {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ok);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.install-done[hidden],
+.install-btn[hidden] {
+  display: none;
+}
+.install-done .ic {
+  width: 18px;
+  height: 18px;
+}
+
+.foot-offline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.oc-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--muted);
+  flex: none;
+}
+.foot-offline[data-state='ready'] .oc-dot {
+  background: var(--ok);
+}
+.foot-offline[data-state='loading'] .oc-dot {
+  background: var(--primary);
+}
+.foot-offline[data-state='error'] .oc-dot,
+.foot-offline[data-state='na'] .oc-dot {
+  background: var(--warn);
+}
+
+.ig-intro {
+  margin: 4px 0 10px;
+}
+.ig-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.ig-steps li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+.ig-ic {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+.ig-steps div {
+  display: grid;
+  line-height: 1.5;
+}
+.ig-steps span:not(.ig-ic) {
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+.ig-note {
+  margin: 12px 0 0;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
 /* ---------- footer ---------- */
 
 .foot {

@@ -114,6 +114,10 @@ const icon = (name, cls = 'ic') => {
     chevron: '<path d="m9 6 6 6-6 6"/>',
     wrap: '<path d="M3 6h18M3 12h15a3 3 0 0 1 0 6h-4"/><path d="m16 16-2 2 2 2"/><path d="M3 18h7"/>',
     arrowUp: '<path d="M12 19V5M5 12l7-7 7 7"/>',
+    wifiOff: '<path d="M2 2l20 20"/><path d="M8.5 16.5a5 5 0 0 1 7 0"/><path d="M5 12.9a10 10 0 0 1 5.2-2.8M19 12.9a10 10 0 0 0-2.4-1.7"/><path d="M2 8.8a15 15 0 0 1 4.2-2.6M22 8.8A15 15 0 0 0 10.7 5"/><circle cx="12" cy="20" r="1"/>',
+    download: '<path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/>',
+    share: '<path d="M12 3v12M8 7l4-4 4 4"/><path d="M6 11H5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-1"/>',
+    plusSquare: '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8"/>',
   };
   return `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name]}</svg>`;
 };
@@ -547,6 +551,7 @@ function layout({ slug, title, desc, body, data = {}, buildId }) {
 <meta property="og:type" content="website">
 <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/icon-192.png">
+<meta name="apple-mobile-web-app-title" content="${SITE_NAME}">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="preload" href="/assets/fonts/noto-sans-lao-lao-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/app.css?v=${buildId}">
@@ -562,6 +567,7 @@ function layout({ slug, title, desc, body, data = {}, buildId }) {
     <button class="icon-btn theme-btn" type="button" aria-label="ປ່ຽນໂໝດມືດ / ແຈ້ງ">${icon('moon', 'ic i-moon')}${icon('sun', 'ic i-sun')}</button>
   </div>
 </header>
+<div class="net-banner" role="status" hidden>${icon('wifiOff')}<span>ບໍ່ມີອິນເຕີເນັດ — ກຳລັງໃຊ້ຂໍ້ມູນທີ່ເກັບໄວ້ໃນເຄື່ອງ</span></div>
 <nav class="nav" aria-label="ເມນູຫຼັກ">${navItems(slug)}</nav>
 <div class="shell">
 <main id="main" class="main">
@@ -569,6 +575,8 @@ ${body}
 <footer class="foot">
   <p>ສ້າງຈາກເອກະສານປະກອບການສອນ ບົດທີ 1–6 ແລະ ໂຄ້ດໂປຣເຈັກຂາຍເຄື່ອງໜ້າຮ້ານ · ໂຄ້ດຕົວຢ່າງທົດສອບດ້ວຍ JDK 21</p>
   <p>ອັບເດດລ່າສຸດ ${today}</p>
+  <p class="foot-offline"><span class="oc-dot" aria-hidden="true"></span><span class="oc-status">ກຳລັງກວດສອບການໃຊ້ offline…</span></p>
+  <p><button class="btn btn-sm install-btn" type="button" hidden>${icon('download')} ຕິດຕັ້ງໃສ່ໜ້າຈໍ</button></p>
 </footer>
 </main>
 <aside class="toc-side" aria-label="ສາລະບານ"></aside>
@@ -594,6 +602,16 @@ ${body}
   </div>
   <div class="search-results" id="search-results" aria-live="polite"></div>
 </div>
+
+<template id="ios-guide">
+  <p class="ig-intro">iPhone / iPad ຕິດຕັ້ງຜ່ານເມນູ Share ຂອງ <b>Safari</b>:</p>
+  <ol class="ig-steps">
+    <li><span class="ig-ic">${icon('share')}</span><div><b>ແຕະປຸ່ມ Share</b><span>ຮູບສີ່ຫຼ່ຽມມີລູກສອນຊີ້ຂຶ້ນ — iPhone ຢູ່ແຖບລຸ່ມ, iPad ຢູ່ແຖບເທິງ</span></div></li>
+    <li><span class="ig-ic">${icon('plusSquare')}</span><div><b>ເລືອກ "Add to Home Screen"</b><span>ຖ້າບໍ່ເຫັນ ໃຫ້ເລື່ອນລາຍການລົງລຸ່ມ</span></div></li>
+    <li><span class="ig-ic">${icon('check')}</span><div><b>ແຕະ "Add" ມຸມຂວາເທິງ</b><span>ຈະມີໄອຄອນ "${SITE_NAME}" ຢູ່ໜ້າຈໍຫຼັກ</span></div></li>
+  </ol>
+  <p class="ig-note">ເປີດຈາກໄອຄອນນັ້ນທຸກຄັ້ງ — ໃຊ້ offline ໄດ້ ແລະ ຂໍ້ມູນຄວາມຄືບໜ້າຈະບໍ່ຖືກ Safari ລຶບຖ້າບໍ່ໄດ້ເປີດຫຼາຍມື້</p>
+</template>
 
 <script id="page-data" type="application/json">${jsonForScript(data)}</script>
 <script src="/assets/app.js?v=${buildId}" defer></script>
@@ -665,6 +683,16 @@ function homeBody(results) {
     <div class="overall-top"><span>ຄວາມຄືບໜ້າທັງໝົດ</span><b class="overall-pct">0%</b></div>
     <div class="bar big"><span></span></div>
   </div>
+  <div class="offline-card" data-state="checking">
+    <div class="oc-row">
+      <span class="oc-ic">${icon('wifiOff')}</span>
+      <div class="oc-text"><b>ໃຊ້ງານ offline</b><span class="oc-status">ກຳລັງກວດສອບ…</span></div>
+    </div>
+    <div class="oc-actions">
+      <button class="btn btn-primary install-btn" type="button" hidden>${icon('download')} ຕິດຕັ້ງໃສ່ໜ້າຈໍ</button>
+      <span class="install-done" hidden>${icon('check')} ເປີດຈາກແອັບແລ້ວ</span>
+    </div>
+  </div>
 </div>
 <h2 class="block-title">ບົດຮຽນ</h2>
 <div class="cards">${cards}</div>
@@ -684,7 +712,7 @@ function homeBody(results) {
   <div class="tip">${icon('check')}<div><b>ໝາຍວ່າອ່ານແລ້ວ</b><span>ບັນທຶກຄວາມຄືບໜ້າໃນເຄື່ອງນີ້</span></div></div>
   <div class="tip">${icon('search')}<div><b>ຄົ້ນຫາ</b><span>ຫາຄຳໃດກໍໄດ້ຈາກທຸກໜ້າ</span></div></div>
 </div>
-<p class="note">ໃຊ້ງານແບບ offline ໄດ້ ຫຼັງຈາກເປີດແຕ່ລະໜ້າ 1 ຄັ້ງ · ເພີ່ມໃສ່ໜ້າຈໍຫຼັກໄດ້ຈາກເມນູຂອງ browser</p>`;
+<p class="note">ເປີດເວັບ 1 ຄັ້ງຕອນມີອິນເຕີເນັດ ແລ້ວໃຊ້ offline ໄດ້ທຸກໜ້າ · ຕິດຕັ້ງໃສ່ໜ້າຈໍຫຼັກ ເພື່ອໃຫ້ຂໍ້ມູນຢູ່ໃນເຄື່ອງໄດ້ດົນ</p>`;
 }
 
 // ---------------------------------------------------------------- fonts (self-host, ໃຊ້ offline ໄດ້)
@@ -743,9 +771,13 @@ function main() {
   hash.update(css).update(js).update(JSON.stringify(searchIndex));
   for (const p of pages) hash.update(results[p.slug].html);
   hash.update(readFileSync(join(SRC, 'code', 'Login.java'))).update(readFileSync(join(SRC, 'code', 'PanelProduct.java')));
+  // ລວມໄຟລ໌ build ແລະ service worker ເພື່ອໃຫ້ cache offline ອັບເດດເມື່ອແມ່ແບບປ່ຽນ
+  hash.update(readFileSync(fileURLToPath(import.meta.url))).update(readFileSync(join(SRC, 'sw.js')));
   const buildId = hash.digest('hex').slice(0, 10);
 
   const manifest = Object.fromEntries(pages.map((p) => [p.slug, results[p.slug].sectionIds]));
+  const precache = ['/', ...pages.map((p) => `/${p.slug}/`), `/assets/app.css?v=${buildId}`, `/assets/app.js?v=${buildId}`, '/search-index.json', '/assets/icon.svg', ...fonts.files];
+  const offline = { cache: `ljr-${buildId}`, urls: precache };
 
   writeOut(
     'index.html',
@@ -754,7 +786,7 @@ function main() {
       title: SITE_NAME,
       desc: 'ເວັບທົບທວນ Java: ສະຫຼຸບບົດທີ 1–6, ອະທິບາຍໂຄ້ດ Login ແລະ PanelProduct ທີລະບັນທັດ, ຄຳຖາມສອບເສັງ 15 ຂໍ້ ພ້ອມຄຳຕອບ',
       body: homeBody(results),
-      data: { slug: 'home', manifest },
+      data: { slug: 'home', manifest, offline },
       buildId,
     }),
   );
@@ -768,7 +800,7 @@ function main() {
         title: p.title,
         desc: p.desc,
         body: pageBody(p, r),
-        data: { slug: p.slug, toc: r.toc, sections: r.sectionIds, quiz: !!p.quiz, code: !!p.code },
+        data: { slug: p.slug, toc: r.toc, sections: r.sectionIds, quiz: !!p.quiz, code: !!p.code, offline },
         buildId,
       }),
     );
@@ -781,7 +813,7 @@ function main() {
       title: 'ບໍ່ພົບໜ້ານີ້',
       desc: 'ບໍ່ພົບໜ້າທີ່ຕ້ອງການ',
       body: `<div class="hero"><h1>ບໍ່ພົບໜ້ານີ້</h1><p class="hero-desc">ລິ້ງອາດຜິດ ຫຼື ໜ້ານີ້ຖືກຍ້າຍແລ້ວ</p><p><a class="btn btn-primary" href="/">ກັບໜ້າຫຼັກ</a></p></div>`,
-      data: { slug: '404' },
+      data: { slug: '404', offline },
       buildId,
     }),
   );
@@ -798,10 +830,13 @@ function main() {
     'manifest.webmanifest',
     JSON.stringify(
       {
+        id: '/',
         name: SITE_NAME,
-        short_name: 'Java',
+        short_name: SITE_NAME,
+        description: 'ສະຫຼຸບບົດທີ 1–6, ອະທິບາຍໂຄ້ດ Login ແລະ PanelProduct, ຄຳຖາມສອບເສັງ 15 ຂໍ້',
         lang: 'lo',
         start_url: '/',
+        scope: '/',
         display: 'standalone',
         background_color: '#f6f7fb',
         theme_color: '#2f5bea',
@@ -816,7 +851,6 @@ function main() {
     ),
   );
 
-  const precache = ['/', ...pages.map((p) => `/${p.slug}/`), `/assets/app.css?v=${buildId}`, `/assets/app.js?v=${buildId}`, '/search-index.json', '/assets/icon.svg', ...fonts.files];
   writeOut('sw.js', readFileSync(join(SRC, 'sw.js'), 'utf8').replace('__BUILD_ID__', buildId).replace('__PRECACHE__', JSON.stringify(precache)));
 
   console.log(`✔ build ${buildId} → dist/ (${pages.length + 2} ໜ້າ, ${searchIndex.length} ລາຍການຄົ້ນຫາ)`);

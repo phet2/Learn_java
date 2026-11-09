@@ -667,10 +667,104 @@
   handleHash();
   window.addEventListener('hashchange', handleHash);
 
-  // ---------------------------------------------------------------- offline (service worker)
-  if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
-    window.addEventListener('load', function () {
-      navigator.serviceWorker.register('/sw.js').catch(function () { /* ບໍ່ເປັນຫຍັງ */ });
+  // ---------------------------------------------------------------- offline (service worker) + ສະຖານະ
+  var off = data.offline;
+  var swOk = 'serviceWorker' in navigator && !!window.caches &&
+    (location.protocol === 'https:' || location.hostname === 'localhost');
+
+  function setOfflineStatus(state, text) {
+    $$('.oc-status').forEach(function (el) { el.textContent = text; });
+    $$('.offline-card, .foot-offline').forEach(function (el) { el.setAttribute('data-state', state); });
+  }
+
+  var checkTries = 0;
+  function checkOffline() {
+    if (!off) return;
+    if (!swOk) {
+      setOfflineStatus('na', location.protocol === 'https:' || location.hostname === 'localhost'
+        ? 'browser ນີ້ບໍ່ຮອງຮັບການໃຊ້ offline'
+        : 'ໃຊ້ offline ໄດ້ສະເພາະເວັບທີ່ເປີດຜ່ານ https');
+      return;
+    }
+    caches.open(off.cache).then(function (cache) {
+      return Promise.all(off.urls.map(function (u) { return cache.match(u); }));
+    }).then(function (res) {
+      var n = res.filter(Boolean).length;
+      var total = off.urls.length;
+      if (n === total) {
+        setOfflineStatus('ready', 'ພ້ອມໃຊ້ offline ✓ — ເປີດໄດ້ແມ່ນບໍ່ມີອິນເຕີເນັດ');
+        return;
+      }
+      checkTries++;
+      if (checkTries > 60) {
+        setOfflineStatus('error', 'ດາວໂຫຼດບໍ່ຄົບ (' + n + '/' + total + ') — ເປີດເວັບໃໝ່ຕອນມີອິນເຕີເນັດ');
+        return;
+      }
+      setOfflineStatus('loading', navigator.onLine === false
+        ? 'ຍັງບໍ່ພ້ອມໃຊ້ offline — ເປີດເວັບຕອນມີອິນເຕີເນັດ 1 ຄັ້ງ'
+        : 'ກຳລັງດາວໂຫຼດເກັບໄວ້ໃນເຄື່ອງ… ' + n + '/' + total);
+      setTimeout(checkOffline, 1000);
+    }).catch(function () {
+      setOfflineStatus('error', 'ກວດສອບບໍ່ໄດ້ — browser ອາດປິດການເກັບຂໍ້ມູນ (ເຊັ່ນ ໂໝດ Private)');
     });
   }
+
+  if (swOk) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/sw.js').then(checkOffline, function () {
+        setOfflineStatus('error', 'ເປີດໃຊ້ offline ບໍ່ໄດ້ — browser ອາດປິດການເກັບຂໍ້ມູນ (ເຊັ່ນ ໂໝດ Private)');
+      });
+    });
+  } else {
+    checkOffline();
+  }
+
+  // ແຖບແຈ້ງເມື່ອບໍ່ມີອິນເຕີເນັດ
+  var netBanner = $('.net-banner');
+  function updateNet() {
+    var isOff = navigator.onLine === false;
+    if (netBanner) netBanner.hidden = !isOff;
+    document.body.classList.toggle('is-offline', isOff);
+  }
+  window.addEventListener('online', function () { updateNet(); toast('ກັບມາອອນລາຍແລ້ວ'); });
+  window.addEventListener('offline', updateNet);
+  updateNet();
+
+  // ---------------------------------------------------------------- ຕິດຕັ້ງເປັນແອັບ (Add to Home Screen)
+  var installPrompt = null;
+  var standalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+  var isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+  function updateInstall() {
+    $$('.install-btn').forEach(function (b) { b.hidden = standalone || !(installPrompt || isIOS); });
+    $$('.install-done').forEach(function (el) { el.hidden = !standalone; });
+  }
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    installPrompt = e;
+    updateInstall();
+  });
+  window.addEventListener('appinstalled', function () {
+    installPrompt = null;
+    updateInstall();
+    toast('ຕິດຕັ້ງແລ້ວ ✓ ເປີດຈາກໄອຄອນໃນໜ້າຈໍໄດ້ເລີຍ');
+  });
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.install-btn')) return;
+    if (installPrompt) {
+      var p = installPrompt;
+      installPrompt = null;
+      p.prompt();
+      // prompt() ໃຊ້ໄດ້ຄັ້ງດຽວ — ຖ້າຜູ້ໃຊ້ກົດຍົກເລີກ ປຸ່ມຈະກັບມາເມື່ອ browser ສົ່ງ event ໃໝ່
+      if (p.userChoice) p.userChoice.then(updateInstall, updateInstall);
+      else updateInstall();
+    } else if (isIOS) {
+      var tpl = $('#ios-guide');
+      var node = document.createElement('div');
+      if (tpl) node.appendChild(tpl.content.cloneNode(true));
+      openSheet('ຕິດຕັ້ງໃສ່ໜ້າຈໍຫຼັກ', node);
+    }
+  });
+  updateInstall();
 })();
