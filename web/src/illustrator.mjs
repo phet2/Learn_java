@@ -423,82 +423,230 @@ export function toolbarHtml() {
 </div>`;
 }
 
-// ---------------------------------------------------------------- ໜ້າຈໍລວມ (Workspace) ແບບ SVG
+// ---------------------------------------------------------------- ໜ້າຈໍລວມ (Workspace) ແບບ SVG — Essentials Classic
 
 const WS = [
-  { k: 1, c: '#f97316', x: 2, y: 2, w: 996, h: 32, bx: 990, by: 18, t: 'Menu Bar (ແຖບເມນູ)', d: 'ເມນູຄຳສັ່ງທັງໝົດ: File, Edit, Object, Type, Select, Effect, View, Window, Help' },
-  { k: 2, c: '#eab308', x: 48, y: 36, w: 712, h: 24, bx: 752, by: 48, t: 'Document Tab (ແຖບຊື່ໄຟລ໌)', d: 'ສະແດງຊື່ໄຟລ໌, % ການຊູມ, ໂໝດສີ (CMYK/RGB) ແລະ ໂໝດມຸມມອງ · ເປີດຫຼາຍໄຟລ໌ໄດ້ເປັນແທັບ' },
-  { k: 3, c: '#3b82f6', x: 2, y: 62, w: 44, h: 554, bx: 24, by: 74, t: 'Toolbar (ແຖບເຄື່ອງມື)', d: 'ເຄື່ອງມືວາດ, ເລືອກ, ພິມ, ທາສີ ແລະ ປັບແຕ່ງ · ເປີດ/ປິດ ທີ່ Window > Toolbars' },
-  { k: 4, c: '#22c55e', x: 196, y: 120, w: 420, h: 380, bx: 206, by: 132, t: 'Artboard (ໜ້າເຈ້ຍ)', d: 'ພື້ນທີ່ສີຂາວ — ສະເພາະວັດຖຸທີ່ຢູ່ໃນ Artboard ເທົ່ານັ້ນທີ່ຖືກພິມ ຫຼື export · 1 ໄຟລ໌ມີຫຼາຍ Artboard ໄດ້' },
-  { k: 5, c: '#14b8a6', x: 50, y: 64, w: 706, h: 548, bx: 66, by: 588, t: 'Canvas / Pasteboard (ພື້ນທີ່ອ້ອມຂ້າງ)', d: 'ພື້ນທີ່ສີເທົາອ້ອມ Artboard — ວາງວັດຖຸພັກໄວ້ໄດ້ ແຕ່ບໍ່ຖືກພິມ ຫຼື export' },
-  { k: 6, c: '#ec4899', x: 318, y: 440, w: 236, h: 34, bx: 562, by: 457, t: 'Contextual Task Bar', d: 'ແຖບລອຍໃກ້ວັດຖຸທີ່ເລືອກ — ລວມຄຳສັ່ງທີ່ໃຊ້ຕໍ່ເລື້ອຍ (ໃໝ່ໃນ Illustrator 2025) · ເປີດ/ປິດ ທີ່ Window > Contextual Task Bar' },
-  { k: 7, c: '#a855f7', x: 762, y: 36, w: 236, h: 580, bx: 774, by: 76, t: 'Panels / Properties (ແຜງຄວບຄຸມ)', d: 'Properties ສະແດງຄ່າຂອງວັດຖຸທີ່ເລືອກ (ຂະໜາດ, ສີ, ເສັ້ນ) · ແທັບອື່ນເຊັ່ນ Layers · ເປີດ panel ອື່ນທີ່ເມນູ Window' },
-  { k: 8, c: '#94a3b8', x: 48, y: 616, w: 712, h: 22, bx: 752, by: 627, t: 'Status Bar (ແຖບສະຖານະ)', d: 'ສະແດງ % ຊູມ, ມຸມໝູນມຸມມອງ, ເລກ Artboard (ກົດ ◀ ▶ ເພື່ອປ່ຽນໜ້າ) ແລະ ຊື່ເຄື່ອງມືທີ່ກຳລັງໃຊ້' },
+  { k: 1, c: '#f97316', x: 2, y: 2, w: 800, h: 30, bx: 700, by: 17, t: 'Menu Bar (ແຖບເມນູ)', d: 'ໂລໂກ້ Ai, ປຸ່ມ Home (ກັບໜ້າເລີ່ມຕົ້ນ) ແລະ ເມນູ File, Edit, Object, Type, Select, Effect, View, Window, Help · ໄອຄອນຂ້າງ Help = Arrange Documents (ຈັດວາງຫຼາຍໄຟລ໌ໃຫ້ເຫັນພ້ອມກັນ)' },
+  { k: 2, c: '#eab308', x: 836, y: 3, w: 160, h: 28, bx: 820, by: 17, t: 'Workspace Switcher (ປຸ່ມປ່ຽນ Workspace)', d: 'ສະແດງຊື່ Workspace ທີ່ໃຊ້ຢູ່ (Essentials Classic) · ຄລິກເພື່ອປ່ຽນ Workspace ຫຼື Reset — ຄືກັນກັບເມນູ Window > Workspace' },
+  { k: 3, c: '#ef4444', x: 2, y: 36, w: 996, h: 28, bx: 975, by: 50, t: 'Control Panel (ແຖບຄວບຄຸມ)', d: 'ແຖບຕົວເລືອກແນວນອນໃຕ້ເມນູ — ເນື້ອໃນປ່ຽນຕາມວັດຖຸ ຫຼື ເຄື່ອງມືທີ່ເລືອກ: Fill, Stroke, ຄວາມໜາເສັ້ນ, Opacity · ເປີດ/ປິດ ທີ່ Window > Control' },
+  { k: 4, c: '#3b82f6', x: 72, y: 66, w: 716, h: 24, bx: 400, by: 78, t: 'Document Tab (ແຖບຊື່ໄຟລ໌)', d: 'ຊື່ໄຟລ໌ @ % ຊູມ (ໂໝດສີ/ໂໝດສະແດງຜົນ) ເຊັ່ນ Untitled-1 @ 66.67% (RGB/GPU Preview) · GPU Preview = ໃຊ້ກາດຈໍຊ່ວຍສະແດງຜົນໃຫ້ໄວ · ເປີດຫຼາຍໄຟລ໌ໄດ້ເປັນແທັບ' },
+  { k: 5, c: '#22c55e', x: 2, y: 66, w: 66, h: 578, bx: 35, by: 626, t: 'Toolbar ແບບ Advanced (2 ຖັນ)', d: 'Essentials Classic ໃຊ້ Toolbar ແບບ Advanced (ເຄື່ອງມືຄົບ) · ກົດ « ຢູ່ເທິງສຸດຂອງ Toolbar = ສະຫຼັບ 1 ຖັນ ↔ 2 ຖັນ · ລຸ່ມສຸດເປັນ Fill / Stroke' },
+  { k: 6, c: '#14b8a6', x: 250, y: 150, w: 360, h: 430, bx: 262, by: 162, t: 'Artboard (ໜ້າເຈ້ຍ)', d: 'ພື້ນທີ່ສີຂາວ — ສະເພາະວັດຖຸທີ່ຢູ່ໃນ Artboard ເທົ່ານັ້ນທີ່ຖືກພິມ ຫຼື export · 1 ໄຟລ໌ມີຫຼາຍ Artboard ໄດ້' },
+  { k: 7, c: '#ec4899', x: 72, y: 92, w: 716, h: 552, bx: 92, by: 626, t: 'Canvas / Pasteboard (ພື້ນທີ່ອ້ອມຂ້າງ)', d: 'ພື້ນທີ່ສີເທົາອ້ອມ Artboard — ວາງວັດຖຸພັກໄວ້ໄດ້ ແຕ່ບໍ່ຖືກພິມ ຫຼື export' },
+  { k: 8, c: '#a855f7', x: 792, y: 66, w: 206, h: 602, bx: 809, by: 420, t: 'Panels (ແຜງຄວບຄຸມ)', d: 'ແຖວໄອຄອນ = panel ທີ່ຫຍໍ້ໄວ້ (ຄລິກເພື່ອເປີດ) · ຖັດໄປແມ່ນ panel ທີ່ກາງອອກ ເຊັ່ນ Properties, Color, Swatches · ເປີດ panel ອື່ນໄດ້ທີ່ເມນູ Window' },
+  { k: 9, c: '#94a3b8', x: 72, y: 646, w: 716, h: 22, bx: 770, by: 657, t: 'Status Bar (ແຖບສະຖານະ)', d: 'ສະແດງ % ຊູມ, ມຸມໝູນມຸມມອງ, ເລກ Artboard (ກົດ ◀ ▶ ເພື່ອປ່ຽນໜ້າ) ແລະ ຊື່ເຄື່ອງມືທີ່ກຳລັງໃຊ້' },
 ];
 
+const svgIcon = (id, x, y, size = 20, color = '#d4d4d4') =>
+  `<svg x="${x}" y="${y}" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${P[id]}</svg>`;
+
 export function workspaceHtml() {
+  // ແຖບເມນູ
   const menus = ['File', 'Edit', 'Object', 'Type', 'Select', 'Effect', 'View', 'Window', 'Help'];
-  let mx = 18;
+  let mx = 72;
   const menuText = menus
     .map((m) => {
-      const s = `<text x="${mx}" y="23" class="ws-t">${m}</text>`;
+      const s = `<text x="${mx}" y="22" class="ws-t">${m}</text>`;
       mx += m.length * 8 + 22;
       return s;
     })
     .join('');
-  const tbIcons = TOOLS.slice(0, 22)
-    .map((t, i) => `<svg x="13" y="${70 + i * 24.5}" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4d4d4" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${P[t.icon]}</svg>`)
+
+  // Toolbar 2 ຖັນ ຕາມລຳດັບຈິງ (ຊ້າຍ-ຂວາ ເທື່ອລະແຖວ)
+  const tbIcons = TOOLS.map((t, i) => {
+    const x = i % 2 ? 39 : 11;
+    const y = 96 + Math.floor(i / 2) * 25;
+    const fly = t.hidden ? `<path d="M${x + 21} ${y + 17}v4h-4z" fill="#bdbdbd"/>` : '';
+    return svgIcon(t.icon, x, y) + fly;
+  }).join('');
+
+  // ແຖວໄອຄອນ panel ທີ່ຫຍໍ້ໄວ້
+  const dock = [
+    '<circle cx="12" cy="9" r="5" fill="#ef4444" stroke="none"/><circle cx="9" cy="15" r="5" fill="#22c55e" stroke="none" opacity=".85"/><circle cx="15" cy="15" r="5" fill="#3b82f6" stroke="none" opacity=".85"/>',
+    '<rect x="4" y="4" width="7" height="7"/><rect x="13" y="4" width="7" height="7"/><rect x="4" y="13" width="7" height="7"/><rect x="13" y="13" width="7" height="7"/>',
+    P.paintbrush,
+    P.symbol,
+    '<path d="M4 6h16" stroke-width="1"/><path d="M4 11h16" stroke-width="2"/><path d="M4 17h16" stroke-width="3.5"/>',
+    '<rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M8 4v16" stroke-width="4" opacity=".8"/><path d="M13 4v16" stroke-width="3" opacity=".4"/>',
+    '<circle cx="10" cy="12" r="6"/><circle cx="14" cy="12" r="6" fill="currentColor" opacity=".35"/>',
+    '<rect x="4" y="5" width="16" height="4"/><rect x="4" y="11" width="16" height="4"/><rect x="4" y="17" width="16" height="3"/>',
+    '<path d="M12 4 3 9l9 5 9-5z"/><path d="M3 14l9 5 9-5"/>',
+  ]
+    .map((p, i) => `<svg x="799" y="${80 + i * 34}" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4d4d4" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" color="#d4d4d4">${p}</svg>`)
     .join('');
-  const regions = WS.map(
-    (r) => `<g class="hs" data-hs="${r.k}" style="--c:${r.c}" tabindex="0" role="button" aria-label="${r.k}. ${esc(r.t)}">
+
+  // ລຽງໃຫ້ພື້ນທີ່ໃຫຍ່ຢູ່ລຸ່ມ ພື້ນທີ່ນ້ອຍຢູ່ເທິງ (ແຕະ Artboard ໄດ້ ບໍ່ຖືກ Canvas ບັງ)
+  const regions = [...WS]
+    .sort((a, b) => b.w * b.h - a.w * a.h)
+    .map(
+      (r) => `<g class="hs" data-hs="${r.k}" style="--c:${r.c}" tabindex="0" role="button" aria-label="${r.k}. ${esc(r.t)}">
       <rect class="hs-r" x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" rx="4"/>
       <circle class="hs-b" cx="${r.bx}" cy="${r.by}" r="11"/><text class="hs-n" x="${r.bx}" y="${r.by + 4.5}">${r.k}</text>
     </g>`,
-  ).join('');
-  const svg = `<svg class="ws-svg" viewBox="0 0 1000 640" role="img" aria-label="ໜ້າຈໍຈຳລອງ Adobe Illustrator 2025">
-  <rect width="1000" height="640" fill="#1d1d1d"/>
+    )
+    .join('');
+
+  const svg = `<svg class="ws-svg" viewBox="0 0 1000 670" role="img" aria-label="ໜ້າຈໍຈຳລອງ Adobe Illustrator ແບບ Essentials Classic">
+  <defs><linearGradient id="wsspec" x1="0" x2="1"><stop offset="0" stop-color="#ff0000"/><stop offset=".17" stop-color="#ffff00"/><stop offset=".33" stop-color="#00ff00"/><stop offset=".5" stop-color="#00ffff"/><stop offset=".67" stop-color="#0000ff"/><stop offset=".83" stop-color="#ff00ff"/><stop offset="1" stop-color="#ff0000"/></linearGradient>
+  <linearGradient id="wsdark" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000"/></linearGradient></defs>
+  <rect width="1000" height="670" fill="#1d1d1d"/>
+
+  <!-- 1–2 ແຖບເມນູ + ປຸ່ມປ່ຽນ Workspace -->
   <rect width="1000" height="34" fill="#323232"/>
+  <rect x="9" y="6" width="24" height="22" rx="3" fill="#330000" stroke="#ff9a00" stroke-width="1.2"/><text x="21" y="22" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#ff9a00">Ai</text>
+  <path d="M44 18l8-7 8 7M47 16v8h10v-8" fill="none" stroke="#d4d4d4" stroke-width="1.7" stroke-linejoin="round"/>
   ${menuText}
-  <rect x="842" y="7" width="66" height="20" rx="10" fill="#2f6fe6"/><text x="875" y="21" class="ws-t" text-anchor="middle" fill="#fff">Share</text>
-  <circle cx="930" cy="17" r="7" fill="none" stroke="#bbb" stroke-width="1.6"/><path d="M935 22l4 4" stroke="#bbb" stroke-width="1.6"/>
-  <rect y="34" width="1000" height="28" fill="#262626"/>
-  <rect x="48" y="36" width="300" height="26" fill="#1d1d1d"/>
-  <text x="60" y="53" class="ws-s">ໂລໂກ້.ai @ 66 % (CMYK/Preview)</text><text x="332" y="53" class="ws-s">×</text>
-  <rect y="62" width="46" height="554" fill="#323232"/>
+  <rect x="644" y="10" width="16" height="14" fill="none" stroke="#bbb" stroke-width="1.4"/><path d="M652 10v14" stroke="#bbb" stroke-width="1.4"/><path d="M666 15l3 3 3-3" fill="none" stroke="#bbb" stroke-width="1.4"/>
+  <text x="962" y="22" class="ws-t" text-anchor="end">Essentials Classic</text><path d="M970 14l4 4 4-4" fill="none" stroke="#d4d4d4" stroke-width="1.6"/>
+
+  <!-- 3 Control Panel -->
+  <rect y="34" width="1000" height="32" fill="#2b2b2b"/><rect y="65" width="1000" height="1" fill="#1a1a1a"/>
+  <text x="12" y="54" class="ws-s">No Selection</text>
+  <rect x="100" y="41" width="18" height="18" fill="#fff" stroke="#888"/><path d="M122 48l3 3 3-3" fill="none" stroke="#bbb" stroke-width="1.3"/>
+  <rect x="138" y="41" width="18" height="18" fill="#2b2b2b" stroke="#888"/><rect x="141" y="44" width="12" height="12" fill="none" stroke="#111" stroke-width="3.5"/><rect x="143.5" y="46.5" width="7" height="7" fill="none" stroke="#fff" stroke-width="1"/><path d="M160 48l3 3 3-3" fill="none" stroke="#bbb" stroke-width="1.3"/>
+  <text x="178" y="54" class="ws-s" text-decoration="underline">Stroke:</text>
+  <rect x="226" y="41" width="56" height="18" rx="2" fill="#1f1f1f" stroke="#4a4a4a"/><text x="234" y="54" class="ws-s">1 pt</text><path d="M270 48l3 3 3-3" fill="none" stroke="#bbb" stroke-width="1.3"/>
+  <rect x="290" y="41" width="96" height="18" rx="2" fill="#1f1f1f" stroke="#4a4a4a"/><path d="M296 50h24" stroke="#ddd" stroke-width="2.5"/><text x="326" y="54" class="ws-s">Uniform</text>
+  <rect x="394" y="41" width="104" height="18" rx="2" fill="#1f1f1f" stroke="#4a4a4a"/><circle cx="404" cy="50" r="4" fill="#ddd"/><text x="414" y="54" class="ws-s">5 pt. Round</text>
+  <text x="510" y="54" class="ws-s" text-decoration="underline">Opacity:</text><rect x="562" y="41" width="50" height="18" rx="2" fill="#1f1f1f" stroke="#4a4a4a"/><text x="568" y="54" class="ws-s">100%</text>
+  <text x="622" y="54" class="ws-s">Style:</text><rect x="660" y="42" width="16" height="16" fill="#fff" stroke="#888"/>
+  <rect x="692" y="40" width="104" height="20" rx="3" fill="#3a3a3a" stroke="#555"/><text x="744" y="54" class="ws-s" text-anchor="middle">Document Setup</text>
+  <rect x="802" y="40" width="88" height="20" rx="3" fill="#3a3a3a" stroke="#555"/><text x="846" y="54" class="ws-s" text-anchor="middle">Preferences</text>
+
+  <!-- 4 Document Tab -->
+  <rect x="70" y="66" width="720" height="24" fill="#262626"/>
+  <rect x="72" y="66" width="310" height="24" fill="#3a3a3a"/>
+  <text x="82" y="83" class="ws-s" font-weight="700" fill="#f0f0f0">Untitled-1 @ 66.67% (RGB/GPU Preview)</text><text x="366" y="83" class="ws-s">×</text>
+
+  <!-- 5 Toolbar 2 ຖັນ -->
+  <rect y="66" width="70" height="604" fill="#323232"/>
+  <text x="8" y="80" class="ws-s" font-size="11">«</text><path d="M26 76h18M26 79h18" stroke="#666" stroke-width="1"/>
   ${tbIcons}
-  <rect x="11" y="612" width="0" height="0"/>
-  <rect x="46" y="62" width="714" height="554" fill="#1d1d1d"/>
-  <rect x="196" y="120" width="420" height="380" fill="#ffffff"/>
-  <text x="200" y="114" class="ws-s" fill="#9a9a9a">01 - Artboard 1</text>
-  <circle cx="406" cy="282" r="78" fill="#2f5bea"/>
-  <path d="M370 300c18-60 54-60 72 0" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/>
-  <text x="406" y="400" text-anchor="middle" font-size="30" font-weight="700" font-family="sans-serif" fill="#1d1d1d">LOGO</text>
-  <rect x="326" y="202" width="160" height="160" fill="none" stroke="#3b9cff" stroke-width="1.2"/>
-  ${[[326, 202], [406, 202], [486, 202], [326, 282], [486, 282], [326, 362], [406, 362], [486, 362]].map(([x, y]) => `<rect x="${x - 3.5}" y="${y - 3.5}" width="7" height="7" fill="#fff" stroke="#3b9cff"/>`).join('')}
-  <rect x="318" y="440" width="236" height="34" rx="17" fill="#323232" stroke="#4a4a4a"/>
-  <text x="340" y="462" class="ws-s">Recolor</text><text x="410" y="462" class="ws-s">Duplicate</text><text x="488" y="462" class="ws-s">Lock</text><text x="528" y="462" class="ws-s">•••</text>
-  <rect x="760" y="34" width="240" height="582" fill="#323232"/>
-  <text x="776" y="54" class="ws-t" fill="#fff">Properties</text><text x="862" y="54" class="ws-s">Layers</text><text x="920" y="54" class="ws-s">Libraries</text>
-  <rect x="770" y="60" width="78" height="2" fill="#fff"/>
-  <text x="776" y="96" class="ws-s" fill="#9a9a9a">Path</text>
-  <text x="776" y="124" class="ws-t" fill="#e5e5e5">Transform</text>
-  <text x="776" y="148" class="ws-s">X: 320 px</text><text x="880" y="148" class="ws-s">Y: 240 px</text>
-  <text x="776" y="170" class="ws-s">W: 160 px</text><text x="880" y="170" class="ws-s">H: 160 px</text>
-  <text x="776" y="208" class="ws-t" fill="#e5e5e5">Appearance</text>
-  <rect x="776" y="220" width="16" height="16" fill="#2f5bea"/><text x="800" y="233" class="ws-s">Fill</text>
-  <rect x="776" y="244" width="16" height="16" fill="none" stroke="#bbb" stroke-width="3"/><text x="800" y="257" class="ws-s">Stroke  1 pt</text>
-  <text x="776" y="282" class="ws-s">Opacity  100 %</text>
-  <text x="776" y="320" class="ws-t" fill="#e5e5e5">Quick Actions</text>
-  <rect x="776" y="332" width="100" height="26" rx="4" fill="#3d3d3d"/><text x="826" y="349" class="ws-s" text-anchor="middle">Offset Path</text>
-  <rect x="884" y="332" width="100" height="26" rx="4" fill="#3d3d3d"/><text x="934" y="349" class="ws-s" text-anchor="middle">Recolor</text>
-  <rect x="46" y="616" width="714" height="24" fill="#262626"/>
-  <text x="60" y="632" class="ws-s">66 %</text><text x="116" y="632" class="ws-s">0°</text><text x="160" y="632" class="ws-s">◀  1  ▶</text><text x="240" y="632" class="ws-s">Selection</text>
+  <path d="M8 448h54" stroke="#444"/>
+  <rect x="12" y="458" width="26" height="26" fill="#fff" stroke="#111"/>
+  <rect x="28" y="474" width="26" height="26" fill="none" stroke="#111" stroke-width="8"/><rect x="28" y="474" width="26" height="26" fill="none" stroke="#e5e5e5" stroke-width="1"/><rect x="36" y="482" width="10" height="10" fill="none" stroke="#e5e5e5" stroke-width="1"/>
+  <path d="M46 458q10 0 10 10" fill="none" stroke="#bbb" stroke-width="1.4"/><rect x="10" y="490" width="7" height="7" fill="#fff"/><rect x="13" y="493" width="7" height="7" fill="none" stroke="#fff"/>
+  <rect x="11" y="512" width="13" height="13" fill="#ddd"/><rect x="28" y="512" width="13" height="13" fill="url(#wsdark)" stroke="#888"/><rect x="45" y="512" width="13" height="13" fill="#fff"/><path d="M45 525l13-13" stroke="#e11d48" stroke-width="2"/>
+  <rect x="11" y="536" width="13" height="12" fill="none" stroke="#bbb"/><rect x="28" y="536" width="13" height="12" fill="none" stroke="#bbb"/><rect x="45" y="536" width="13" height="12" fill="none" stroke="#bbb" stroke-dasharray="2 2"/>
+  <rect x="20" y="562" width="30" height="20" rx="2" fill="none" stroke="#bbb"/><rect x="25" y="567" width="20" height="10" fill="#bbb"/>
+  <text x="35" y="604" text-anchor="middle" font-family="sans-serif" font-size="14" fill="#ddd">•••</text>
+
+  <!-- 6–7 Canvas + Artboard -->
+  <rect x="70" y="90" width="720" height="556" fill="#1d1d1d"/>
+  <text x="252" y="144" class="ws-s" fill="#9a9a9a">01 - Artboard 1</text>
+  <rect x="250" y="150" width="360" height="430" fill="#ffffff"/>
+  <circle cx="430" cy="320" r="78" fill="#2f5bea"/>
+  <path d="M394 338c18-60 54-60 72 0" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/>
+  <text x="430" y="452" text-anchor="middle" font-size="30" font-weight="700" font-family="sans-serif" fill="#1d1d1d">LOGO</text>
+
+  <!-- 8 Panels: ແຖວໄອຄອນ + panel ທີ່ກາງອອກ -->
+  <rect x="790" y="66" width="210" height="604" fill="#262626"/>
+  <rect x="792" y="66" width="34" height="604" fill="#2b2b2b"/>
+  ${dock}
+  <rect x="828" y="66" width="172" height="604" fill="#323232"/>
+  <rect x="828" y="66" width="172" height="24" fill="#262626"/>
+  <text x="836" y="83" class="ws-s" font-weight="700" fill="#fff">Properties</text><text x="904" y="83" class="ws-s">Layers</text><text x="950" y="83" class="ws-s">Libraries</text>
+  <rect x="832" y="88" width="66" height="2" fill="#fff"/>
+  <text x="836" y="110" class="ws-s" fill="#9a9a9a">No Selection</text>
+  <text x="836" y="134" class="ws-t" font-size="13" fill="#e5e5e5">Document</text>
+  <text x="836" y="156" class="ws-s">Units</text><rect x="900" y="144" width="92" height="18" rx="2" fill="#1f1f1f" stroke="#4a4a4a"/><text x="906" y="157" class="ws-s">Pixels</text>
+  <text x="836" y="180" class="ws-s">Artboard</text><rect x="900" y="168" width="92" height="18" rx="2" fill="#1f1f1f" stroke="#4a4a4a"/><text x="906" y="181" class="ws-s">1</text>
+  <rect x="836" y="194" width="156" height="22" rx="3" fill="#3d3d3d"/><text x="914" y="209" class="ws-s" text-anchor="middle">Edit Artboards</text>
+  <text x="836" y="238" class="ws-t" font-size="13" fill="#e5e5e5">Rulers &amp; Grids</text>
+  <text x="836" y="262" class="ws-t" font-size="13" fill="#e5e5e5">Guides</text>
+  <text x="836" y="296" class="ws-t" font-size="13" fill="#e5e5e5">Quick Actions</text>
+  <rect x="836" y="306" width="156" height="22" rx="3" fill="#3d3d3d"/><text x="914" y="321" class="ws-s" text-anchor="middle">Document Setup</text>
+  <rect x="836" y="334" width="156" height="22" rx="3" fill="#3d3d3d"/><text x="914" y="349" class="ws-s" text-anchor="middle">Preferences</text>
+  <rect x="828" y="372" width="172" height="24" fill="#262626"/>
+  <text x="836" y="389" class="ws-s" font-weight="700" fill="#fff">Color</text><text x="880" y="389" class="ws-s">Color Guide</text>
+  <rect x="838" y="404" width="20" height="20" fill="#fff" stroke="#888"/><rect x="848" y="414" width="20" height="20" fill="none" stroke="#111" stroke-width="5"/>
+  <rect x="878" y="404" width="114" height="34" fill="url(#wsspec)"/><rect x="878" y="404" width="114" height="34" fill="url(#wsdark)"/>
+  <rect x="828" y="452" width="172" height="24" fill="#262626"/>
+  <text x="836" y="469" class="ws-s" font-weight="700" fill="#fff">Swatches</text><text x="900" y="469" class="ws-s">Brushes</text><text x="952" y="469" class="ws-s">Symbols</text>
+  ${['#fff', '#000', '#e11d48', '#f97316', '#facc15', '#22c55e', '#06b6d4', '#2563eb', '#7c3aed', '#db2777', '#a3a3a3', '#fde68a', '#fca5a5', '#93c5fd', '#86efac', '#c4b5fd']
+    .map((c, i) => `<rect x="${838 + (i % 8) * 19}" y="${486 + Math.floor(i / 8) * 19}" width="16" height="16" fill="${c}" stroke="#1a1a1a"/>`)
+    .join('')}
+
+  <!-- 9 Status Bar -->
+  <rect x="70" y="646" width="720" height="24" fill="#262626"/>
+  <text x="82" y="662" class="ws-s">66.67%</text><text x="148" y="662" class="ws-s">0°</text><text x="190" y="662" class="ws-s">◀  1  ▶</text><text x="270" y="662" class="ws-s">Selection</text>
   ${regions}
 </svg>`;
   const legend = WS.map(
     (r) => `<li class="hs-item" data-hs="${r.k}" style="--c:${r.c}" tabindex="0" role="button"><span class="lg-n">${r.k}</span><div><b>${esc(r.t)}</b><span>${esc(r.d)}</span></div></li>`,
   ).join('');
-  return `<figure class="ai-fig hs-fig"><div class="ws-wrap">${svg}</div><figcaption>ແຕະໝາຍເລກ ຫຼື ລາຍການຂ້າງລຸ່ມ ເພື່ອໄຮໄລທ໌ສ່ວນນັ້ນ · ໜ້າຈໍຈຳລອງຂອງ Workspace ແບບ Essentials</figcaption><ol class="ai-legend hs-list">${legend}</ol></figure>`;
+  return `<figure class="ai-fig hs-fig"><div class="ws-wrap">${svg}</div><figcaption>ແຕະໝາຍເລກ ຫຼື ລາຍການຂ້າງລຸ່ມ ເພື່ອໄຮໄລທ໌ສ່ວນນັ້ນ · ໜ້າຈໍຈຳລອງຂອງ Workspace ແບບ <b>Essentials Classic</b> (Windows) — ການຈັດ panel ທາງຂວາອາດຕ່າງຈາກເຄື່ອງຂອງທ່ານເລັກນ້ອຍ</figcaption><ol class="ai-legend hs-list">${legend}</ol></figure>`;
+}
+
+// ---------------------------------------------------------------- ເມນູ Window ຈຳລອງ (ຕາມໜ້າຈໍຈິງ)
+// [ຊື່, ຄີລັດ, ທຸງ] · ທຸງ: '>' = ມີເມນູຍ່ອຍ, 'v' = ໝາຍ ✓ (ເປີດຢູ່), 'off' = ສີຈາງ, n = ໝາຍເລກອະທິບາຍ
+
+const WINDOW_MENU = [
+  ['New Window'],
+  '-',
+  ['Arrange', '', '>'],
+  ['Find Extensions on Exchange…'],
+  ['Workspace', '', '>', 1],
+  '-',
+  ['Extensions', '', '>'],
+  '-',
+  ['Control', '', 'v', 2],
+  ['Toolbars', '', '>', 3],
+  '-',
+  ['Actions'], ['Align', 'Shift+F7'], ['Appearance', 'Shift+F6'], ['Artboards'], ['Asset Export'],
+  ['Attributes', 'Ctrl+F11'], ['Brushes', 'F5', '', 5], ['Color', 'F6'], ['Color Guide', 'Shift+F3'], ['Color Themes'],
+  ['CSS Properties'], ['Document Info'], ['Flattener Preview'], ['Gradient', 'Ctrl+F9'], ['Graphic Styles', 'Shift+F5'],
+  ['Image Trace'], ['Info', 'Ctrl+F8'], ['Layers', 'F7'], ['Learn', '', 'off', 6], ['Libraries'], ['Links'], ['Magic Wand'],
+  ['Navigator'], ['Pathfinder', 'Shift+Ctrl+F9'], ['Pattern Options'], ['Properties', '', 'v', 4], ['Separations Preview'],
+  ['Stroke', 'Ctrl+F10'], ['Swatches'], ['Symbols', 'Shift+Ctrl+F11'], ['Transform', 'Shift+F8'],
+  ['Transparency', 'Shift+Ctrl+F10'], ['Type', '', '>'], ['Variables'],
+  '-',
+  ['Brush Libraries', '', '>'], ['Graphic Style Libraries', '', '>'], ['Swatch Libraries', '', '>'], ['Symbol Libraries', '', '>'],
+];
+
+const WORKSPACES = [
+  ['Automation', 'ເນັ້ນ panel ເຮັດວຽກຊ້ຳອັດຕະໂນມັດ ເຊັ່ນ Actions, Variables'],
+  ['Essentials', 'ຄ່າເລີ່ມຕົ້ນ ແບບໃໝ່: Properties ທາງຂວາ, Toolbar ແບບ Basic, ບໍ່ມີ Control Panel'],
+  ['Essentials Classic', 'ແບບຄລາສສິກ: ມີ Control Panel ໃຕ້ເມນູ, Toolbar ແບບ Advanced'],
+  ['Layout', 'ເນັ້ນການຈັດໜ້າ ແລະ ຈັດແນວວັດຖຸ'],
+  ['Painting', 'ເນັ້ນການແຕ້ມ ແລະ ທາສີ: Brushes, Color, Swatches'],
+  ['Printing and Proofing', 'ເນັ້ນການກວດງານກ່ອນສົ່ງພິມ'],
+  ['Tracing', 'ເນັ້ນ Image Trace (ແປງຮູບ raster ເປັນ vector)'],
+  ['Typography', 'ເນັ້ນຕົວອັກສອນ: Character, Paragraph, Glyphs'],
+  ['Web', 'ເນັ້ນງານເວັບ ແລະ ໜ້າຈໍ'],
+];
+
+const WM_NOTES = [
+  ['Workspace ▸', 'ເລືອກ Workspace (✓ = ທີ່ໃຊ້ຢູ່) · Reset Essentials Classic = ຄືນການຈັດ panel ໃຫ້ຄືເດີມ ເມື່ອ panel ຫາຍ ຫຼື ຍ້າຍຜິດບ່ອນ · New Workspace… = ບັນທຶກການຈັດວາງຂອງຕົນເອງ · Manage Workspaces… = ປ່ຽນຊື່ / ລຶບ'],
+  ['✓ Control', 'ເປີດ / ປິດ Control Panel (ແຖບຕົວເລືອກແນວນອນໃຕ້ເມນູ)'],
+  ['Toolbars ▸', 'ເລືອກ Toolbar ແບບ Basic (ເຄື່ອງມືບາງສ່ວນ) ຫຼື Advanced (ເຄື່ອງມືຄົບ)'],
+  ['✓ ໜ້າຊື່ panel', 'ເຄື່ອງໝາຍ ✓ = panel ນັ້ນເປີດຢູ່ · ຄລິກອີກຄັ້ງ = ປິດ · ເມນູ panel ລຽງຕາມຕົວອັກສອນ A–Z'],
+  ['ຄີລັດທາງຂວາ', 'ກົດຄີລັດແທນການເປີດເມນູໄດ້ ເຊັ່ນ F7 = Layers, F6 = Color, F5 = Brushes, Ctrl+F9 = Gradient, Shift+Ctrl+F9 = Pathfinder'],
+  ['ເມນູສີຈາງ', 'ຄຳສັ່ງທີ່ໃຊ້ບໍ່ໄດ້ໃນຂະນະນັ້ນ (ເຊັ່ນ Learn)'],
+];
+
+export function windowMenuHtml() {
+  const c = ['#eab308', '#ef4444', '#22c55e', '#a855f7', '#3b82f6', '#94a3b8'];
+  const pn = (n) => (n ? `<span class="pn" style="--c:${c[n - 1]}">${n}</span>` : '');
+  const row = (it) => {
+    if (it === '-') return '<li class="wm-sep" role="separator"></li>';
+    const [name, key = '', flag = '', n = 0] = it;
+    const cls = [flag === 'off' ? 'off' : '', name === 'Workspace' ? 'on' : ''].filter(Boolean).join(' ');
+    return `<li${cls ? ` class="${cls}"` : ''}><i class="wm-ck">${flag === 'v' ? '✓' : ''}</i><span class="wm-n">${esc(name)}${pn(n)}</span><span class="wm-k">${flag === '>' ? '›' : esc(key)}</span></li>`;
+  };
+  const sub = WORKSPACES.map(([w]) => `<li><i class="wm-ck">${w === 'Essentials Classic' ? '✓' : ''}</i><span class="wm-n">${esc(w)}</span></li>`).join('');
+  const menu = `<div class="wm">
+  <div class="wm-bar"><span>File</span><span>Edit</span><span>Object</span><span>Type</span><span>Select</span><span>Effect</span><span>View</span><span class="on">Window</span><span>Help</span></div>
+  <div class="wm-cols">
+    <ul class="wm-list wm-main">${WINDOW_MENU.map(row).join('')}</ul>
+    <ul class="wm-list wm-sub"><li class="wm-h">Window › Workspace ${pn(1)}</li>${sub}<li class="wm-sep" role="separator"></li><li><i class="wm-ck"></i><span class="wm-n">Reset Essentials Classic</span></li><li><i class="wm-ck"></i><span class="wm-n">New Workspace…</span></li><li><i class="wm-ck"></i><span class="wm-n">Manage Workspaces…</span></li></ul>
+  </div>
+</div>`;
+  const notes = WM_NOTES.map(([t, d], i) => `<li style="--c:${c[i]}"><span class="lg-n">${i + 1}</span><div><b>${esc(t)}</b><span>${esc(d)}</span></div></li>`).join('');
+  const table = `<div class="table-wrap"><table><thead><tr><th>Workspace</th><th>ເໝາະກັບ</th></tr></thead><tbody>${WORKSPACES.map(
+    ([w, d]) => `<tr><td><b>${esc(w)}</b>${w === 'Essentials Classic' ? ' ✓' : ''}</td><td>${esc(d)}</td></tr>`,
+  ).join('')}</tbody></table></div>`;
+  return `<div class="ai-panel-wrap">${menu}<ol class="ai-legend">${notes}</ol></div>${table}`;
 }
 
 // ---------------------------------------------------------------- Panels ຈຳລອງ
@@ -547,6 +695,32 @@ function alIcon(kind) {
 }
 
 export const PANELS = {
+  control: () =>
+    panel(
+      'Control  (Window > Control)',
+      `<div class="aip-ctl"><span>{1}<b>No Selection</b></span>
+       <span>{2}<i class="aip-swf"></i>▾</span>
+       <span>{3}<i class="aip-sws"></i>▾</span>
+       <span>{4}<u>Stroke:</u> <span class="aip-in sm">1 pt ▾</span></span>
+       <span>{5}<span class="aip-in">━ Uniform ▾</span></span>
+       <span>{6}<span class="aip-in">● 5 pt. Round ▾</span></span>
+       <span>{7}<u>Opacity:</u> <span class="aip-in sm">100% ›</span></span>
+       <span>{8}Style: <i class="aip-swf"></i>▾</span>
+       <span>{9}<span class="aip-btn">Document Setup</span></span>
+       <span>{10}<span class="aip-btn">Preferences</span></span></div>`,
+      [
+        ['ປະເພດວັດຖຸທີ່ເລືອກ', 'No Selection = ບໍ່ໄດ້ເລືອກຫຍັງ · ເມື່ອເລືອກແລ້ວຈະສະແດງ Path, Group, Type… ແລະ ຕົວເລືອກໃນແຖບຈະປ່ຽນຕາມ'],
+        ['Fill (ສີພື້ນ)', 'ຄລິກ ▾ ເພື່ອເລືອກສີຈາກ Swatches'],
+        ['Stroke (ສີເສັ້ນ)', 'ຄລິກ ▾ ເພື່ອເລືອກສີເສັ້ນຂອບ'],
+        ['Stroke Weight', 'ຄວາມໜາເສັ້ນ · ຄຳທີ່ມີຂີດກ້ອງ (Stroke:, Opacity:) ຄລິກແລ້ວຈະເປີດ panel ນັ້ນແບບດ່ວນ'],
+        ['Variable Width Profile', 'ຮູບແບບຄວາມໜາ-ບາງຂອງເສັ້ນ · Uniform = ໜາເທົ່າກັນຕະຫຼອດເສັ້ນ'],
+        ['Brush Definition', 'ລາຍແປງທີ່ໃຊ້ກັບເສັ້ນ (ຄ່າເລີ່ມຕົ້ນ 5 pt. Round)'],
+        ['Opacity', 'ຄວາມທຶບ/ໂປ່ງໃສ ຂອງວັດຖຸ (100% = ທຶບ)'],
+        ['Style', 'Graphic Style — ຊຸດ Fill + Stroke + Effect ສຳເລັດຮູບ'],
+        ['Document Setup', 'ຕັ້ງຄ່າເອກະສານ: ໜ່ວຍ, Bleed, Transparency Grid (Alt+Ctrl+P) — ສະແດງເມື່ອບໍ່ໄດ້ເລືອກວັດຖຸ'],
+        ['Preferences', 'ຕັ້ງຄ່າໂປຣແກຣມ (Ctrl+K) ເຊັ່ນ ໜ່ວຍວັດ, ສີໜ້າຈໍ (UI), ຄີລັດລູກສອນ'],
+      ],
+    ),
   layers: () =>
     panel(
       'Layers  (F7)',
@@ -680,7 +854,7 @@ const MENUS = [
   ['Select', 'ການເລືອກ', [['All', 'Ctrl+A'], ['Deselect', 'Shift+Ctrl+A'], ['Inverse (ເລືອກກົງກັນຂ້າມ)', ''], ['Same > Fill Color / Stroke Color', ''], ['Save Selection', '']]],
   ['Effect', 'ເອັບເຟັກ (ແກ້ກັບຄືນໄດ້ໃນ Appearance)', [['3D and Materials', ''], ['Distort & Transform', ''], ['Stylize > Drop Shadow / Round Corners', ''], ['Warp', ''], ['Photoshop Effects: Blur, Texture…', ''], ['Document Raster Effects Settings', '']]],
   ['View', 'ມຸມມອງ', [['Outline / Preview', 'Ctrl+Y'], ['Zoom In / Zoom Out', 'Ctrl++ / Ctrl+−'], ['Fit Artboard in Window', 'Ctrl+0'], ['Actual Size (100%)', 'Ctrl+1'], ['Rulers', 'Ctrl+R'], ['Guides', 'Ctrl+;'], ['Smart Guides', 'Ctrl+U'], ['Show Grid', 'Ctrl+"']]],
-  ['Window', 'ເປີດ / ປິດ Panel', [['Workspace > Essentials / Reset', ''], ['Toolbars > Advanced', ''], ['Layers / Color / Swatches / Stroke …', 'F7 / F6 / – / Ctrl+F10'], ['Properties / Contextual Task Bar', '']]],
+  ['Window', 'ເປີດ / ປິດ Panel', [['Workspace > Essentials Classic / Reset Essentials Classic', ''], ['Control (ເປີດ/ປິດ Control Panel)', ''], ['Toolbars > Basic / Advanced', ''], ['Layers / Color / Brushes', 'F7 / F6 / F5'], ['Align / Appearance / Graphic Styles', 'Shift+F7 / Shift+F6 / Shift+F5'], ['Gradient / Stroke', 'Ctrl+F9 / Ctrl+F10'], ['Info / Attributes', 'Ctrl+F8 / Ctrl+F11'], ['Transparency / Pathfinder', 'Shift+Ctrl+F10 / Shift+Ctrl+F9'], ['Properties', '']]],
   ['Help', 'ຊ່ວຍເຫຼືອ', [['Illustrator Help', 'F1'], ['Updates / What\'s New', '']]],
 ];
 
@@ -808,6 +982,7 @@ export function aiInclude(name) {
   const [kind, arg] = name.split(':');
   switch (kind) {
     case 'ai-workspace': return workspaceHtml();
+    case 'ai-window-menu': return windowMenuHtml();
     case 'ai-toolbar': return toolbarHtml();
     case 'ai-tools': return toolsGroupHtml(arg);
     case 'ai-fillstroke': return fillStrokeHtml();
