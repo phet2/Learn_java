@@ -6,21 +6,44 @@
 
 ## 1. ພາບລວມໜ້າຈໍ (Workspace)
 
-ເມື່ອເປີດ ຫຼື ສ້າງໄຟລ໌ໃໝ່ Illustrator ຈະສະແດງໜ້າຈໍແບບ **Essentials** (ຄ່າເລີ່ມຕົ້ນ). ໜ້າຈໍແບ່ງເປັນ 8 ສ່ວນຫຼັກ — ແຕະໝາຍເລກເພື່ອເບິ່ງແຕ່ລະສ່ວນ:
+Illustrator ມີການຈັດໜ້າຈໍ (Workspace) ໃຫ້ເລືອກຫຼາຍແບບ — ບົດຮຽນນີ້ໃຊ້ແບບ **Essentials Classic** (ມີ Control Panel ໃຕ້ເມນູ ແລະ Toolbar ເຄື່ອງມືຄົບ 2 ຖັນ). ໜ້າຈໍແບ່ງເປັນ 9 ສ່ວນຫຼັກ — ແຕະໝາຍເລກເພື່ອເບິ່ງແຕ່ລະສ່ວນ:
 
 <!-- include:ai-workspace -->
 
+**Essentials ກັບ Essentials Classic ຕ່າງກັນແນວໃດ?**
+
+| ຫົວຂໍ້ | Essentials (ຄ່າເລີ່ມຕົ້ນຂອງໂປຣແກຣມ) | Essentials Classic (ບົດຮຽນນີ້) |
+|---|---|---|
+| Control Panel | ບໍ່ສະແດງ | ສະແດງໃຕ້ແຖບເມນູ |
+| Toolbar | Basic (ເຄື່ອງມືບາງສ່ວນ) | Advanced (ເຄື່ອງມືຄົບ) |
+| Panel ທາງຂວາ | Properties, Layers, Libraries | Properties ແລະ panel ແບບເກົ່າ (Color, Swatches, Stroke…) ເປັນກຸ່ມ ແລະ ເປັນແຖວໄອຄອນ |
+| ປ່ຽນໄປໃຊ້ | `Window > Workspace > Essentials` | `Window > Workspace > Essentials Classic` |
+
 **ຄວນຮູ້ເພີ່ມ**
-- **Workspace** = ການຈັດວາງ panel ທັງໝົດ · ປ່ຽນ ຫຼື ຄືນຄ່າເດີມທີ່ `Window > Workspace > Essentials` ແລະ `Reset Essentials`
-- **Control Panel** (ແຖບຕົວເລືອກແນວນອນໃຕ້ເມນູ) ບໍ່ສະແດງໃນ Essentials ແລ້ວ — ເປີດໄດ້ທີ່ `Window > Control`
+- ຊື່ Workspace ທີ່ໃຊ້ຢູ່ສະແດງ **ມຸມຂວາເທິງ** (ເຊັ່ນ `Essentials Classic ▾`) — ຄລິກເພື່ອປ່ຽນໄດ້ທັນທີ
+- panel ຫາຍ ຫຼື ຍ້າຍຜິດບ່ອນ → `Window > Workspace > Reset Essentials Classic` ຈະຄືນໃຫ້ຄືເດີມ
+- ກົດ `«` ຢູ່ເທິງສຸດຂອງ Toolbar = ສະຫຼັບ 1 ຖັນ ↔ 2 ຖັນ
 - ກົດ `Tab` = ເຊື່ອງ/ສະແດງ panel ແລະ toolbar ທັງໝົດ · `Shift+Tab` = ເຊື່ອງສະເພາະ panel ທາງຂວາ
-- ໜ້າ **Home** ຈະສະແດງຕອນເປີດໂປຣແກຣມ ກ່ອນເປີດໄຟລ໌
+- ຖ້າພື້ນ Artboard ເປັນ **ລາຍຕາໝາກຮຸກ** (ສີ່ຫຼ່ຽມເທົາ-ຂາວ) = ເປີດ Transparency Grid ຢູ່ — ປິດທີ່ `View > Hide Transparency Grid` (`Shift+Ctrl+D`) · ພື້ນຫຼັງຈະຖືກ export ເປັນໂປ່ງໃສ ບໍ່ແມ່ນສີຂາວ
+- ໜ້າ **Home** (ໄອຄອນເຮືອນຂ້າງໂລໂກ້ Ai) ໃຊ້ກັບໄປໜ້າເລີ່ມຕົ້ນ ເພື່ອສ້າງ ຫຼື ເປີດໄຟລ໌
+
+### 1.1 Control Panel — ແຖບຄວບຄຸມ
+
+ແຖບແນວນອນໃຕ້ເມນູ ທີ່ເນື້ອໃນ **ປ່ຽນຕາມວັດຖຸ ຫຼື ເຄື່ອງມືທີ່ເລືອກ** — ຕົວຢ່າງລຸ່ມນີ້ຄືຕອນ **ບໍ່ໄດ້ເລືອກວັດຖຸ** (No Selection):
+
+<!-- include:ai-panel:control -->
+
+### 1.2 ເມນູ Window ແລະ Workspace
+
+ເມນູ **Window** ໃຊ້ເປີດ/ປິດ panel ທຸກອັນ ແລະ ປ່ຽນ Workspace — ເຄື່ອງໝາຍ ✓ ໝາຍເຖິງສິ່ງທີ່ເປີດຢູ່:
+
+<!-- include:ai-window-menu -->
 
 ## 2. ແຖບເຄື່ອງມື (Toolbar)
 
 Toolbar ມີ 2 ແບບ:
 - **Basic** — ຄ່າເລີ່ມຕົ້ນ ສະແດງແຕ່ເຄື່ອງມືທີ່ໃຊ້ເລື້ອຍ
-- **Advanced** — ສະແດງເຄື່ອງມືຄົບ · ເປີດທີ່ `Window > Toolbars > Advanced` (ບົດຮຽນນີ້ໃຊ້ແບບ Advanced)
+- **Advanced** — ສະແດງເຄື່ອງມືຄົບ · ເປີດທີ່ `Window > Toolbars > Advanced` · Workspace **Essentials Classic** ໃຊ້ແບບນີ້ຢູ່ແລ້ວ (ບົດຮຽນນີ້ໃຊ້ແບບ Advanced ລຽງຕາມລຳດັບຈິງ: ຊ້າຍ→ຂວາ ເທື່ອລະແຖວ)
 
 **ກົດທີ່ຄວນຈື່:**
 - ໄອຄອນທີ່ມີ **ສາມຫຼ່ຽມນ້ອຍຢູ່ມຸມ** = ມີເຄື່ອງມືຊ່ອນຢູ່ໃນກຸ່ມ → **ກົດຄ້າງ** ຫຼື **ຄລິກຂວາ** ເພື່ອເປີດ
@@ -124,7 +147,9 @@ Pathfinder ມັກອອກສອບ! ແຖວເທິງ **Shape Modes** (4
 | Brushes | F5 | ເລືອກລາຍແປງສຳລັບ Paintbrush |
 | Symbols | Shift+Ctrl+F11 | ເກັບວັດຖຸທີ່ໃຊ້ຊ້ຳ — ແກ້ຕົ້ນແບບ 1 ຄັ້ງ ທຸກອັນປ່ຽນຕາມ |
 | Graphic Styles | Shift+F5 | ເກັບຊຸດ Fill + Stroke + Effect ໄວ້ໃຊ້ຊ້ຳ |
-| Info | F8 | ສະແດງຕຳແໜ່ງ, ຂະໜາດ ແລະ ຄ່າສີ ທີ່ຕົວຊີ້ເມົ້າຢູ່ |
+| Info | Ctrl+F8 | ສະແດງຕຳແໜ່ງ, ຂະໜາດ ແລະ ຄ່າສີ ທີ່ຕົວຊີ້ເມົ້າຢູ່ |
+| Color Guide | Shift+F3 | ແນະນຳຊຸດສີທີ່ເຂົ້າກັນກັບສີທີ່ເລືອກ |
+| Attributes | Ctrl+F11 | ຕັ້ງຄ່າ Overprint ແລະ ຄຸນສົມບັດອື່ນໆ ສຳລັບງານພິມ |
 
 ## 4. ເມນູຫຼັກ (Menu Bar)
 
