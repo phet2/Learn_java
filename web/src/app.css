@@ -4095,3 +4095,303 @@ kbd {
 .shots {
   grid-template-columns: 1fr 1fr;
 }
+
+/* ---------- ສູນບົດຮຽນ: ໝວດ → ວິຊາ → ບົດ ---------- */
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 6px;
+  margin: 0 0 8px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.crumbs a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.crumbs a:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+.crumbs [aria-current] {
+  color: var(--text);
+  font-weight: 600;
+}
+.crumbs .sep {
+  opacity: 0.6;
+}
+[data-type='lesson'] .hero-kicker,
+[data-type='course'] .hero-kicker {
+  color: var(--cc, var(--accent));
+}
+.kind {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+.kind .ic {
+  width: 14px;
+  height: 14px;
+}
+.kind-qa {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.kind-exam {
+  background: var(--ok-soft);
+  color: var(--ok);
+}
+
+/* ໜ້າຫຼັກ */
+.cat-jump {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin: 18px -16px 0;
+  padding: 2px 16px 6px;
+}
+.cat-jump a {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.cat-jump .ic {
+  width: 16px;
+  height: 16px;
+  color: var(--primary);
+}
+.cat-jump b {
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-align: center;
+}
+.cat {
+  scroll-margin-top: calc(var(--appbar-h) + 8px);
+}
+.cat-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cat-title > .ic {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  color: var(--primary);
+}
+.cat-title > span {
+  display: grid;
+}
+.cat-title small {
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+.course-card .card-ic,
+.course-ic {
+  background: var(--cc, var(--primary));
+  color: #fff;
+}
+.card-meta {
+  font-size: 0.75rem;
+  color: var(--cc, var(--muted));
+  font-weight: 600;
+}
+.course-card {
+  border-left: 4px solid var(--cc, var(--primary));
+}
+.resume {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--primary);
+  background: var(--primary-soft);
+  color: var(--text);
+  text-decoration: none;
+}
+.resume[hidden] {
+  display: none;
+}
+.resume-ic {
+  flex: none;
+  color: var(--primary);
+}
+.resume-t {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+.resume-t small {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+.resume-t b {
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ໜ້າວິຊາ */
+.course-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.course-head h1 {
+  margin: 0;
+}
+.course-head .hero-kicker {
+  margin: 0;
+}
+.course-ic {
+  flex: none;
+  width: 54px;
+  height: 54px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+}
+.course-ic .ic {
+  width: 28px;
+  height: 28px;
+}
+.course-hero .overall {
+  margin-top: 12px;
+}
+.lesson-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.lesson-n {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--cc, var(--primary));
+  color: #fff;
+  font-weight: 700;
+}
+.lesson-card .card-main {
+  gap: 3px;
+}
+.lesson-card .kind {
+  justify-self: start;
+  width: fit-content;
+}
+.lesson-card.is-done .lesson-n,
+.course-card.is-done .card-ic {
+  background: var(--ok);
+}
+
+/* ບົດກ່ອນ / ຖັດໄປ */
+.pager {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 24px 0 8px;
+}
+.pg {
+  display: grid;
+  gap: 2px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  min-width: 0;
+}
+.pg small {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+.pg b {
+  font-size: 0.86rem;
+  overflow-wrap: anywhere;
+}
+.pg.next {
+  text-align: right;
+  grid-column: 2;
+}
+.pg:hover {
+  border-color: var(--cc, var(--primary));
+}
+
+/* ເມນູ: ມືຖືສະແດງບໍ່ເກີນ 6 · desktop ສະແດງຄົບ + ວິຊາອື່ນ */
+.nav-desk,
+.nav-tree {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .nav-desk {
+    display: flex;
+  }
+  .nav-more-m {
+    display: none;
+  }
+  .nav-tree {
+    display: grid;
+    gap: 4px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .nav-cat {
+    margin: 6px 14px 2px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--muted);
+  }
+  .nav-cat-h {
+    margin-top: 0;
+    text-transform: none;
+  }
+  .nav-course {
+    font-weight: 700;
+    color: var(--text);
+  }
+  .nav-course .ic {
+    color: var(--cc, var(--primary));
+  }
+  .nav-sub {
+    margin-left: 14px;
+    font-size: 0.9rem;
+  }
+}
+.tip > div {
+  min-width: 0;
+}
+.tip b,
+.tip span {
+  overflow-wrap: anywhere;
+}

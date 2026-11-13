@@ -1,0 +1,62 @@
+{
+  "title": "Mobile App Development (Flutter)",
+  "short": "Flutter",
+  "category": "programming",
+  "order": 2,
+  "icon": "phone",
+  "color": "#0277bd",
+  "desc": "ພັດທະນາແອັບມືຖືດ້ວຍ Flutter ແລະ Dart: ແອັບຈັດການນັກສຶກສາ (Provider + SharedPreferences), Firebase ແລະ ຄຳຖາມສອບກາງພາກ 50 ຂໍ້",
+  "plan": [
+    { "t": "ຮຽນ ແອັບຈັດການນັກສຶກສາ", "d": "ອ່ານພື້ນຖານ Dart/Flutter ແລ້ວເປີດແຖບ \"ໂຄ້ດເຕັມ\" ອ່ານໂຄ້ດທີລະໄຟລ໌" },
+    { "t": "ຮຽນ Flutter + Firebase", "d": "Auth, Firestore, Storage — ເນື້ອຫາທີ່ອອກສອບຫຼາຍທີ່ສຸດ" },
+    { "t": "ຝຶກຕອບ ຄຳຖາມກາງພາກ 50 ຂໍ້", "d": "ເປີດໂໝດຝຶກຕອບ ແລ້ວທວນຂໍ້ທີ່ຍັງຈື່ບໍ່ໄດ້ຈົນຄົບ" },
+    { "t": "ທຳ ຂໍ້ສອບລອງທຳ", "d": "ທຳຊ້ຳຈົນໄດ້ 80% ຂຶ້ນໄປ" }
+  ],
+  "resources": [
+    { "t": "ໂປຣເຈັກຈາກສະໄລ", "d": "flutter/student_app/ ໃນ repo — Provider + SharedPreferences" },
+    { "t": "ໂປຣເຈັກເວີຊັນ Firebase", "d": "flutter/student_app_firebase/ ໃນ repo — Auth + Firestore + Storage" }
+  ],
+  "lessons": [
+    {
+      "slug": "student-app",
+      "nav": "ແອັບນັກສຶກສາ",
+      "icon": "phone",
+      "kind": "lesson",
+      "title": "ບົດຮຽນ Flutter: ແອັບຈັດການນັກສຶກສາ",
+      "desc": "ພື້ນຖານ Dart ແລະ Flutter, ທິດສະດີ 4 ຂໍ້, ອະທິບາຍໂຄ້ດ 9 ໄຟລ໌ຈາກສະໄລ ແຕະທີລະແຖວ ແລະ ຈຸດທີ່ຄວນລະວັງ",
+      "quiz": true,
+      "code": "flutter",
+      "legacy": ["/flutter/"]
+    },
+    {
+      "slug": "firebase",
+      "nav": "Firebase",
+      "icon": "cloud",
+      "kind": "lesson",
+      "title": "Flutter + Firebase",
+      "desc": "ຕັ້ງຄ່າ FlutterFire, Authentication, Cloud Firestore, Storage, StreamBuilder ແລະ ປ່ຽນແອັບນັກສຶກສາໃຫ້ໃຊ້ Firestore",
+      "quiz": true,
+      "legacy": ["/firebase/"]
+    },
+    {
+      "slug": "midterm-qa",
+      "nav": "ຄຳຖາມກາງພາກ",
+      "icon": "quiz",
+      "kind": "qa",
+      "title": "ຄຳຖາມຄົ້ນຄວ້າສອບເສັງກາງພາກ (50 ຂໍ້)",
+      "desc": "ຄຳຖາມ 50 ຂໍ້ 5 ໝວດ ພ້ອມຄຳຕອບ ແລະ ຄຳອະທິບາຍເພີ່ມ — ໂຄ້ດທຸກຂໍ້ກວດແລ້ວດ້ວຍ Flutter 3.50 · ມີໂໝດຝຶກຕອບ",
+      "quiz": true,
+      "qa": true,
+      "legacy": ["/flutter-qa/"]
+    },
+    {
+      "slug": "mock-exam",
+      "nav": "ລອງສອບ",
+      "icon": "pen",
+      "kind": "exam",
+      "title": "ຂໍ້ສອບລອງທຳ Flutter",
+      "desc": "ປາລະໄນ 41 ຂໍ້ + ອ່ານໂຄ້ດ 10 ຂໍ້ ກວດໃຫ້ທັນທີ ພ້ອມຄະແນນ · ອັດຕະໄນ 8 ຂໍ້ ພ້ອມຄຳຕອບຕົວຢ່າງ",
+      "legacy": ["/flutter-exam/"]
+    }
+  ]
+}

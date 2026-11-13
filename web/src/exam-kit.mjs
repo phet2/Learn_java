@@ -19,7 +19,7 @@ function permute(n, seed) {
 /**
  * @param {object} cfg
  * @param {string} cfg.key     key ບັນທຶກຄຳຕອບໃນ localStorage (ຕ້ອງບໍ່ຊ້ຳກັນລະຫວ່າງໜ້າ)
- * @param {string} cfg.lesson  path ບົດຮຽນຫຼັກ ເຊັ່ນ '/flutter/' — ref ທີ່ບໍ່ຂຶ້ນຕົ້ນດ້ວຍ '/' ຈະຕໍ່ທ້າຍ path ນີ້
+ * @param {string} cfg.lesson  path ບົດຮຽນຫຼັກ ເຊັ່ນ '/flutter/student-app/' — ref ທີ່ບໍ່ຂຶ້ນຕົ້ນດ້ວຍ '/' ຈະຕໍ່ທ້າຍ path ນີ້
  */
 export function makeExam({ key, lesson }) {
   let seed = 7;

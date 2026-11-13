@@ -1,9 +1,10 @@
 # ບົດຮຽນ Flutter: ແອັບຈັດການນັກສຶກສາ (Provider + SharedPreferences)
 
 > 📱 ບົດຮຽນນີ້ອະທິບາຍແອັບ **"ລະບົບຈັດການນັກສຶກສາ ສະຖາບັນ ເຕັກໂນໂລຊີ ສຸດສະກະ"** ຈາກສະໄລ 24 ໜ້າ — ໂຄ້ດທຸກໄຟລ໌ພິມຄືນ **ກົງກັບສະໄລທຸກແຖວ** (ເລກແຖວຄືກັນ) ເປີດແຖບ **ໂຄ້ດເຕັມ · ແຕະແຖວ** ເພື່ອອ່ານທີລະແຖວ
+>
 > ✅ ກວດແລ້ວດ້ວຍ **Flutter 3.50.0 / Dart 3.14**: `flutter analyze` ບໍ່ມີ error, `flutter build web` ຜ່ານ ແລະ ໜ້າຈໍທີ່ໄດ້ຄືກັບໃນສະໄລ · ໂປຣເຈັກຢູ່ໃນ repo ທີ່ `flutter/student_app/`
 >
-> 📚 ຮຽນຕໍ່: **[Flutter + Firebase](/firebase/)** · **[ຄຳຖາມສອບກາງພາກ 50 ຂໍ້](/flutter-qa/)** · **[ຂໍ້ສອບລອງທຳ](/flutter-exam/)**
+> 📚 ຮຽນຕໍ່: **[Flutter + Firebase](/flutter/firebase/)** · **[ຄຳຖາມສອບກາງພາກ 50 ຂໍ້](/flutter/midterm-qa/)** · **[ຂໍ້ສອບລອງທຳ](/flutter/mock-exam/)**
 
 ## 1. ພາບລວມແອັບ
 
@@ -48,7 +49,7 @@
 
 <!-- include:fl-layers -->
 
-ຫຼັກຖານວ່າແຍກຊັ້ນໄດ້ດີ: ໃນ **[ບົດ Firebase](/firebase/)** ເຮົາປ່ຽນບ່ອນເກັບຂໍ້ມູນຈາກເຄື່ອງເປັນ Cloud ໂດຍແກ້ **ແຕ່ Provider** — ໜ້າຈໍ ແລະ widget ໃຊ້ຄືເກົ່າເກືອບທັງໝົດ
+ຫຼັກຖານວ່າແຍກຊັ້ນໄດ້ດີ: ໃນ **[ບົດ Firebase](/flutter/firebase/)** ເຮົາປ່ຽນບ່ອນເກັບຂໍ້ມູນຈາກເຄື່ອງເປັນ Cloud ໂດຍແກ້ **ແຕ່ Provider** — ໜ້າຈໍ ແລະ widget ໃຊ້ຄືເກົ່າເກືອບທັງໝົດ
 
 ### 2.3 Data Persistence — Local Caching / Key-Value Store
 
@@ -735,7 +736,7 @@ final List<String> majors = const [kAllMajors, ...kMajors];   // ...  = spread (
 
 ### 13.8 ສິ່ງທີ່ຍັງບໍ່ຄົບ
 
-- **`image_picker` ຕິດຕັ້ງແຕ່ບໍ່ໄດ້ໃຊ້** — ຖ້າບໍ່ໃຊ້ຄວນ `flutter pub remove image_picker` (ແອັບໃຫຍ່ຂຶ້ນ ແລະ iOS ຕ້ອງຂໍສິດເຂົ້າຄັງຮູບໂດຍບໍ່ຈຳເປັນ) · ວິທີໃຊ້ຢູ່ໃນ [ບົດ Firebase › Storage](/firebase/#sec-6)
+- **`image_picker` ຕິດຕັ້ງແຕ່ບໍ່ໄດ້ໃຊ້** — ຖ້າບໍ່ໃຊ້ຄວນ `flutter pub remove image_picker` (ແອັບໃຫຍ່ຂຶ້ນ ແລະ iOS ຕ້ອງຂໍສິດເຂົ້າຄັງຮູບໂດຍບໍ່ຈຳເປັນ) · ວິທີໃຊ້ຢູ່ໃນ [ບົດ Firebase › Storage](/flutter/firebase/#sec-6)
 - **ເມນູ "ໂທຫາ" ພຽງສະແດງ SnackBar** — ໂທແທ້ຕ້ອງໃຊ້ package `url_launcher`: `launchUrl(Uri(scheme: 'tel', path: student.phone))`
 - **ຄອມເມັນ `[cite: 9]`** ໃນ `initState` ຫຼົງມາຈາກ AI — ຄວນລຶບ
 - `_saveToPrefs()` ບໍ່ໄດ້ `await` — ຖ້າບັນທຶກລົ້ມເຫຼວ ຜູ້ໃຊ້ບໍ່ຮູ້ (ເຫັນແຕ່ໃນ debug console)

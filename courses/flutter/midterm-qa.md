@@ -1,14 +1,16 @@
 # ຄຳຖາມຄົ້ນຄວ້າສອບເສັງກາງພາກ Flutter (50 ຂໍ້)
 
 > 📄 ຄຳຖາມ ແລະ ຄຳຕອບຈາກເອກະສານ "ຄຳຖາມຄົ້ນຄວ້າສອບເສັງກາງພາກ ສົກຮຽນ 2026-2027" (ແກ້ຄຳພິມຜິດເລັກນ້ອຍ) · **💡 ເພີ່ມເຕີມ** = ຄຳອະທິບາຍທີ່ເພີ່ມໃຫ້ເຂົ້າໃຈເລິກຂຶ້ນ
+>
 > ✅ ໂຄ້ດຄຳຕອບທຸກຂໍ້ຢູ່ໃນ `flutter/student_app_firebase/lib/examples/exam_answers.dart` — ກວດແລ້ວດ້ວຍ `flutter analyze` (Flutter 3.50)
+>
 > ✍️ ເປີດໂໝດ **ຝຶກຕອບ** → ຄິດຄຳຕອບກ່ອນ → ກົດ **ສະແດງຄຳຕອບ** → ປະເມີນ "ຈື່ໄດ້ / ທວນອີກ"
 >
-> 📚 ອ່ານເນື້ອຫາ: **[ບົດຮຽນ Flutter](/flutter/)** · **[Flutter + Firebase](/firebase/)** · ລອງສອບ: **[ຂໍ້ສອບລອງທຳ](/flutter-exam/)**
+> 📚 ອ່ານເນື້ອຫາ: **[ບົດຮຽນ Flutter](/flutter/student-app/)** · **[Flutter + Firebase](/flutter/firebase/)** · ລອງສອບ: **[ຂໍ້ສອບລອງທຳ](/flutter/mock-exam/)**
 
 ## ໝວດທີ 1: ພື້ນຖານ Flutter, CLI, ການຕັ້ງຄ່າ Project ແລະ Lifecycle
 
-ຂໍ້ 1–10 · ເນື້ອຫາໃນ [ບົດ Flutter ຫົວຂໍ້ 3–5](/flutter/#sec-3) ແລະ [ບົດ Firebase ຫົວຂໍ້ 2](/firebase/#sec-2)
+ຂໍ້ 1–10 · ເນື້ອຫາໃນ [ບົດ Flutter ຫົວຂໍ້ 3–5](/flutter/student-app/#sec-3) ແລະ [ບົດ Firebase ຫົວຂໍ້ 2](/flutter/firebase/#sec-2)
 
 ## ຂໍ້ 1. ຄຳສັ່ງໃດໃນ Command Line ທີ່ໃຊ້ສຳລັບສ້າງ Project Flutter ໃໝ່?
 
@@ -22,7 +24,7 @@ flutter create <project_name>
 
 ໃຊ້ສຳລັບ **ຈັດການ Dependencies** (Package/Library ຕ່າງໆທີ່ໃຊ້ໃນ Project), **ກຳນົດ Version ຂອງແອັບ**, **ຕັ້ງຄ່າ Assets** (ຮູບພາບ, Fonts) ແລະ ການຕັ້ງຄ່າກ່ຽວກັບ Project
 
-💡 **ເພີ່ມເຕີມ:** ແກ້ pubspec.yaml ແລ້ວຕ້ອງ `flutter pub get` · `^2.2.2` = ເວີຊັນ 2.2.2 ຂຶ້ນໄປແຕ່ຕ່ຳກວ່າ 3.0.0 · `version: 1.0.0+1` = ຊື່ເວີຊັນ + build number — [ອ່ານເພີ່ມ](/flutter/#sec-5-2)
+💡 **ເພີ່ມເຕີມ:** ແກ້ pubspec.yaml ແລ້ວຕ້ອງ `flutter pub get` · `^2.2.2` = ເວີຊັນ 2.2.2 ຂຶ້ນໄປແຕ່ຕ່ຳກວ່າ 3.0.0 · `version: 1.0.0+1` = ຊື່ເວີຊັນ + build number — [ອ່ານເພີ່ມ](/flutter/student-app/#sec-5-2)
 
 ## ຂໍ້ 3. ໄຟລ໌ຄອນຟິກຂອງ Android (google-services.json) ແລະ iOS (GoogleService-Info.plist) ທີ່ໄດ້ຈາກ Firebase Console ຕ້ອງເອົາໄປວາງໄວ້ຢູ່ Folder ໃດຂອງ Project?
 
@@ -31,7 +33,7 @@ flutter create <project_name>
 | Android | `google-services.json` | `android/app/` |
 | iOS | `GoogleService-Info.plist` | `ios/Runner/` (ຜ່ານ Xcode) |
 
-💡 **ເພີ່ມເຕີມ:** ຖ້າໃຊ້ `flutterfire configure` ເຄື່ອງມືຈະຈັດການໃຫ້ອັດຕະໂນມັດ — [ອ່ານເພີ່ມ](/firebase/#sec-2-3)
+💡 **ເພີ່ມເຕີມ:** ຖ້າໃຊ້ `flutterfire configure` ເຄື່ອງມືຈະຈັດການໃຫ້ອັດຕະໂນມັດ — [ອ່ານເພີ່ມ](/flutter/firebase/#sec-2-3)
 
 ## ຂໍ້ 4. ໃນການເລີ່ມຕົ້ນຕັ້ງຄ່າ Flutter ໃຫ້ເຮັດວຽກຮ່ວມກັບ Firebase ເວີຊັນປັດຈຸບັນ ເຄື່ອງມື CLI ໃດທີ່ນິຍົມໃຊ້ສ້າງໄຟລ໌ firebase_options.dart?
 
@@ -65,7 +67,7 @@ Future<void> main() async {
 
 **`initState()`**
 
-💡 **ເພີ່ມເຕີມ:** ຕ້ອງເອີ້ນ `super.initState()` ເປັນແຖວທຳອິດ · ໃຊ້ສ້າງ controller, ເລີ່ມຟັງ Stream, ຕັ້ງຄ່າເລີ່ມຕົ້ນ — [ເບິ່ງແຜນພາບ Lifecycle](/flutter/#sec-4-3)
+💡 **ເພີ່ມເຕີມ:** ຕ້ອງເອີ້ນ `super.initState()` ເປັນແຖວທຳອິດ · ໃຊ້ສ້າງ controller, ເລີ່ມຟັງ Stream, ຕັ້ງຄ່າເລີ່ມຕົ້ນ — [ເບິ່ງແຜນພາບ Lifecycle](/flutter/student-app/#sec-4-3)
 
 ## ຂໍ້ 8. Lifecycle function ໃດທີ່ຖືກເອີ້ນໃຊ້ງານເມື່ອ Widget ຖືກທຳລາຍ ຫຼື ຖອດອອກຈາກ Widget Tree?
 
@@ -96,7 +98,7 @@ void dispose() {
 
 ## ໝວດທີ 2: Firebase Authentication ແລະ State Management
 
-ຂໍ້ 11–20 · ເນື້ອຫາໃນ [ບົດ Firebase ຫົວຂໍ້ 3](/firebase/#sec-3)
+ຂໍ້ 11–20 · ເນື້ອຫາໃນ [ບົດ Firebase ຫົວຂໍ້ 3](/flutter/firebase/#sec-3)
 
 ## ຂໍ້ 11. Package ໃດໃນ Flutter ທີ່ຈຳເປັນຕ້ອງຕິດຕັ້ງເພື່ອໃຊ້ງານ System Authentication ຂອງ Firebase?
 
@@ -151,7 +153,7 @@ await cred.user?.sendEmailVerification();
 
 ຊ່ວຍໃຫ້ **ການແບ່ງປັນສະຖານະ (State) ຂອງ User ໄປທົ່ວທັງແອັບເປັນລະບຽບ**, **ຫຼຸດຜ່ອນການສົ່ງຄ່າຜ່ານ constructor ທີລະຊັ້ນ (Prop Drilling)** ແລະ ເຮັດໃຫ້ **UI ອັບເດດ (Rebuild) ອັດຕະໂນມັດທັນທີ** ເມື່ອຜູ້ໃຊ້ Login ຫຼື Logout
 
-💡 **ເພີ່ມເຕີມ:** ໃນແອັບນັກສຶກສາເວີຊັນ Firebase, `StudentProvider` ຟັງ `authStateChanges()` — Logout ແລ້ວລ້າງຂໍ້ມູນໃຫ້ເອງ ຜູ້ໃຊ້ຄົນຕໍ່ໄປບໍ່ເຫັນຂໍ້ມູນເກົ່າ — [ອ່ານເພີ່ມ](/firebase/#sec-3-5)
+💡 **ເພີ່ມເຕີມ:** ໃນແອັບນັກສຶກສາເວີຊັນ Firebase, `StudentProvider` ຟັງ `authStateChanges()` — Logout ແລ້ວລ້າງຂໍ້ມູນໃຫ້ເອງ ຜູ້ໃຊ້ຄົນຕໍ່ໄປບໍ່ເຫັນຂໍ້ມູນເກົ່າ — [ອ່ານເພີ່ມ](/flutter/firebase/#sec-3-5)
 
 ## ຂໍ້ 19. Widget ໃດທີ່ເໝາະສົມທີ່ສຸດໃນການໃຊ້ສັບປ່ຽນໜ້າຈໍ Login ແລະ ໜ້າ Main App ຕາມສະຖານະ Authentication ທີ່ໄດ້ຈາກ Stream?
 
@@ -176,13 +178,13 @@ StreamBuilder<User?>(
 
 ## ໝວດທີ 3: Cloud Firestore (NoSQL Document Database)
 
-ຂໍ້ 21–35 · ເນື້ອຫາໃນ [ບົດ Firebase ຫົວຂໍ້ 4](/firebase/#sec-4)
+ຂໍ້ 21–35 · ເນື້ອຫາໃນ [ບົດ Firebase ຫົວຂໍ້ 4](/flutter/firebase/#sec-4)
 
 ## ຂໍ້ 21. Cloud Firestore ມີໂຄງສ້າງ (Structure) ການເກັບຂໍ້ມູນຫຼັກໆເປັນແບບໃດ?
 
 ເປັນແບບ **Document-based / Collection-based (NoSQL)** — ຂໍ້ມູນເກັບເປັນ **Document** (ຮູບແບບ JSON / Key-Value) ໄວ້ໃນ **Collection** ແລະ ພາຍໃນ Document ສາມາດມີ **Sub-collection** ໄດ້ອີກ
 
-💡 **ເພີ່ມເຕີມ:** Collection → Document → Field — [ເບິ່ງແຜນພາບ](/firebase/#sec-4-1)
+💡 **ເພີ່ມເຕີມ:** Collection → Document → Field — [ເບິ່ງແຜນພາບ](/flutter/firebase/#sec-4-1)
 
 ## ຂໍ້ 22. ຂໍ້ມູນປະເພດໃດແດ່ທີ່ສາມາດເກັບລົງໃນ Document ຂອງ Cloud Firestore ໄດ້?
 
@@ -194,7 +196,7 @@ String, Number (Integer / Double), Boolean, Array, Map (Nested objects), Null, T
 
 **ຂໍ້ດີ / ຄວາມແຕກຕ່າງ:** ຍືດຫຍຸ່ນສູງ (**Schemaless** — ບໍ່ຈຳເປັນຕ້ອງກຳນົດໂຄງສ້າງຕາຕະລາງລ່ວງໜ້າ), ຂະຫຍາຍລະບົບງ່າຍ (**Scalability**), ຮອງຮັບ **Real-time sync** ໄດ້ດີຫຼາຍ — ແຕ່ **ບໍ່ເໝາະກັບ Query ທີ່ຊັບຊ້ອນຫຼາຍຕາຕະລາງ** (JOIN ໂດຍກົງຄື SQL ບໍ່ໄດ້)
 
-💡 **ເພີ່ມເຕີມ:** ຍັງໃຊ້ offline ໄດ້ ແລະ ຄິດເງິນຕາມຈຳນວນອ່ານ/ຂຽນ — [ເບິ່ງຕາຕະລາງທຽບ](/firebase/#sec-4-2)
+💡 **ເພີ່ມເຕີມ:** ຍັງໃຊ້ offline ໄດ້ ແລະ ຄິດເງິນຕາມຈຳນວນອ່ານ/ຂຽນ — [ເບິ່ງຕາຕະລາງທຽບ](/flutter/firebase/#sec-4-2)
 
 ## ຂໍ້ 24. ການເພີ່ມຂໍ້ມູນໃໝ່ລົງໃນ Collection ໂດຍໃຊ້ .add() ແລະ ການໃຊ້ .doc(id).set() ມີຄວາມແຕກຕ່າງກັນແນວໃດ?
 
@@ -277,11 +279,11 @@ for (var doc in snapshot.docs) {
 
 ອະນຸຍາດໃຫ້ຜູ້ໃຊ້ **ອ່ານ (Read) ແລະ ຂຽນ (Write)** ຂໍ້ມູນໄດ້ **ກໍຕໍ່ເມື່ອຜູ້ໃຊ້ນັ້ນໄດ້ Login ເຂົ້າສູ່ລະບົບແລ້ວເທົ່ານັ້ນ** (ປ້ອງກັນບໍ່ໃຫ້ຄົນທີ່ບໍ່ໄດ້ Login ເຂົ້າມາແກ້ໄຂຂໍ້ມູນ)
 
-💡 **ເພີ່ມເຕີມ:** ທຸກຄົນທີ່ Login ຍັງແກ້ຂໍ້ມູນຂອງຄົນອື່ນໄດ້ — ຖ້າຢາກໃຫ້ແກ້ໄດ້ແຕ່ຂອງຕົນເອງ ໃຊ້ `request.auth.uid == userId` — [ອ່ານເພີ່ມ](/firebase/#sec-4-8)
+💡 **ເພີ່ມເຕີມ:** ທຸກຄົນທີ່ Login ຍັງແກ້ຂໍ້ມູນຂອງຄົນອື່ນໄດ້ — ຖ້າຢາກໃຫ້ແກ້ໄດ້ແຕ່ຂອງຕົນເອງ ໃຊ້ `request.auth.uid == userId` — [ອ່ານເພີ່ມ](/flutter/firebase/#sec-4-8)
 
 ## ໝວດທີ 4: Firebase Storage ແລະ Async Widgets (StreamBuilder / FutureBuilder)
 
-ຂໍ້ 36–42 · ເນື້ອຫາໃນ [ບົດ Firebase ຫົວຂໍ້ 5–6](/firebase/#sec-5)
+ຂໍ້ 36–42 · ເນື້ອຫາໃນ [ບົດ Firebase ຫົວຂໍ້ 5–6](/flutter/firebase/#sec-5)
 
 ## ຂໍ້ 36. Firebase Storage ໃຊ້ສຳລັບຈັດເກັບຂໍ້ມູນປະເພດໃດເປັນຫຼັກ?
 
@@ -291,7 +293,7 @@ for (var doc in snapshot.docs) {
 
 **`firebase_storage`**
 
-💡 **ເພີ່ມເຕີມ:** ມັກໃຊ້ຄູ່ກັບ `image_picker` ເພື່ອເລືອກຮູບຈາກຄັງຮູບ ຫຼື ກ້ອງ — [ເບິ່ງໂຄ້ດ](/firebase/#sec-6)
+💡 **ເພີ່ມເຕີມ:** ມັກໃຊ້ຄູ່ກັບ `image_picker` ເພື່ອເລືອກຮູບຈາກຄັງຮູບ ຫຼື ກ້ອງ — [ເບິ່ງໂຄ້ດ](/flutter/firebase/#sec-6)
 
 ## ຂໍ້ 38. ຫາກຕ້ອງການດຶງ URL ຂອງຮູບພາບຈາກ Firebase Storage ມາສະແດງໃນ Widget Image ຂອງ Flutter ຕ້ອງໃຊ້ Method ໃດ?
 
@@ -374,7 +376,7 @@ StreamBuilder<QuerySnapshot>(
 
 `data.length` ມີຄ່າ **0** ດັ່ງນັ້ນ `ListView.builder` ຈະສ້າງ **List ທີ່ວ່າງເປົ່າ** — ບໍ່ສະແດງ item ໃດໆ **ແຕ່ແອັບບໍ່ພັງ (ບໍ່ Error)**
 
-💡 **ເພີ່ມເຕີມ:** UX ທີ່ດີຄວນກວດ `if (data.isEmpty) return Text('ຍັງບໍ່ມີສິນຄ້າ');` — ຄືກັບ `EmptyStateWidget` ໃນ[ແອັບນັກສຶກສາ](/flutter/#sec-11-4)
+💡 **ເພີ່ມເຕີມ:** UX ທີ່ດີຄວນກວດ `if (data.isEmpty) return Text('ຍັງບໍ່ມີສິນຄ້າ');` — ຄືກັບ `EmptyStateWidget` ໃນ[ແອັບນັກສຶກສາ](/flutter/student-app/#sec-11-4)
 
 ## ຂໍ້ 46. ຈາກໂຄ້ດ Function ລຸ່ມນີ້ ຟັງຊັນນີ້ໃຊ້ເຮັດວຽກຫຍັງ?
 
@@ -429,7 +431,7 @@ Future<void> signInWithEmail(String email, String password) async {
 }
 ```
 
-💡 **ເພີ່ມເຕີມ:** `on FirebaseAuthException` ຈັບ error ຂອງ Firebase ສະເພາະ (ມີ `e.code` ເຊັ່ນ `invalid-credential`) · `catch (e)` ທ້າຍສຸດຈັບ error ອື່ນທັງໝົດ · ໃນແອັບຈິງໃຊ້ SnackBar ແທນ print — [ເບິ່ງຕາຕະລາງ e.code](/firebase/#sec-3-2)
+💡 **ເພີ່ມເຕີມ:** `on FirebaseAuthException` ຈັບ error ຂອງ Firebase ສະເພາະ (ມີ `e.code` ເຊັ່ນ `invalid-credential`) · `catch (e)` ທ້າຍສຸດຈັບ error ອື່ນທັງໝົດ · ໃນແອັບຈິງໃຊ້ SnackBar ແທນ print — [ເບິ່ງຕາຕະລາງ e.code](/flutter/firebase/#sec-3-2)
 
 ## ຂໍ້ 50. ຈົ່ງຂຽນຄຳສັ່ງ Firestore Query ເພື່ອດຶງຂໍ້ມູນຈາກ Collection orders: ຄັດກອງເອົາສະເພາະ status == 'pending', ຈັດລຽງຕາມ created_at ຈາກໃໝ່ຫາເກົ່າ ແລະ ຈຳກັດການດຶງພຽງ 10 ລາຍການ
 

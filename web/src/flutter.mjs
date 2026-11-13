@@ -110,7 +110,7 @@ const fbAuthFlow = () => `<figure class="diagram">
 // ---------------------------------------------------------------- ຂໍ້ສອບລອງທຳ Flutter
 // a = ດັດຊະນີຄຳຕອບທີ່ຖືກ (ເລີ່ມຈາກ 0) · ref = ຫົວຂໍ້ໃນບົດຮຽນ (ບໍ່ມີ '/' ນຳໜ້າ = ໜ້າ /flutter/)
 
-const F = '/firebase/#';
+const F = '/flutter/firebase/#';
 
 export const MCQ = [
   { q: 'ຄຳສັ່ງໃດໃຊ້ສ້າງໂປຣເຈັກ Flutter ໃໝ່?', o: ['flutter create ຊື່ໂປຣເຈັກ', 'flutter new ຊື່ໂປຣເຈັກ', 'flutter init ຊື່ໂປຣເຈັກ', 'dart create app'], a: 0, e: 'flutter create student_app', ref: 'sec-5-1' },
@@ -189,15 +189,15 @@ export const CODEQ = [
   },
   {
     qHtml: `ໂຄ້ດນີ້ເຮັດຫຍັງ?${code("StreamBuilder<QuerySnapshot>(\n  stream: FirebaseFirestore.instance.collection('products').snapshots(),\n  builder: (context, snapshot) {\n    if (snapshot.hasError) return Text('Something went wrong');\n    if (snapshot.connectionState == ConnectionState.waiting) {\n      return CircularProgressIndicator();\n    }\n    final data = snapshot.data!.docs;\n    return ListView.builder(\n      itemCount: data.length,\n      itemBuilder: (context, i) => ListTile(title: Text(data[i]['name'])),\n    );\n  },\n)")}`,
-    o: ['ສະແດງລາຍຊື່ສິນຄ້າຈາກ Firestore ແບບ Realtime', 'ດຶງສິນຄ້າຄັ້ງດຽວ', 'ເພີ່ມສິນຄ້າ', 'ລຶບສິນຄ້າ'], a: 0, e: '.snapshots() + StreamBuilder = ອັບເດດທັນທີເມື່ອຂໍ້ມູນປ່ຽນ', ref: '/flutter-qa/#q-43',
+    o: ['ສະແດງລາຍຊື່ສິນຄ້າຈາກ Firestore ແບບ Realtime', 'ດຶງສິນຄ້າຄັ້ງດຽວ', 'ເພີ່ມສິນຄ້າ', 'ລຶບສິນຄ້າ'], a: 0, e: '.snapshots() + StreamBuilder = ອັບເດດທັນທີເມື່ອຂໍ້ມູນປ່ຽນ', ref: '/flutter/midterm-qa/#q-43',
   },
   {
     qHtml: `ຖ້າ Document <code>docId</code> ບໍ່ມີຢູ່ ຜົນຈະເປັນແນວໃດ?${code("try {\n  await FirebaseFirestore.instance.collection('users')\n      .doc(docId).update({'age': newAge});\n  print('Updated successfully');\n} catch (e) {\n  print('Error updating: $e');\n}")}`,
-    o: ['ພິມ "Error updating: ..." ເພາະ update ຕ້ອງມີ Document', 'ພິມ "Updated successfully"', 'ສ້າງ Document ໃໝ່', 'ແອັບ crash'], a: 0, e: 'update() ໂຍນ not-found → ເຂົ້າ catch', ref: '/flutter-qa/#q-47',
+    o: ['ພິມ "Error updating: ..." ເພາະ update ຕ້ອງມີ Document', 'ພິມ "Updated successfully"', 'ສ້າງ Document ໃໝ່', 'ແອັບ crash'], a: 0, e: 'update() ໂຍນ not-found → ເຂົ້າ catch', ref: '/flutter/midterm-qa/#q-47',
   },
   {
     qHtml: `Query ນີ້ດຶງຂໍ້ມູນຫຍັງ?${code(".collection('orders')\n.where('status', isEqualTo: 'pending')\n.orderBy('created_at', descending: true)\n.limit(10)\n.get();")}`,
-    o: ['10 ອໍເດີ pending ທີ່ໃໝ່ທີ່ສຸດ ດຶງຄັ້ງດຽວ', '10 ອໍເດີທຳອິດທັງໝົດ', 'ອໍເດີ pending ທັງໝົດແບບ Realtime', 'ອໍເດີ pending ເກົ່າສຸດ 10 ລາຍການ'], a: 0, e: 'descending: true = ໃໝ່→ເກົ່າ · .get() = ຄັ້ງດຽວ', ref: '/flutter-qa/#q-50',
+    o: ['10 ອໍເດີ pending ທີ່ໃໝ່ທີ່ສຸດ ດຶງຄັ້ງດຽວ', '10 ອໍເດີທຳອິດທັງໝົດ', 'ອໍເດີ pending ທັງໝົດແບບ Realtime', 'ອໍເດີ pending ເກົ່າສຸດ 10 ລາຍການ'], a: 0, e: 'descending: true = ໃໝ່→ເກົ່າ · .get() = ຄັ້ງດຽວ', ref: '/flutter/midterm-qa/#q-50',
   },
 ];
 
@@ -207,12 +207,12 @@ export const WRITTEN = [
   { q: 'ອະທິບາຍຂັ້ນຕອນທີ່ loadStudents() ອ່ານຂໍ້ມູນ ແລະ _saveToPrefs() ບັນທຶກຂໍ້ມູນ', a: ['SharedPreferences.getInstance() → getString(key)', 'ມີຂໍ້ມູນ: json.decode → map(fromMap) → List', 'ບໍ່ມີ (null): ໃຊ້ຂໍ້ມູນຕົວຢ່າງ 4 ຄົນ ແລ້ວບັນທຶກ', 'ບັນທຶກ: map(toMap) → json.encode → setString', 'ຈົບດ້ວຍ notifyListeners() · ຫໍ່ try-catch'], ref: 'sec-7-4' },
   { q: 'ໜ້າ StudentFormScreen ໃຊ້ສຳລັບທັງ "ເພີ່ມ" ແລະ "ແກ້ໄຂ" ໄດ້ແນວໃດ?', a: ['ຮັບ StudentModel? student (ອາດເປັນ null)', 'null = ໂໝດເພີ່ມ · ມີຄ່າ = ໂໝດແກ້ໄຂ', 'initState ເຕີມຄ່າເດີມ ດ້ວຍ widget.student?.x ?? ຄ່າເລີ່ມຕົ້ນ', '_saveForm: null → addStudent (id ໃໝ່ຈາກເວລາ) · ບໍ່ null → updateStudent(copyWith)', 'ຫົວຂໍ້ AppBar ປ່ຽນຕາມ isEditing'], ref: 'sec-10' },
   { q: 'ຊີ້ບັນຫາ 3 ຂໍ້ໃນໂຄ້ດສະໄລ ແລະ ວິທີແກ້', a: ['ປ້ອນຕົວເລກຜິດ → parse error: ໃຊ້ tryParse ໃນ validator + ກວດຂອບເຂດ', 'ປັດລຶບທັນທີ: ເພີ່ມ confirmDismiss + SnackBar Undo', 'getter students ຄຳນວນຊ້ຳ: ເກັບໃສ່ຕົວປ່ຽນຄັ້ງດຽວ', '(ອື່ນໆ) ຈັດລຽງຊື່ລາວ, ບໍ່ມີຊ່ອງອີເມວ, ລາຍຊື່ສາຂາຊ້ຳ 2 ໄຟລ໌, API deprecated'], ref: 'sec-13' },
-  { q: 'ຂຽນ Function Sign In ດ້ວຍ Email & Password ພ້ອມ try-catch', a: ['Future<void> signIn(String email, String password) async { ... }', 'await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password)', 'on FirebaseAuthException catch (e) → ແຈ້ງ e.message / e.code', 'catch (e) → error ອື່ນ'], ref: '/flutter-qa/#q-49' },
+  { q: 'ຂຽນ Function Sign In ດ້ວຍ Email & Password ພ້ອມ try-catch', a: ['Future<void> signIn(String email, String password) async { ... }', 'await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password)', 'on FirebaseAuthException catch (e) → ແຈ້ງ e.message / e.code', 'catch (e) → error ອື່ນ'], ref: '/flutter/midterm-qa/#q-49' },
   { q: 'ອະທິບາຍວ່າຈະປ່ຽນແອັບນັກສຶກສາຈາກ SharedPreferences ເປັນ Cloud Firestore ແນວໃດ', a: ['ຕັ້ງຄ່າ Firebase: flutterfire configure + Firebase.initializeApp ໃນ main', 'ແກ້ແຕ່ StudentProvider (ຊື່ method ຄືເກົ່າ) — UI ບໍ່ຕ້ອງແກ້', 'Read: collection(\'students\').snapshots().listen → fromMap({...doc.data(), \'id\': doc.id})', 'Create .add() · Update .doc(id).update() · Delete .doc(id).delete()', 'ຕັ້ງ Security Rules + Login ກ່ອນເຂົ້າເຖິງຂໍ້ມູນ'], ref: F + 'sec-7' },
   { q: 'ທຽບ FutureBuilder ກັບ StreamBuilder ແລະ ບອກ property ສຳຄັນຂອງ AsyncSnapshot', a: ['FutureBuilder = Future ຄ່າດຽວ (ເຊັ່ນ .get())', 'StreamBuilder = Stream ຫຼາຍຄ່າ rebuild ທຸກຄັ້ງທີ່ມີຂໍ້ມູນໃໝ່ (ເຊັ່ນ .snapshots(), authStateChanges())', 'connectionState == waiting → ສະແດງ loading', 'hasError / error → ສະແດງ error + ປຸ່ມລອງໃໝ່', 'hasData / data → ຂໍ້ມູນຈິງ'], ref: F + 'sec-5' },
 ];
 
-const exam = makeExam({ key: 'flmock', lesson: '/flutter/' });
+const exam = makeExam({ key: 'flmock', lesson: '/flutter/student-app/' });
 export const TOTAL_AUTO = MCQ.length + CODEQ.length;
 
 // ---------------------------------------------------------------- include → HTML

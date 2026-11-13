@@ -87,7 +87,7 @@ export const TOTAL_AUTO = MCQ.length + ICONQ.length;
 // ---------------------------------------------------------------- HTML
 
 // ສັບລຳດັບຕົວເລືອກແບບຄົງທີ່ຕອນ build (browser ຈະສັບໃໝ່ອີກຄັ້ງຕອນເປີດໜ້າ)
-const exam = makeExam({ key: 'aimock', lesson: '/illustrator/' });
+const exam = makeExam({ key: 'aimock', lesson: '/illustrator/basics/' });
 
 export function mcqHtml() {
   return exam.list(MCQ, 'A');

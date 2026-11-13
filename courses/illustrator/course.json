@@ -1,0 +1,35 @@
+{
+  "title": "Adobe Illustrator 2025",
+  "short": "Illustrator",
+  "category": "design",
+  "order": 1,
+  "icon": "vector",
+  "color": "#c2570c",
+  "desc": "ໜ້າຈໍຈຳລອງແຕະເບິ່ງໄດ້: Workspace (Essentials Classic), ເຄື່ອງມືທຸກອັນ, Panels, ເມນູ, New Document, ທິດສະດີ Vector/Raster ແລະ ຂໍ້ສອບລອງທຳ",
+  "plan": [
+    { "t": "ຮຽນບົດ 1–3", "d": "ແຕະໜ້າຈໍຈຳລອງ ແລະ Toolbar ທີລະອັນ" },
+    { "t": "ຝຶກບົດ 7–8", "d": "ເປີດໂໝດຝຶກຕອບ ທາຍຊື່ເຄື່ອງມືຈາກໄອຄອນ" },
+    { "t": "ທຳ ຂໍ້ສອບລອງທຳ", "d": "ທຳຊ້ຳຈົນໄດ້ 80% ຂຶ້ນໄປ" }
+  ],
+  "lessons": [
+    {
+      "slug": "basics",
+      "nav": "ບົດຮຽນ",
+      "icon": "vector",
+      "kind": "lesson",
+      "title": "ບົດຮຽນ Adobe Illustrator 2025",
+      "desc": "ໜ້າຈໍຈຳລອງ ແຕະເບິ່ງໄດ້: Workspace, ເຄື່ອງມືທຸກອັນ, Panels, ເມນູ, New Document, ທິດສະດີ ແລະ ຝຶກຕອບ",
+      "quiz": true,
+      "legacy": ["/illustrator/"]
+    },
+    {
+      "slug": "mock-exam",
+      "nav": "ລອງສອບ",
+      "icon": "pen",
+      "kind": "exam",
+      "title": "ຂໍ້ສອບລອງທຳ Illustrator",
+      "desc": "ປາລະໄນ 48 ຂໍ້ + ທາຍໄອຄອນ 10 ຂໍ້ ກວດໃຫ້ທັນທີ ພ້ອມຄະແນນ · ອັດຕະໄນ 10 ຂໍ້ ພ້ອມຄຳຕອບຕົວຢ່າງ",
+      "legacy": ["/ai-exam/"]
+    }
+  ]
+}

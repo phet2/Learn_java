@@ -1,10 +1,12 @@
 # Flutter + Firebase
 
 > 🔥 ຄຳຖາມສອບກາງພາກ **ປະມານ 38 ຈາກ 50 ຂໍ້ເປັນເລື່ອງ Firebase** ແຕ່ແອັບໃນສະໄລຍັງບໍ່ໄດ້ໃຊ້ — ບົດນີ້ເພີ່ມເຂົ້າມາໃຫ້ຄົບ ໂດຍໃຊ້ **ແອັບນັກສຶກສາເດີມ** ເປັນຕົວຢ່າງ
+>
 > ✅ ໂຄ້ດທັງໝົດຢູ່ໃນ `flutter/student_app_firebase/` — `flutter analyze` ບໍ່ມີ error ແລະ **ທົດສອບຈິງກັບ Firebase Emulator**: ສະໝັກ → ເພີ່ມນັກສຶກສາ → Logout → Login ໃໝ່ຂໍ້ມູນຍັງຢູ່ → ປັດລຶບ + ຢືນຢັນ → Undo ຜ່ານທຸກຂັ້ນ
+>
 > ℹ️ ເວີຊັນ package ທີ່ໃຊ້: `firebase_core` 5.1 · `firebase_auth` 7.0 · `cloud_firestore` 7.1 · `firebase_storage` 14.0 — ຊື່ method ທຸກອັນຄືກັບເວີຊັນເກົ່າ (5.x / 4.x) ທີ່ອາຈານອາດໃຊ້
 >
-> ⬅️ ຮຽນພື້ນຖານແອັບກ່ອນທີ່ **[ບົດຮຽນ Flutter](/flutter/)**
+> ⬅️ ຮຽນພື້ນຖານແອັບກ່ອນທີ່ **[ບົດຮຽນ Flutter](/flutter/student-app/)**
 
 ## 1. Firebase ແມ່ນຫຍັງ
 
@@ -374,7 +376,7 @@ match /students/{fileName} {
 
 ## 7. ປ່ຽນແອັບນັກສຶກສາໃຫ້ໃຊ້ Firestore
 
-ຍ້ອນແອັບແຍກຊັ້ນໄວ້ດີ ([Separation of Concerns](/flutter/#sec-2-2)) — **ແກ້ແຕ່ `StudentProvider`** ໂດຍຮັກສາຊື່ method ຄືເກົ່າ ໜ້າຈໍ ແລະ widget ໃຊ້ຕໍ່ໄດ້ທັນທີ
+ຍ້ອນແອັບແຍກຊັ້ນໄວ້ດີ ([Separation of Concerns](/flutter/student-app/#sec-2-2)) — **ແກ້ແຕ່ `StudentProvider`** ໂດຍຮັກສາຊື່ method ຄືເກົ່າ ໜ້າຈໍ ແລະ widget ໃຊ້ຕໍ່ໄດ້ທັນທີ
 
 | ໜ້າທີ່ | SharedPreferences (ສະໄລ) | Cloud Firestore |
 |---|---|---|
@@ -424,7 +426,7 @@ void dispose() {          // ຍົກເລີກ subscription ກັນ memory
 - ບໍ່ຕ້ອງເອີ້ນ `notifyListeners()` ຫຼັງ add/update/delete — Firestore ອັບເດດ cache ໃນເຄື່ອງທັນທີ (Latency Compensation) ແລ້ວ listener ຍິງເອງ ⇒ ໜ້າຈໍປ່ຽນທັນທີແມ້ເນັດຊ້າ
 - ເພີ່ມ `isLoading` / `error` ໃຫ້ໜ້າລາຍການສະແດງ loading ແລະ ຂໍ້ຄວາມ error
 
-**ສິ່ງອື່ນທີ່ປ່ຽນ:** `main.dart` (Firebase.initializeApp + `home: AuthGate()`), ເພີ່ມ `LoginScreen`, ປຸ່ມ **ອອກຈາກລະບົບ** ໃນ AppBar ແລະ ລວມການແກ້ບັນຫາທັງໝົດໃນ [ຫົວຂໍ້ 13 ຂອງບົດ Flutter](/flutter/#sec-13) — ເບິ່ງລາຍລະອຽດໃນ `flutter/student_app_firebase/README.md`
+**ສິ່ງອື່ນທີ່ປ່ຽນ:** `main.dart` (Firebase.initializeApp + `home: AuthGate()`), ເພີ່ມ `LoginScreen`, ປຸ່ມ **ອອກຈາກລະບົບ** ໃນ AppBar ແລະ ລວມການແກ້ບັນຫາທັງໝົດໃນ [ຫົວຂໍ້ 13 ຂອງບົດ Flutter](/flutter/student-app/#sec-13) — ເບິ່ງລາຍລະອຽດໃນ `flutter/student_app_firebase/README.md`
 
 ## 8. ⚠️ ຂໍ້ຜິດພາດທີ່ພົບເລື້ອຍ
 
