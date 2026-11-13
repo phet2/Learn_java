@@ -1,4 +1,4 @@
-/* ເວັບທົບທວນ Java — ການເຮັດວຽກຝັ່ງ browser */
+/* ສູນບົດຮຽນ — ການເຮັດວຽກຝັ່ງ browser */
 (function () {
   'use strict';
 
@@ -24,6 +24,33 @@
   function saveRaw(key, value) {
     try { localStorage.setItem(P + key, value); } catch (e) { /* ບໍ່ເປັນຫຍັງ */ }
   }
+
+  // ---------------------------------------------------------------- ຍ້າຍຂໍ້ມູນຈາກລິ້ງເກົ່າ (ຄັ້ງດຽວ)
+  // ກ່ອນແຍກວິຊາ ໜ້າໃຊ້ key ເຊັ່ນ "login" · ຕອນນີ້ເປັນ "java/login"
+  (function migrate() {
+    if (load('mig', 0) >= 2) return;
+    var MAP = {
+      summary: 'java/summary', login: 'java/login', product: 'java/product', exam: 'java/exam',
+      illustrator: 'illustrator/basics', 'ai-exam': 'illustrator/mock-exam',
+      flutter: 'flutter/student-app', firebase: 'flutter/firebase', 'flutter-qa': 'flutter/midterm-qa', 'flutter-exam': 'flutter/mock-exam',
+    };
+    var move = function (obj, bareTo) {
+      var out = {};
+      Object.keys(obj).forEach(function (k) {
+        var i = k.indexOf('/');
+        var head = i < 0 ? '' : k.slice(0, i);
+        if (i >= 0 && MAP[head]) out[MAP[head] + k.slice(i)] = obj[k];
+        else if (i < 0 && bareTo) out[bareTo + '/' + k] = obj[k]; // ຄະແນນໜ້າ exam ເກົ່າເກັບແບບບໍ່ມີຊື່ໜ້າ
+        else out[k] = obj[k];
+      });
+      return out;
+    };
+    save('read', move(load('read', {}), null));
+    save('grade', move(load('grade', {}), 'java/exam'));
+    var cf = load('cfile:flutter', null);
+    if (cf !== null) save('cfile:flutter/student-app', cf);
+    save('mig', 2);
+  })();
 
   var readState = load('read', {});
   var gradeState = load('grade', {});
@@ -162,11 +189,12 @@
   });
 
   // ---------------------------------------------------------------- self grading (ໜ້າຂໍ້ສອບ)
+  function gk(id) { return slug + '/' + id; }
   function renderGrades() {
     var ok = 0;
     var again = 0;
     $$('.sec.is-q').forEach(function (sec) {
-      var g = gradeState[sec.id];
+      var g = gradeState[gk(sec.id)];
       if (g) sec.setAttribute('data-grade', g); else sec.removeAttribute('data-grade');
       $$('.grade-btn', sec).forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.grade === g)); });
       if (g === 'ok') ok++;
@@ -181,17 +209,18 @@
     var b = e.target.closest('.grade-btn');
     if (!b) return;
     var sec = b.closest('.sec');
-    gradeState[sec.id] = gradeState[sec.id] === b.dataset.grade ? undefined : b.dataset.grade;
-    if (!gradeState[sec.id]) delete gradeState[sec.id];
+    var k = gk(sec.id);
+    gradeState[k] = gradeState[k] === b.dataset.grade ? undefined : b.dataset.grade;
+    if (!gradeState[k]) delete gradeState[k];
     save('grade', gradeState);
     renderGrades();
-    if (gradeState[sec.id] === 'ok') markRead(sec.id, true);
+    if (gradeState[k] === 'ok') markRead(sec.id, true);
   });
   var resetBtn = $('.score-reset');
   if (resetBtn) {
     resetBtn.addEventListener('click', function () {
       if (!window.confirm('ລ້າງຄະແນນການຝຶກຕອບທັງໝົດ?')) return;
-      gradeState = {};
+      $$('.sec.is-q').forEach(function (q) { delete gradeState[gk(q.id)]; });
       save('grade', gradeState);
       $$('.is-q.revealed').forEach(function (s) { s.classList.remove('revealed'); });
       renderGrades();
@@ -228,25 +257,43 @@
   });
 
   // ---------------------------------------------------------------- home progress
-  if (slug === 'home' && data.manifest) {
-    var all = 0;
-    var done = 0;
-    Object.keys(data.manifest).forEach(function (p) {
-      var ids = data.manifest[p];
-      var n = ids.filter(function (id) { return isRead(p, id); }).length;
-      all += ids.length;
-      done += n;
-      var card = $('.card[data-slug="' + p + '"]');
-      if (card) {
-        $('.bar > span', card).style.width = (ids.length ? (n / ids.length) * 100 : 0) + '%';
-        $('.card-count', card).textContent = n + '/' + ids.length;
-      }
+  if (data.manifest) {
+    $$('[data-keys]').forEach(function (el) {
+      var all = 0;
+      var done = 0;
+      el.getAttribute('data-keys').split(' ').forEach(function (p) {
+        var ids = data.manifest[p] || [];
+        all += ids.length;
+        done += ids.filter(function (id) { return isRead(p, id); }).length;
+      });
+      var pct = all ? Math.round((done / all) * 100) : 0;
+      var bar = $('.bar > span', el);
+      if (bar) bar.style.width = pct + '%';
+      var cnt = $('.card-count', el);
+      if (cnt) cnt.textContent = done + '/' + all;
+      var op = $('.overall-pct', el);
+      if (op) op.textContent = pct + '%';
+      el.classList.toggle('is-done', all > 0 && done === all);
     });
-    var pct = all ? Math.round((done / all) * 100) : 0;
-    var op = $('.overall-pct');
-    if (op) op.textContent = pct + '%';
-    var ob = $('.overall .bar > span');
-    if (ob) ob.style.width = pct + '%';
+  }
+
+  // ---------------------------------------------------------------- ຮຽນຕໍ່ຈາກເທື່ອກ່ອນ
+  if (data.type === 'lesson') {
+    save('last', { u: location.pathname, t: data.title, c: data.course });
+  }
+  var resume = $('.resume');
+  if (resume) {
+    var last = load('last', null);
+    if (last && last.u && last.t) {
+      resume.href = last.u;
+      $('.resume-t b', resume).textContent = (last.c ? last.c + ' · ' : '') + last.t;
+      resume.hidden = false;
+    }
+  }
+
+  // ---------------------------------------------------------------- ລິ້ງເກົ່າທີ່ມີ #ຫົວຂໍ້ (ເຊັ່ນ /flutter/#sec-3) → ບົດທີ່ຖືກຕ້ອງ
+  if (data.type === 'course' && data.legacyHash && /^#(sec|q|refs|s)-?/.test(location.hash)) {
+    location.replace(data.legacyHash + location.hash);
   }
 
   // ---------------------------------------------------------------- sheet (bottom sheet / side panel)
@@ -381,12 +428,12 @@
     return { title: (prefixText ? prefixText + ' › ' : '') + clean(el), node: frag };
   }
 
-  var viewer = $('.viewer');
-  if (viewer) {
+  var viewers = $$('.viewer');
+  if (viewers.length) {
     var wrapBtn = $('.wrap-btn');
     var wrapOn = load('wrap', true);
     var applyWrap = function () {
-      viewer.classList.toggle('wrap', wrapOn);
+      viewers.forEach(function (v) { v.classList.toggle('wrap', wrapOn); });
       if (wrapBtn) wrapBtn.setAttribute('aria-pressed', String(wrapOn));
     };
     applyWrap();
@@ -396,7 +443,7 @@
       var r = ln.dataset.r;
       var id = ln.dataset.sec;
       $$('.ln.hl').forEach(function (l) { l.classList.remove('hl'); });
-      var group = $$('.ln[data-r="' + r + '"]');
+      var group = $$('.ln[data-r="' + r + '"]', ln.closest('.viewer'));
       group.forEach(function (l) { l.classList.add('hl'); });
       var nums = group.map(function (l) { return parseInt(l.dataset.l, 10); });
       var info = sectionFragment(id);
@@ -429,18 +476,39 @@
       // ໄຮໄລທ໌ຍັງຢູ່ຫຼັງປິດ sheet ຈົນກວ່າຈະແຕະແຖວໃໝ່
       openSheet(info.title, body, foot);
     };
-    viewer.addEventListener('click', function (e) {
-      var ln = e.target.closest('.ln.has');
-      if (!ln) return;
-      if (window.getSelection && String(window.getSelection()).length > 0) return;
-      openLine(ln);
+    viewers.forEach(function (viewer) {
+      viewer.addEventListener('click', function (e) {
+        var ln = e.target.closest('.ln.has');
+        if (!ln) return;
+        if (window.getSelection && String(window.getSelection()).length > 0) return;
+        openLine(ln);
+      });
+      viewer.addEventListener('keydown', function (e) {
+        if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('has')) {
+          e.preventDefault();
+          openLine(e.target);
+        }
+      });
     });
-    viewer.addEventListener('keydown', function (e) {
-      if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('has')) {
-        e.preventDefault();
-        openLine(e.target);
-      }
-    });
+
+    // ເລືອກໄຟລ໌ (ໂປຣເຈັກທີ່ມີຫຼາຍໄຟລ໌) — ຈື່ໄຟລ໌ລ່າສຸດໄວ້ຕໍ່ໜ້າ
+    var cfBtns = $$('.cf-btn');
+    var showFile = function (i, scroll) {
+      cfBtns.forEach(function (b) { b.setAttribute('aria-selected', String(b.dataset.file === String(i))); });
+      $$('.code-pane').forEach(function (p) { p.hidden = p.dataset.file !== String(i); });
+      var on = $('.cf-btn[aria-selected="true"]');
+      var bar = $('.code-files');
+      if (on && bar) bar.scrollLeft = Math.max(0, on.offsetLeft - bar.clientWidth / 2 + on.offsetWidth / 2);
+      if (scroll && bar && bar.getBoundingClientRect().top < 0) bar.scrollIntoView({ block: 'start' });
+    };
+    if (cfBtns.length) {
+      var lastFile = load('cfile:' + slug, 0);
+      if (!$('.code-pane[data-file="' + lastFile + '"]')) lastFile = 0;
+      showFile(lastFile, false);
+      cfBtns.forEach(function (b) {
+        b.addEventListener('click', function () { save('cfile:' + slug, Number(b.dataset.file)); showFile(b.dataset.file, true); });
+      });
+    }
   }
 
   // ---------------------------------------------------------------- Illustrator: ແຕະໝາຍເລກເທິງໜ້າຈໍຈຳລອງ
@@ -517,12 +585,14 @@
     toast('ສັບລຳດັບແລ້ວ');
   });
 
-  // ---------------------------------------------------------------- ຂໍ້ສອບລອງທຳ Illustrator
+  // ---------------------------------------------------------------- ຂໍ້ສອບລອງທຳ (Illustrator, Flutter)
   if ($('.mq-list')) {
     var LETTERS = ['ກ', 'ຂ', 'ຄ', 'ງ'];
-    var mx = load('aimock', { a: {}, w: {}, g: {} });
+    var examEl = $('[data-exam]');
+    var examKey = (examEl && examEl.dataset.exam) || 'aimock';
+    var mx = load(examKey, { a: {}, w: {}, g: {} });
     mx.a = mx.a || {}; mx.w = mx.w || {}; mx.g = mx.g || {};
-    var saveMx = function () { save('aimock', mx); };
+    var saveMx = function () { save(examKey, mx); };
     var shuffleArr = function (arr) {
       for (var i = arr.length - 1; i > 0; i--) {
         var j = Math.floor(Math.random() * (i + 1));
@@ -632,7 +702,7 @@
             li.appendChild(a);
             if (c.dataset.ref) {
               var r = document.createElement('a');
-              r.href = '/illustrator/#' + c.dataset.ref;
+              r.href = c.dataset.ref.charAt(0) === '/' ? c.dataset.ref : '/illustrator/basics/#' + c.dataset.ref;
               r.className = 'mx-ref';
               r.textContent = 'ບົດຮຽນ →';
               li.appendChild(r);
@@ -810,11 +880,15 @@
   var input = $('#search-input');
   var results = $('#search-results');
   var index = null;
-  var pageNames = { summary: 'ສະຫຼຸບບົດທີ 1–6', login: 'Login.java', product: 'PanelProduct.java', illustrator: 'Illustrator', 'ai-exam': 'ຂໍ້ສອບລອງທຳ Illustrator', exam: 'ຂໍ້ສອບ 15 ຂໍ້' };
+  var pageNames = {};
 
   function loadIndex() {
     if (index) return Promise.resolve(index);
-    return fetch('/search-index.json').then(function (r) { return r.json(); }).then(function (j) { index = j; return j; });
+    return fetch('/search-index.json').then(function (r) { return r.json(); }).then(function (j) {
+      pageNames = j.n || {};
+      index = j.i || [];
+      return index;
+    });
   }
   function openSearch() {
     if (!searchEl) return;

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "ເວັບທົບທວນ Java ບົດທີ 1-6, ອະທິບາຍໂຄ້ດ Login ແລະ PanelProduct, ຄຳຖາມສອບເສັງ",
+  "description": "ສູນບົດຮຽນ — ເວັບລວມບົດຮຽນ ແລະ ຂໍ້ສອບທົບທວນ (Java, Flutter, Illustrator)",
   "scripts": {
     "build": "node web/build.mjs",
     "preview": "npm run build && npx wrangler dev",

@@ -1,0 +1,62 @@
+{
+  "title": "Java Programming",
+  "short": "Java",
+  "category": "programming",
+  "order": 1,
+  "icon": "coffee",
+  "color": "#e76f00",
+  "desc": "ສະຫຼຸບບົດທີ 1–6, ອະທິບາຍໂຄ້ດ Login ແລະ PanelProduct ທີລະບັນທັດ (JDBC, CRUD) ແລະ ຄຳຖາມສອບເສັງ 15 ຂໍ້",
+  "plan": [
+    { "t": "ອ່ານ ສະຫຼຸບບົດທີ 1–6", "d": "ໂດຍສະເພາະຕາຕະລາງ ແລະ ຈຸດທີ່ສະໄລພິມຜິດ" },
+    { "t": "ອ່ານ ຂໍ້ສອບ 15 ຂໍ້ ໃນໂໝດອ່ານ", "d": "ເຂົ້າໃຈຄຳຕອບ ແລະ ຕົວຢ່າງໂຄ້ດ" },
+    { "t": "ຮຽນ Login ແລ້ວ PanelProduct", "d": "ເປີດແຖບ \"ໂຄ້ດເຕັມ\" ແລ້ວແຕະທີລະແຖວ" },
+    { "t": "ຝຶກຕອບ ຂໍ້ສອບ 15 ຂໍ້", "d": "ເປີດໂໝດຝຶກຕອບ ແລ້ວທວນຂໍ້ທີ່ຍັງຈື່ບໍ່ໄດ້ຈົນຄົບ" }
+  ],
+  "lessons": [
+    {
+      "slug": "summary",
+      "nav": "ສະຫຼຸບ",
+      "icon": "book",
+      "kind": "lesson",
+      "title": "ສະຫຼຸບບົດທີ 1–6",
+      "desc": "ເນື້ອຫາຫຼັກທຸກບົດ, ຕາຕະລາງທີ່ມັກອອກສອບ, ຈຸດທີ່ສະໄລພິມຜິດ ແລະ ຄຳຖາມທົດສອບຕົນເອງ",
+      "quiz": true,
+      "legacy": ["/summary/"]
+    },
+    {
+      "slug": "login",
+      "nav": "Login",
+      "icon": "lock",
+      "kind": "lesson",
+      "title": "ອະທິບາຍ Login.java",
+      "desc": "ສອນທີລະບັນທັດ ຕັ້ງແຕ່ main() ຈົນເຂົ້າສູ່ລະບົບສຳເລັດ — JDBC, PreparedStatement, BCrypt",
+      "quiz": true,
+      "code": "login",
+      "collapseIssues": true,
+      "legacy": ["/login/"]
+    },
+    {
+      "slug": "product",
+      "nav": "ສິນຄ້າ",
+      "icon": "box",
+      "kind": "lesson",
+      "title": "ອະທິບາຍ PanelProduct.java",
+      "desc": "CRUD ສິນຄ້າ: ເພີ່ມ, ສະແດງ/ຄົ້ນຫາ, ແກ້ໄຂ, ລຶບ — JOIN, barcode_old, error 1451",
+      "quiz": true,
+      "code": "product",
+      "collapseIssues": true,
+      "legacy": ["/product/"]
+    },
+    {
+      "slug": "exam",
+      "nav": "ຂໍ້ສອບ",
+      "icon": "quiz",
+      "kind": "qa",
+      "title": "ຄຳຖາມສອບເສັງ 15 ຂໍ້",
+      "desc": "ຄຳຖາມທີ່ອາຈານໃຫ້ ພ້ອມຄຳຕອບ ແລະ ຕົວຢ່າງໂຄ້ດທີ່ທົດສອບແລ້ວ — ມີໂໝດຝຶກຕອບ",
+      "quiz": true,
+      "qa": true,
+      "legacy": ["/exam/"]
+    }
+  ]
+}

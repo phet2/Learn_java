@@ -1,6 +1,7 @@
-// ສະຄຣິບ build ເວັບທົບທວນ Java
-// ອ່ານ markdown ໃນ review/ → ສ້າງໜ້າ HTML ແບບ static ໄວ້ໃນ dist/
-import { readFileSync, writeFileSync, mkdirSync, rmSync, copyFileSync, existsSync } from 'node:fs';
+// ສະຄຣິບ build ເວັບ "ສູນບົດຮຽນ"
+// ອ່ານ courses/<ວິຊາ>/course.json + markdown → ສ້າງໜ້າ HTML ແບບ static ໄວ້ໃນ dist/
+// ເພີ່ມວິຊາໃໝ່: ສ້າງໂຟນເດີ courses/<id>/ ທີ່ມີ course.json ແລະ <slug>.md (ເບິ່ງ README.md)
+import { readFileSync, writeFileSync, mkdirSync, rmSync, copyFileSync, existsSync, readdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -9,80 +10,92 @@ import hljs from 'highlight.js/lib/core';
 import java from 'highlight.js/lib/languages/java';
 import bash from 'highlight.js/lib/languages/bash';
 import sql from 'highlight.js/lib/languages/sql';
+import dart from 'highlight.js/lib/languages/dart';
+import yaml from 'highlight.js/lib/languages/yaml';
 import { codeMaps } from './src/code-map.mjs';
 import { aiInclude } from './src/illustrator.mjs';
 import { aiExamInclude } from './src/ai-exam.mjs';
+import { flutterInclude } from './src/flutter.mjs';
 
 hljs.registerLanguage('java', java);
 hljs.registerLanguage('bash', bash);
 hljs.registerLanguage('sql', sql);
+hljs.registerLanguage('dart', dart);
+hljs.registerLanguage('yaml', yaml);
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SRC = join(ROOT, 'web', 'src');
 const OUT = join(ROOT, 'dist');
 
-const SITE_NAME = 'ທົບທວນ Java';
+const SITE_NAME = 'ສູນບົດຮຽນ';
 const STORE_PREFIX = 'ljr:v1:';
 
-const pages = [
-  {
-    slug: 'summary',
-    file: 'review/SUMMARY.md',
-    nav: 'ສະຫຼຸບ',
-    icon: 'book',
-    title: 'ສະຫຼຸບບົດທີ 1–6',
-    desc: 'ເນື້ອຫາຫຼັກທຸກບົດ, ຕາຕະລາງທີ່ມັກອອກສອບ, ຈຸດທີ່ສະໄລພິມຜິດ ແລະ ຄຳຖາມທົດສອບຕົນເອງ',
-    quiz: true,
-  },
-  {
-    slug: 'login',
-    file: 'review/01_LOGIN_EXPLAINED.md',
-    nav: 'Login',
-    icon: 'lock',
-    title: 'ອະທິບາຍ Login.java',
-    desc: 'ສອນທີລະບັນທັດ ຕັ້ງແຕ່ main() ຈົນເຂົ້າສູ່ລະບົບສຳເລັດ — JDBC, PreparedStatement, BCrypt',
-    quiz: true,
-    code: 'login',
-  },
-  {
-    slug: 'product',
-    file: 'review/02_PANEL_PRODUCT_EXPLAINED.md',
-    nav: 'ສິນຄ້າ',
-    icon: 'box',
-    title: 'ອະທິບາຍ PanelProduct.java',
-    desc: 'CRUD ສິນຄ້າ: ເພີ່ມ, ສະແດງ/ຄົ້ນຫາ, ແກ້ໄຂ, ລຶບ — JOIN, barcode_old, error 1451',
-    quiz: true,
-    code: 'product',
-  },
-  {
-    slug: 'illustrator',
-    file: 'review/04_ILLUSTRATOR.md',
-    nav: 'Illustrator',
-    icon: 'vector',
-    title: 'ບົດຮຽນ Adobe Illustrator 2025',
-    desc: 'ໜ້າຈໍຈຳລອງ ແຕະເບິ່ງໄດ້: Workspace, ເຄື່ອງມືທຸກອັນ, Panels, ເມນູ, New Document, ທິດສະດີ ແລະ ຝຶກຕອບ',
-    quiz: true,
-  },
-  {
-    slug: 'ai-exam',
-    file: 'review/05_ILLUSTRATOR_MOCK_EXAM.md',
-    nav: 'ລອງສອບ Ai',
-    icon: 'quiz',
-    title: 'ຂໍ້ສອບລອງທຳ Illustrator',
-    desc: 'ປາລະໄນ 48 ຂໍ້ + ທາຍໄອຄອນ 10 ຂໍ້ ກວດໃຫ້ທັນທີ ພ້ອມຄະແນນ · ອັດຕະໄນ 10 ຂໍ້ ພ້ອມຄຳຕອບຕົວຢ່າງ',
-    inNav: false,
-    navParent: 'illustrator',
-  },
-  {
-    slug: 'exam',
-    file: 'review/03_EXAM_QA.md',
-    nav: 'ຂໍ້ສອບ',
-    icon: 'quiz',
-    title: 'ຄຳຖາມສອບເສັງ 15 ຂໍ້',
-    desc: 'ຄຳຖາມທີ່ອາຈານໃຫ້ ພ້ອມຄຳຕອບ ແລະ ຕົວຢ່າງໂຄ້ດທີ່ທົດສອບແລ້ວ — ມີໂໝດຝຶກຕອບ',
-    quiz: true,
-  },
-];
+// ---------------------------------------------------------------- ວິຊາ ແລະ ບົດຮຽນ (ອ່ານຈາກ courses/)
+
+const COURSES_DIR = join(ROOT, 'courses');
+const KINDS = { lesson: 'ບົດຮຽນ', qa: 'ຄຳຖາມ-ຄຳຕອບ', exam: 'ຂໍ້ສອບລອງທຳ' };
+const RESERVED = new Set(['assets', 'fonts']);
+
+function loadCourses() {
+  const fail = (msg) => {
+    throw new Error(`courses: ${msg}`);
+  };
+  const categories = JSON.parse(readFileSync(join(COURSES_DIR, 'categories.json'), 'utf8'));
+  const catIds = new Set(categories.map((c) => c.id));
+  const courses = readdirSync(COURSES_DIR, { withFileTypes: true })
+    // ໂຟນເດີທີ່ຂຶ້ນຕົ້ນດ້ວຍ _ (ເຊັ່ນ _template) ບໍ່ຖືກ build
+    .filter((d) => d.isDirectory() && !d.name.startsWith('_'))
+    .map((d) => {
+      const id = d.name;
+      const cfgPath = join(COURSES_DIR, id, 'course.json');
+      if (!existsSync(cfgPath)) fail(`${id}/ ບໍ່ມີ course.json`);
+      if (!/^[a-z0-9-]+$/.test(id) || RESERVED.has(id)) fail(`ຊື່ໂຟນເດີ "${id}" ໃຊ້ບໍ່ໄດ້ (a-z, 0-9, - ເທົ່ານັ້ນ)`);
+      const c = JSON.parse(readFileSync(cfgPath, 'utf8'));
+      for (const k of ['title', 'short', 'category', 'icon', 'desc']) if (!c[k]) fail(`${id}/course.json ຂາດ "${k}"`);
+      if (!catIds.has(c.category)) fail(`${id}: ບໍ່ພົບໝວດ "${c.category}" ໃນ categories.json`);
+      if (!Array.isArray(c.lessons) || !c.lessons.length) fail(`${id}: ຕ້ອງມີ lessons ຢ່າງໜ້ອຍ 1 ບົດ`);
+      const course = { ...c, id, url: `/${id}/`, color: c.color || '#2f5bea' };
+      const seen = new Set();
+      course.lessons = c.lessons.map((l, index) => {
+        if (!/^[a-z0-9-]+$/.test(l.slug || '')) fail(`${id}: slug "${l.slug}" ໃຊ້ບໍ່ໄດ້`);
+        if (seen.has(l.slug)) fail(`${id}: slug "${l.slug}" ຊ້ຳ`);
+        seen.add(l.slug);
+        for (const k of ['nav', 'title', 'desc', 'icon']) if (!l[k]) fail(`${id}/${l.slug}: ຂາດ "${k}"`);
+        const kind = l.kind || 'lesson';
+        if (!KINDS[kind]) fail(`${id}/${l.slug}: kind "${kind}" ຕ້ອງເປັນ ${Object.keys(KINDS).join(' / ')}`);
+        const file = `courses/${id}/${l.slug}.md`;
+        if (!existsSync(join(ROOT, file))) fail(`ບໍ່ພົບໄຟລ໌ ${file}`);
+        return { ...l, kind, index, course, file, key: `${id}/${l.slug}`, url: `/${id}/${l.slug}/` };
+      });
+      return course;
+    })
+    // ລຽງຕາມລຳດັບໝວດໃນ categories.json ກ່ອນ ແລ້ວຈຶ່ງ order ຂອງວິຊາ
+    .sort(
+      (a, b) =>
+        categories.findIndex((c) => c.id === a.category) - categories.findIndex((c) => c.id === b.category) ||
+        (a.order ?? 99) - (b.order ?? 99) ||
+        a.title.localeCompare(b.title),
+    );
+  const cats = categories
+    .map((cat) => ({ ...cat, courses: courses.filter((c) => c.category === cat.id) }))
+    .filter((cat) => cat.courses.length);
+  return { categories: cats, courses, pages: courses.flatMap((c) => c.lessons) };
+}
+
+const { categories: CATEGORIES, courses: COURSES, pages } = loadCourses();
+const categoryOf = (course) => CATEGORIES.find((c) => c.id === course.category);
+
+// ຮູບ ແລະ ໄຟລ໌ປະກອບຂອງແຕ່ລະວິຊາ: courses/<id>/assets/* → /assets/<id>/*
+const COURSE_ASSETS = COURSES.flatMap((c) => {
+  const dir = join(COURSES_DIR, c.id, 'assets');
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir)
+    .filter((f) => !f.startsWith('.'))
+    .map((f) => ({ src: join(dir, f), url: `/assets/${c.id}/${f}` }));
+});
+
+// ລິ້ງເກົ່າ (ກ່ອນແຍກວິຊາ) → ລິ້ງໃໝ່
+const LEGACY = pages.flatMap((p) => (p.legacy || []).map((from) => ({ from, to: p.url })));
 
 // ---------------------------------------------------------------- helpers
 
@@ -139,6 +152,10 @@ const icon = (name, cls = 'ic') => {
     wifiOff: '<path d="M2 2l20 20"/><path d="M8.5 16.5a5 5 0 0 1 7 0"/><path d="M5 12.9a10 10 0 0 1 5.2-2.8M19 12.9a10 10 0 0 0-2.4-1.7"/><path d="M2 8.8a15 15 0 0 1 4.2-2.6M22 8.8A15 15 0 0 0 10.7 5"/><circle cx="12" cy="20" r="1"/>',
     download: '<path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/>',
     share: '<path d="M12 3v12M8 7l4-4 4 4"/><path d="M6 11H5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-1"/>',
+    coffee: '<path d="M4 9h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M17 10h1.5a2.5 2.5 0 0 1 0 5H17"/><path d="M8 3c0 1.5 1.5 1.5 1.5 3M12 3c0 1.5 1.5 1.5 1.5 3"/>',
+    folder: '<path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2.5h8.5A1.5 1.5 0 0 1 21 9v9.5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5z"/>',
+    phone: '<rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10.5 18.5h3"/><path d="m9.5 9.5 2.5 2.5-2.5 2.5M13.5 14.5h2"/>',
+    cloud: '<path d="M7 18a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 8.5a4.5 4.5 0 0 1-.5 9.5z"/>',
     plusSquare: '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8"/>',
   };
   return `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name]}</svg>`;
@@ -300,7 +317,7 @@ function includeHtml(text) {
   const m = /include:([\w:-]+)/.exec(text || '');
   if (!m) return null;
   if (m[1] === 'exercises') return exercisesHtml();
-  const html = aiExamInclude(m[1]) ?? aiInclude(m[1]);
+  const html = aiExamInclude(m[1]) ?? flutterInclude(m[1]) ?? aiInclude(m[1]);
   if (html == null) throw new Error(`ບໍ່ຮູ້ຈັກ include: ${m[1]}`);
   return html;
 }
@@ -424,7 +441,7 @@ function renderPage(page) {
   for (const t of tokens) {
     if (t.type === 'heading' && t.depth >= 2) {
       if (t.depth === 2) h2title = t._plain;
-      entry = { p: page.slug, u: `/${page.slug}/#${t._id}`, t: t._plain, c: t.depth > 2 ? h2title : '', x: '' };
+      entry = { p: page.key, u: `${page.url}#${t._id}`, t: t._plain, c: t.depth > 2 ? h2title : '', x: '' };
       search.push(entry);
     } else if (entry && t.type !== 'heading') {
       // ເນື້ອຫາຈາກ include (ເຊັ່ນ ຊື່ເຄື່ອງມື Illustrator) ກໍຄົ້ນຫາໄດ້
@@ -443,9 +460,9 @@ function renderPage(page) {
       const id = heading._id;
       const titleHtml = marked.parser([heading]).replace(/^<h2>|<\/h2>$/g, '');
       let bodyHtml = marked.parser(body);
-      const isQ = page.slug === 'exam' && id.startsWith('q-');
+      const isQ = !!page.qa && id.startsWith('q-');
       const isRefs = id === 'refs';
-      const isIssues = (page.slug === 'login' || page.slug === 'product') && heading._plain.includes('⚠️');
+      const isIssues = !!page.collapseIssues && heading._plain.includes('⚠️');
       const collapsible = isRefs || isIssues;
       const isSelfTest = heading._plain.includes('ຄຳຖາມທົດສອບ');
       if (isSelfTest) {
@@ -511,12 +528,26 @@ function splitHighlighted(html) {
   return lines;
 }
 
-function buildCodeViewer(key, headingIds) {
-  const { file, ranges, folds } = codeMaps[key];
-  const src = readFileSync(join(SRC, 'code', file), 'utf8').replace(/\n$/, '');
-  const lines = splitHighlighted(hljs.highlight(src, { language: 'java' }).value);
+// ໄຟລ໌ໂຄ້ດຂອງແຕ່ລະ code map (ຮອງຮັບທັງແບບໄຟລ໌ດຽວ ແລະ ຫຼາຍໄຟລ໌)
+function codeFiles(key) {
+  const map = codeMaps[key];
+  return (map.files || [{ file: map.file, ranges: map.ranges, folds: map.folds }]).map((f) => ({
+    ...f,
+    folds: f.folds || [],
+    abs: f.path ? join(ROOT, f.path) : join(SRC, 'code', f.file),
+    lang: f.lang || (/\.dart$/.test(f.file) ? 'dart' : /\.ya?ml$/.test(f.file) ? 'yaml' : 'java'),
+  }));
+}
+
+function codePaneHtml(key, f, idx, multi, headingIds) {
+  const { ranges, folds } = f;
+  const src = readFileSync(f.abs, 'utf8').replace(/\n$/, '');
+  const lines = splitHighlighted(hljs.highlight(src, { language: f.lang }).value);
   for (const [, , id] of ranges) {
-    if (!headingIds.has(id)) throw new Error(`code-map ${key}: ບໍ່ພົບຫົວຂໍ້ id "${id}"`);
+    if (!headingIds.has(id)) throw new Error(`code-map ${key} (${f.file}): ບໍ່ພົບຫົວຂໍ້ id "${id}"`);
+  }
+  for (const [a, b] of ranges) {
+    if (a < 1 || b > lines.length || a > b) throw new Error(`code-map ${key} (${f.file}): ຊ່ວງແຖວ ${a}–${b} ຜິດ (ໄຟລ໌ມີ ${lines.length} ແຖວ)`);
   }
   const rangeOf = (n) => {
     let best = -1;
@@ -534,45 +565,89 @@ function buildCodeViewer(key, headingIds) {
   let i = 0;
   while (i < lines.length) {
     const n = i + 1;
-    const f = folds.find((x) => x[0] === n);
-    if (f) {
+    const fd = folds.find((x) => x[0] === n);
+    if (fd) {
       const chunk = [];
-      for (let k = f[0]; k <= f[1]; k++) chunk.push(row(lines[k - 1], k));
-      out += `<details class="fold"><summary><span class="fold-l">${f[0]}–${f[1]}</span><span>${esc(f[2])} · ${f[1] - f[0] + 1} ແຖວ</span><span class="fold-hint">ແຕະເພື່ອເປີດ</span></summary>${chunk.join('')}</details>`;
-      i = f[1];
+      for (let k = fd[0]; k <= fd[1]; k++) chunk.push(row(lines[k - 1], k));
+      out += `<details class="fold"><summary><span class="fold-l">${fd[0]}–${fd[1]}</span><span>${esc(fd[2])} · ${fd[1] - fd[0] + 1} ແຖວ</span><span class="fold-hint">ແຕະເພື່ອເປີດ</span></summary>${chunk.join('')}</details>`;
+      i = fd[1];
     } else {
       out += row(lines[i], n);
       i++;
     }
   }
+  const label = f.label || f.file;
+  return `<div class="code-pane" data-file="${idx}"${multi && idx ? ' hidden' : ''}>
+  <div class="code-file">${icon('code')} <span>${esc(label)}</span> · ${lines.length} ແຖວ</div>
+  <div class="viewer wrap" data-code="${key}">${out}</div>
+</div>`;
+}
+
+function buildCodeViewer(key, headingIds) {
+  const files = codeFiles(key);
+  const multi = files.length > 1;
+  const switcher = multi
+    ? `<div class="code-files" role="tablist" aria-label="ເລືອກໄຟລ໌">${files
+        .map((f, i) => {
+          const name = (f.label || f.file).split('/').pop();
+          const dir = (f.label || f.file).split('/').slice(0, -1).join('/');
+          return `<button class="cf-btn" type="button" role="tab" data-file="${i}" aria-selected="${i === 0}">${esc(name)}${dir ? `<small>${esc(dir)}/</small>` : ''}</button>`;
+        })
+        .join('')}</div>`
+    : '';
   return `
 <div class="code-intro">
-  <p>ແຕະ <b>ແຖວໃດກໍໄດ້</b> ເພື່ອເບິ່ງຄຳອະທິບາຍຂອງແຖວນັ້ນ — ແຖວທີ່ຢູ່ໃນກຸ່ມດຽວກັນຈະຖືກໄຮໄລທ໌ພ້ອມກັນ</p>
+  <p>ແຕະ <b>ແຖວໃດກໍໄດ້</b> ເພື່ອເບິ່ງຄຳອະທິບາຍຂອງແຖວນັ້ນ — ແຖວທີ່ຢູ່ໃນກຸ່ມດຽວກັນຈະຖືກໄຮໄລທ໌ພ້ອມກັນ${multi ? ` · ໂປຣເຈັກນີ້ມີ ${files.length} ໄຟລ໌ ເລືອກໄຟລ໌ຂ້າງລຸ່ມ` : ''}</p>
   <div class="code-tools">
-    <span class="code-file">${icon('code')} ${esc(file)} · ${lines.length} ແຖວ</span>
     <button class="btn btn-sm wrap-btn" type="button" aria-pressed="true">${icon('wrap')} ຕັດແຖວ</button>
   </div>
 </div>
-<div class="viewer wrap" data-code="${key}">${out}</div>`;
+${switcher}
+${files.map((f, i) => codePaneHtml(key, f, i, multi, headingIds)).join('\n')}`;
 }
 
 // ---------------------------------------------------------------- layout
 
-function navItems(active) {
-  const cur = pages.find((p) => p.slug === active);
-  const activeNav = cur?.navParent || active;
-  const items = [{ slug: '', nav: 'ໜ້າຫຼັກ', icon: 'home' }, ...pages.filter((p) => p.inNav !== false)];
-  return items
-    .map((p) => {
-      const href = p.slug ? `/${p.slug}/` : '/';
-      const on = p.slug === activeNav;
-      return `<a class="nav-item${on ? ' on' : ''}" href="${href}"${on ? ' aria-current="page"' : ''}>${icon(p.icon)}<span>${p.nav}</span></a>`;
-    })
-    .join('');
+// ເມນູຕາມບໍລິບົດ: ໜ້າຫຼັກ → ວິຊາທັງໝົດ · ໃນວິຊາ → ບົດຮຽນຂອງວິຊານັ້ນ
+// ມືຖື (ແຖບລຸ່ມ) ສະແດງບໍ່ເກີນ 6 ລາຍການ · desktop (ແຖບຂ້າງ) ສະແດງທຸກບົດ + ວິຊາອື່ນ
+function navItems(ctx) {
+  const item = (href, ic, label, on, cls = '') =>
+    `<a class="nav-item${cls}${on ? ' on' : ''}" href="${href}"${on ? ' aria-current="page"' : ''}>${icon(ic)}<span>${esc(label)}</span></a>`;
+  const out = [item('/', 'home', 'ໜ້າຫຼັກ', ctx.type === 'home')];
+  const course = ctx.course;
+  if (!course) {
+    const shown = COURSES.length > 5 ? COURSES.slice(0, 4) : COURSES;
+    shown.forEach((c) => out.push(item(c.url, c.icon, c.short, false)));
+    COURSES.slice(shown.length).forEach((c) => out.push(item(c.url, c.icon, c.short, false, ' nav-desk')));
+    if (shown.length < COURSES.length) out.push(item('/#courses', 'list', 'ທັງໝົດ', false, ' nav-more-m'));
+    return out.join('');
+  }
+  out.push(item(course.url, course.icon, course.short, ctx.type === 'course', ' nav-course'));
+  const ls = course.lessons;
+  const shown = ls.length > 4 ? ls.slice(0, 3) : ls;
+  shown.forEach((l) => out.push(item(l.url, l.icon, l.nav, ctx.page === l, ' nav-sub')));
+  ls.slice(shown.length).forEach((l) => out.push(item(l.url, l.icon, l.nav, ctx.page === l, ' nav-sub nav-desk')));
+  if (shown.length < ls.length) out.push(item(course.url, 'list', 'ເພີ່ມເຕີມ', false, ' nav-more-m'));
+  const tree = CATEGORIES.map((cat) => {
+    const others = cat.courses.filter((c) => c !== course);
+    return others.length ? `<p class="nav-cat">${esc(cat.title)}</p>${others.map((c) => item(c.url, c.icon, c.short, false)).join('')}` : '';
+  }).join('');
+  if (tree) out.push(`<div class="nav-tree"><p class="nav-cat nav-cat-h">ວິຊາອື່ນ</p>${tree}</div>`);
+  return out.join('');
 }
 
-function layout({ slug, title, desc, body, data = {}, buildId }) {
-  const fullTitle = slug ? `${title} · ${SITE_NAME}` : `${SITE_NAME} — ບົດທີ 1–6, ອະທິບາຍໂຄ້ດ ແລະ ຂໍ້ສອບ`;
+function crumbs(parts) {
+  return `<nav class="crumbs" aria-label="ເສັ້ນທາງ">${parts
+    .map((p, i) =>
+      p.href && i < parts.length - 1 ? `<a href="${p.href}">${esc(p.t)}</a>` : `<span${i === parts.length - 1 ? ' aria-current="page"' : ''}>${esc(p.t)}</span>`,
+    )
+    .join('<span class="sep" aria-hidden="true">›</span>')}</nav>`;
+}
+
+function layout({ ctx, title, desc, body, data = {}, buildId }) {
+  const fullTitle = ctx.type === 'home' ? `${SITE_NAME} — ບົດຮຽນ ແລະ ຂໍ້ສອບ` : `${title} · ${SITE_NAME}`;
+  const pageAttr = ctx.page ? ctx.page.key : ctx.course ? ctx.course.id : ctx.type;
+  const courseStyle = ctx.course ? ` style="--cc:${ctx.course.color}"` : '';
   return `<!doctype html>
 <html lang="lo">
 <head>
@@ -593,7 +668,7 @@ ${PRELOAD_FONTS.map((f) => `<link rel="preload" href="/assets/fonts/${f}" as="fo
 <link rel="stylesheet" href="/assets/app.css?v=${buildId}">
 <script>(function(){try{var d=document.documentElement,t=localStorage.getItem('${STORE_PREFIX}theme');if(t)d.setAttribute('data-theme',t);if(localStorage.getItem('${STORE_PREFIX}quiz')==='1')d.classList.add('quiz');}catch(e){}})();</script>
 </head>
-<body data-page="${slug || 'home'}">
+<body data-page="${pageAttr}" data-type="${ctx.type}"${courseStyle}>
 <a class="skip" href="#main">ຂ້າມໄປເນື້ອຫາ</a>
 <div class="progress" aria-hidden="true"><span></span></div>
 <header class="appbar">
@@ -604,12 +679,12 @@ ${PRELOAD_FONTS.map((f) => `<link rel="preload" href="/assets/fonts/${f}" as="fo
   </div>
 </header>
 <div class="net-banner" role="status" hidden>${icon('wifiOff')}<span>ບໍ່ມີອິນເຕີເນັດ — ກຳລັງໃຊ້ຂໍ້ມູນທີ່ເກັບໄວ້ໃນເຄື່ອງ</span></div>
-<nav class="nav" aria-label="ເມນູຫຼັກ">${navItems(slug)}</nav>
+<nav class="nav" aria-label="ເມນູຫຼັກ">${navItems(ctx)}</nav>
 <div class="shell">
 <main id="main" class="main">
 ${body}
 <footer class="foot">
-  <p>ສ້າງຈາກເອກະສານປະກອບການສອນ ບົດທີ 1–6 ແລະ ໂຄ້ດໂປຣເຈັກຂາຍເຄື່ອງໜ້າຮ້ານ · ໂຄ້ດຕົວຢ່າງທົດສອບດ້ວຍ JDK 21</p>
+  <p>${SITE_NAME} · ສ້າງຈາກເອກະສານປະກອບການສອນ ແລະ ໂຄ້ດໂປຣເຈັກ · ໂຄ້ດຕົວຢ່າງທົດສອບແລ້ວທຸກວິຊາ</p>
   <p>ອັບເດດລ່າສຸດ ${today}</p>
   <p class="foot-offline"><span class="oc-dot" aria-hidden="true"></span><span class="oc-status">ກຳລັງກວດສອບການໃຊ້ offline…</span></p>
   <p><button class="btn btn-sm install-btn" type="button" hidden>${icon('download')} ຕິດຕັ້ງໃສ່ໜ້າຈໍ</button></p>
@@ -633,7 +708,7 @@ ${body}
 <div class="search" id="search" hidden role="dialog" aria-modal="true" aria-label="ຄົ້ນຫາ">
   <div class="search-bar">
     ${icon('search')}
-    <input type="search" id="search-input" placeholder="ຄົ້ນຫາ ເຊັ່ນ JDBC, Constructor, 1451" autocomplete="off" enterkeyhint="search" aria-label="ຄຳຄົ້ນຫາ">
+    <input type="search" id="search-input" placeholder="ຄົ້ນຫາທຸກວິຊາ ເຊັ່ນ JDBC, Provider, Pen Tool" autocomplete="off" enterkeyhint="search" aria-label="ຄຳຄົ້ນຫາ">
     <button class="btn btn-ghost" type="button" data-close>ປິດ</button>
   </div>
   <div class="search-results" id="search-results" aria-live="polite"></div>
@@ -663,18 +738,21 @@ function pageBody(page, r) {
   <button class="mode-btn" type="button" data-mode="quiz">${icon('pen')} ຝຶກຕອບ</button>
 </div>
 <p class="mode-hint">${
-        page.slug === 'exam'
+        page.qa
           ? 'ໂໝດ <b>ຝຶກຕອບ</b> ຈະເຊື່ອງຄຳຕອບ — ລອງຕອບເອງກ່ອນ ແລ້ວປະເມີນວ່າຈື່ໄດ້ ຫຼື ຕ້ອງທວນອີກ'
           : 'ໂໝດ <b>ຝຶກຕອບ</b> ຈະເຊື່ອງຄຳຕອບໃນຕາຕະລາງຄຳຖາມ — ແຕະເພື່ອເປີດເບິ່ງ'
       }</p>`
     : '';
   const score =
-    page.slug === 'exam'
+    page.qa
       ? `<div class="score" aria-live="polite"><span class="score-ok">0</span> ຈື່ໄດ້ · <span class="score-again">0</span> ທວນອີກ · ຈາກ ${r.sectionIds.filter((x) => x.startsWith('q-')).length} ຂໍ້ <button class="btn btn-sm btn-ghost score-reset" type="button">ລ້າງຄະແນນ</button></div>`
       : '';
+  const course = page.course;
+  const cat = categoryOf(course);
   const hero = `
 <div class="hero">
-  <p class="hero-kicker">${icon(page.icon)} ${esc(page.nav)}</p>
+  ${crumbs([{ href: '/', t: 'ໜ້າຫຼັກ' }, { href: `/#cat-${cat.id}`, t: cat.title }, { href: course.url, t: course.short }, { t: page.nav }])}
+  <p class="hero-kicker">${icon(page.icon)} <span class="kind kind-${page.kind}">${KINDS[page.kind]}</span> ບົດທີ ${page.index + 1}/${course.lessons.length}</p>
   <h1>${esc(page.title)}</h1>
   <p class="hero-desc">${esc(page.desc)}</p>
   <div class="hero-meta"><span class="chip">${r.sectionIds.length} ຫົວຂໍ້</span><span class="chip read-count">ອ່ານແລ້ວ 0/${r.sectionIds.length}</span></div>
@@ -689,33 +767,66 @@ function pageBody(page, r) {
   <button class="tab" role="tab" type="button" id="tab-code" aria-controls="panel-code" aria-selected="false" data-tab="code">${icon('code')} ໂຄ້ດເຕັມ · ແຕະແຖວ</button>
 </div>
 <div class="tab-panel" id="panel-explain" role="tabpanel" aria-labelledby="tab-explain" data-panel="explain">${r.html}</div>
-<div class="tab-panel" id="panel-code" role="tabpanel" aria-labelledby="tab-code" data-panel="code" hidden>${buildCodeViewer(page.code, r.headingIds)}</div>`;
+<div class="tab-panel" id="panel-code" role="tabpanel" aria-labelledby="tab-code" data-panel="code" hidden>${buildCodeViewer(page.code, r.headingIds)}</div>
+${pager(page)}`;
   }
-  return `${hero}\n<div class="content">${r.html}</div>`;
+  return `${hero}\n<div class="content">${r.html}</div>\n${pager(page)}`;
 }
 
-function homeBody(results) {
-  const cards = pages
-    .map((p) => {
-      const r = results[p.slug];
-      return `<a class="card" href="/${p.slug}/" data-slug="${p.slug}">
-  <span class="card-ic">${icon(p.icon)}</span>
+// ບົດກ່ອນ / ບົດຖັດໄປ ພາຍໃນວິຊາດຽວກັນ
+function pager(page) {
+  const ls = page.course.lessons;
+  const prev = ls[page.index - 1];
+  const next = ls[page.index + 1];
+  const link = (l, cls, label) =>
+    `<a class="pg ${cls}" href="${l.url}"><small>${label}</small><b>${esc(l.title)}</b></a>`;
+  return `<nav class="pager" aria-label="ບົດຮຽນກ່ອນ ແລະ ຖັດໄປ">${prev ? link(prev, 'prev', '← ບົດກ່ອນ') : '<span></span>'}${
+    next ? link(next, 'next', 'ບົດຖັດໄປ →') : `<a class="pg next" href="${page.course.url}"><small>ຈົບວິຊາ</small><b>ກັບໜ້າວິຊາ ${esc(page.course.short)}</b></a>`
+  }</nav>`;
+}
+
+const keysOf = (course) => course.lessons.map((l) => l.key).join(' ');
+const progressBar = (total) =>
+  `<span class="card-progress"><span class="bar"><span></span></span><span class="card-count">0/${total}</span></span>`;
+
+function courseCard(course, results) {
+  const total = course.lessons.reduce((n, l) => n + results[l.key].sectionIds.length, 0);
+  const kinds = Object.keys(KINDS)
+    .map((k) => [k, course.lessons.filter((l) => l.kind === k).length])
+    .filter(([, n]) => n)
+    .map(([k, n]) => `${KINDS[k]} ${n}`)
+    .join(' · ');
+  return `<a class="card course-card" href="${course.url}" data-keys="${keysOf(course)}" style="--cc:${course.color}">
+  <span class="card-ic">${icon(course.icon)}</span>
   <span class="card-main">
-    <span class="card-title">${esc(p.title)}</span>
-    <span class="card-desc">${esc(p.desc)}</span>
-    <span class="card-progress"><span class="bar"><span></span></span><span class="card-count">0/${r.sectionIds.length}</span></span>
+    <span class="card-title">${esc(course.title)}</span>
+    <span class="card-desc">${esc(course.desc)}</span>
+    <span class="card-meta">${kinds}</span>
+    ${progressBar(total)}
   </span>
   ${icon('chevron', 'ic chev')}
 </a>`;
-    })
-    .join('');
+}
+
+function homeBody(results) {
+  const jump =
+    CATEGORIES.length > 1
+      ? `<nav class="cat-jump" aria-label="ໝວດວິຊາ">${CATEGORIES.map((c) => `<a href="#cat-${c.id}">${icon(c.icon)}${esc(c.title)} <b>${c.courses.length}</b></a>`).join('')}</nav>`
+      : '';
+  const cats = CATEGORIES.map(
+    (cat) => `<section class="cat" id="cat-${cat.id}">
+  <h2 class="block-title cat-title">${icon(cat.icon)}<span>${esc(cat.title)}<small>${esc(cat.desc)} · ${cat.courses.length} ວິຊາ</small></span></h2>
+  <div class="cards">${cat.courses.map((c) => courseCard(c, results)).join('')}</div>
+</section>`,
+  ).join('\n');
   return `
 <div class="hero home-hero">
-  <p class="hero-kicker">ກຽມສອບ Java</p>
-  <h1>ທົບທວນ Java ໃຫ້ພ້ອມສອບ</h1>
-  <p class="hero-desc">ສະຫຼຸບບົດທີ 1–6, ອະທິບາຍໂຄ້ດ Login ແລະ PanelProduct ທີລະບັນທັດ, ຄຳຖາມສອບເສັງ 15 ຂໍ້ ແລະ ບົດຮຽນ Adobe Illustrator</p>
-  <button class="search-fake search-open" type="button">${icon('search')}<span>ຄົ້ນຫາທຸກຫົວຂໍ້ ເຊັ່ນ JDBC, Pen Tool…</span></button>
-  <div class="overall">
+  <p class="hero-kicker">${SITE_NAME}</p>
+  <h1>ຮຽນ ແລະ ທົບທວນ ໃຫ້ພ້ອມສອບ</h1>
+  <p class="hero-desc">${COURSES.length} ວິຊາ · ${pages.length} ບົດ ໃນ ${CATEGORIES.length} ໝວດ — ເລືອກວິຊາຂ້າງລຸ່ມ ຫຼື ຄົ້ນຫາຫົວຂໍ້ທີ່ຕ້ອງການ</p>
+  <button class="search-fake search-open" type="button">${icon('search')}<span>ຄົ້ນຫາທຸກວິຊາ ເຊັ່ນ JDBC, Provider, Pen Tool…</span></button>
+  <a class="resume" href="/" hidden><span class="resume-ic">${icon('read')}</span><span class="resume-t"><small>ຮຽນຕໍ່ຈາກເທື່ອກ່ອນ</small><b></b></span>${icon('chevron', 'ic chev')}</a>
+  <div class="overall" data-keys="${pages.map((p) => p.key).join(' ')}">
     <div class="overall-top"><span>ຄວາມຄືບໜ້າທັງໝົດ</span><b class="overall-pct">0%</b></div>
     <div class="bar big"><span></span></div>
   </div>
@@ -728,26 +839,80 @@ function homeBody(results) {
     </div>
   </div>
 </div>
-<h2 class="block-title">ບົດຮຽນ</h2>
-<div class="cards">${cards}</div>
-
-<h2 class="block-title">ແຜນທົບທວນທີ່ແນະນຳ</h2>
-<ol class="plan">
-  <li><b>ອ່ານ ສະຫຼຸບບົດທີ 1–6</b><span>ໂດຍສະເພາະຕາຕະລາງ ແລະ ຈຸດທີ່ສະໄລພິມຜິດ</span></li>
-  <li><b>ອ່ານ ຂໍ້ສອບ 15 ຂໍ້ ໃນໂໝດອ່ານ</b><span>ເຂົ້າໃຈຄຳຕອບ ແລະ ຕົວຢ່າງໂຄ້ດ</span></li>
-  <li><b>ຮຽນ Login ແລ້ວ PanelProduct</b><span>ເປີດແຖບ "ໂຄ້ດເຕັມ" ແລ້ວແຕະທີລະແຖວ</span></li>
-  <li><b>ຝຶກຕອບ ຂໍ້ສອບ 15 ຂໍ້</b><span>ເປີດໂໝດຝຶກຕອບ ແລ້ວທວນຂໍ້ທີ່ຍັງຈື່ບໍ່ໄດ້ຈົນຄົບ</span></li>
-  <li><b>Illustrator: ຮຽນບົດ 1–3 ແລ້ວຝຶກບົດ 7–8</b><span>ແຕະໜ້າຈໍຈຳລອງ ແລະ Toolbar ທີລະອັນ ຈາກນັ້ນເປີດໂໝດຝຶກຕອບ ທາຍຊື່ເຄື່ອງມືຈາກໄອຄອນ</span></li>
-</ol>
+<div id="courses">
+${jump}
+${cats}
+</div>
 
 <h2 class="block-title">ວິທີໃຊ້</h2>
 <div class="tips">
+  <div class="tip">${icon('folder')}<div><b>ເລືອກວິຊາ</b><span>ແຕ່ລະວິຊາມີບົດຮຽນ, ຄຳຖາມ ແລະ ຂໍ້ສອບລອງທຳ ພ້ອມແຜນທົບທວນ</span></div></div>
   <div class="tip">${icon('pen')}<div><b>ໂໝດຝຶກຕອບ</b><span>ເຊື່ອງຄຳຕອບໄວ້ ແຕະເພື່ອເປີດ</span></div></div>
   <div class="tip">${icon('code')}<div><b>ແຕະແຖວໂຄ້ດ</b><span>ເບິ່ງຄຳອະທິບາຍຂອງແຖວນັ້ນທັນທີ</span></div></div>
   <div class="tip">${icon('check')}<div><b>ໝາຍວ່າອ່ານແລ້ວ</b><span>ບັນທຶກຄວາມຄືບໜ້າໃນເຄື່ອງນີ້</span></div></div>
-  <div class="tip">${icon('search')}<div><b>ຄົ້ນຫາ</b><span>ຫາຄຳໃດກໍໄດ້ຈາກທຸກໜ້າ</span></div></div>
+  <div class="tip">${icon('search')}<div><b>ຄົ້ນຫາ</b><span>ຫາຄຳໃດກໍໄດ້ຈາກທຸກວິຊາ</span></div></div>
 </div>
 <p class="note">ເປີດເວັບ 1 ຄັ້ງຕອນມີອິນເຕີເນັດ ແລ້ວໃຊ້ offline ໄດ້ທຸກໜ້າ · ຕິດຕັ້ງໃສ່ໜ້າຈໍຫຼັກ ເພື່ອໃຫ້ຂໍ້ມູນຢູ່ໃນເຄື່ອງໄດ້ດົນ</p>`;
+}
+
+function courseBody(course, results) {
+  const cat = categoryOf(course);
+  const totalSec = course.lessons.reduce((n, l) => n + results[l.key].sectionIds.length, 0);
+  const lessons = course.lessons
+    .map(
+      (l) => `<li><a class="card lesson-card" href="${l.url}" data-keys="${l.key}">
+  <span class="lesson-n">${l.index + 1}</span>
+  <span class="card-main">
+    <span class="kind kind-${l.kind}">${icon(l.icon)} ${KINDS[l.kind]}</span>
+    <span class="card-title">${esc(l.title)}</span>
+    <span class="card-desc">${esc(l.desc)}</span>
+    ${progressBar(results[l.key].sectionIds.length)}
+  </span>
+  ${icon('chevron', 'ic chev')}
+</a></li>`,
+    )
+    .join('');
+  const plan = course.plan?.length
+    ? `<h2 class="block-title">ແຜນທົບທວນທີ່ແນະນຳ</h2>
+<ol class="plan">${course.plan.map((x) => `<li><b>${esc(x.t)}</b><span>${esc(x.d)}</span></li>`).join('')}</ol>`
+    : '';
+  const res = course.resources?.length
+    ? `<h2 class="block-title">ແຫຼ່ງຂໍ້ມູນປະກອບ</h2>
+<div class="tips">${course.resources.map((x) => `<div class="tip">${icon('folder')}<div><b>${esc(x.t)}</b><span>${esc(x.d)}</span></div></div>`).join('')}</div>`
+    : '';
+  return `
+<div class="hero course-hero">
+  ${crumbs([{ href: '/', t: 'ໜ້າຫຼັກ' }, { href: `/#cat-${cat.id}`, t: cat.title }, { t: course.short }])}
+  <div class="course-head"><span class="course-ic">${icon(course.icon)}</span><div><p class="hero-kicker">${esc(cat.title)}</p><h1>${esc(course.title)}</h1></div></div>
+  <p class="hero-desc">${esc(course.desc)}</p>
+  <div class="hero-meta"><span class="chip">${course.lessons.length} ບົດ</span><span class="chip">${totalSec} ຫົວຂໍ້</span></div>
+  <div class="overall" data-keys="${keysOf(course)}">
+    <div class="overall-top"><span>ຄວາມຄືບໜ້າໃນວິຊານີ້</span><b class="overall-pct">0%</b></div>
+    <div class="bar big"><span></span></div>
+  </div>
+</div>
+<h2 class="block-title">ບົດຮຽນໃນວິຊານີ້</h2>
+<ol class="lesson-list">${lessons}</ol>
+${plan}
+${res}`;
+}
+
+// ໜ້າລິ້ງເກົ່າ: ພາໄປລິ້ງໃໝ່ (ຮັກສາ #ຫົວຂໍ້ ໄວ້) — ໃຊ້ຄູ່ກັບ _redirects
+function legacyStub(to) {
+  return `<!doctype html>
+<html lang="lo">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ຍ້າຍໄປໜ້າໃໝ່ · ${SITE_NAME}</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="${to}">
+<meta http-equiv="refresh" content="0; url=${to}">
+<script>location.replace(${JSON.stringify(to)} + location.hash);</script>
+</head>
+<body style="font-family:sans-serif;padding:24px"><p>ໜ້ານີ້ຍ້າຍໄປແລ້ວ — <a href="${to}">ໄປໜ້າໃໝ່</a></p></body>
+</html>
+`;
 }
 
 // ---------------------------------------------------------------- fonts (self-host, ໃຊ້ offline ໄດ້)
@@ -814,71 +979,114 @@ function main() {
   const results = {};
   const searchIndex = [];
   for (const p of pages) {
-    results[p.slug] = renderPage(p);
-    searchIndex.push(...results[p.slug].search);
+    results[p.key] = renderPage(p);
+    searchIndex.push(...results[p.key].search);
   }
+  // ຊື່ທີ່ສະແດງໃນຜົນຄົ້ນຫາ: "ວິຊາ · ບົດ"
+  const pageNames = Object.fromEntries(pages.map((p) => [p.key, `${p.course.short} · ${p.title}`]));
 
   const fonts = copyFonts();
   const css = `/* ຟອນ: Noto Sans Lao ແລະ JetBrains Mono (SIL Open Font License) */\n${fonts.css}\n${readFileSync(join(SRC, 'app.css'), 'utf8')}`;
   const js = readFileSync(join(SRC, 'app.js'), 'utf8');
   const hash = createHash('sha256');
-  hash.update(css).update(js).update(JSON.stringify(searchIndex));
-  for (const p of pages) hash.update(results[p.slug].html);
-  hash.update(readFileSync(join(SRC, 'code', 'Login.java'))).update(readFileSync(join(SRC, 'code', 'PanelProduct.java')));
+  hash.update(css).update(js).update(JSON.stringify(searchIndex)).update(JSON.stringify(COURSES.map(({ lessons, ...c }) => c)));
+  for (const p of pages) hash.update(results[p.key].html).update(results[p.key].introHtml);
+  for (const key of Object.keys(codeMaps)) for (const f of codeFiles(key)) hash.update(readFileSync(f.abs));
+  for (const a of COURSE_ASSETS) hash.update(readFileSync(a.src));
   // ລວມໄຟລ໌ build ແລະ service worker ເພື່ອໃຫ້ cache offline ອັບເດດເມື່ອແມ່ແບບປ່ຽນ
   hash.update(readFileSync(fileURLToPath(import.meta.url))).update(readFileSync(join(SRC, 'sw.js')));
   const buildId = hash.digest('hex').slice(0, 10);
 
-  const manifest = Object.fromEntries(pages.map((p) => [p.slug, results[p.slug].sectionIds]));
-  const precache = ['/', ...pages.map((p) => `/${p.slug}/`), `/assets/app.css?v=${buildId}`, `/assets/app.js?v=${buildId}`, '/search-index.json', '/assets/icon.svg', ...fonts.files];
+  const manifest = Object.fromEntries(pages.map((p) => [p.key, results[p.key].sectionIds]));
+  const precache = [
+    '/',
+    ...COURSES.map((c) => c.url),
+    ...pages.map((p) => p.url),
+    `/assets/app.css?v=${buildId}`,
+    `/assets/app.js?v=${buildId}`,
+    '/search-index.json',
+    '/assets/icon.svg',
+    ...COURSE_ASSETS.map((a) => a.url),
+    ...fonts.files,
+  ];
   const offline = { cache: `ljr-${buildId}`, urls: precache };
 
   writeOut(
     'index.html',
     layout({
-      slug: '',
+      ctx: { type: 'home' },
       title: SITE_NAME,
-      desc: 'ເວັບທົບທວນ Java: ສະຫຼຸບບົດທີ 1–6, ອະທິບາຍໂຄ້ດ Login ແລະ PanelProduct ທີລະບັນທັດ, ຄຳຖາມສອບເສັງ 15 ຂໍ້ ພ້ອມຄຳຕອບ',
+      desc: `${SITE_NAME}: ${COURSES.map((c) => c.short).join(', ')} — ບົດຮຽນ, ອະທິບາຍໂຄ້ດ, ຄຳຖາມສອບເສັງ ແລະ ຂໍ້ສອບລອງທຳ`,
       body: homeBody(results),
-      data: { slug: 'home', manifest, offline },
+      data: { slug: 'home', type: 'home', manifest, offline },
       buildId,
     }),
   );
 
-  for (const p of pages) {
-    const r = results[p.slug];
+  for (const c of COURSES) {
+    // ລິ້ງເກົ່າທີ່ກົງກັບໜ້າວິຊາ (ເຊັ່ນ /flutter/#sec-3) → ສົ່ງ #ຫົວຂໍ້ ໄປບົດທີ່ຖືກຕ້ອງ
+    const legacyHash = LEGACY.find((x) => x.from === c.url)?.to || null;
     writeOut(
-      `${p.slug}/index.html`,
+      `${c.id}/index.html`,
       layout({
-        slug: p.slug,
-        title: p.title,
-        desc: p.desc,
-        body: pageBody(p, r),
-        data: { slug: p.slug, toc: r.toc, sections: r.sectionIds, quiz: !!p.quiz, code: !!p.code, offline },
+        ctx: { type: 'course', course: c },
+        title: c.title,
+        desc: c.desc,
+        body: courseBody(c, results),
+        data: { slug: c.id, type: 'course', manifest: Object.fromEntries(c.lessons.map((l) => [l.key, manifest[l.key]])), legacyHash, offline },
         buildId,
       }),
     );
   }
 
+  for (const p of pages) {
+    const r = results[p.key];
+    writeOut(
+      `${p.course.id}/${p.slug}/index.html`,
+      layout({
+        ctx: { type: 'lesson', course: p.course, page: p },
+        title: `${p.title} — ${p.course.short}`,
+        desc: p.desc,
+        body: pageBody(p, r),
+        data: { slug: p.key, type: 'lesson', title: p.title, course: p.course.short, toc: r.toc, sections: r.sectionIds, quiz: !!p.quiz, code: !!p.code, offline },
+        buildId,
+      }),
+    );
+  }
+
+  // ລິ້ງເກົ່າ: ໜ້າພາໄປລິ້ງໃໝ່ + ໄຟລ໌ _redirects (301)
+  const coursePaths = new Set(COURSES.map((c) => c.url));
+  const redirects = [];
+  for (const { from, to } of LEGACY) {
+    if (coursePaths.has(from)) continue;
+    writeOut(`${from.replace(/^\//, '')}index.html`, legacyStub(to));
+    redirects.push(`${from} ${to} 301`, `${from.replace(/\/$/, '')} ${to} 301`);
+  }
+
   writeOut(
     '404.html',
     layout({
-      slug: '404',
+      ctx: { type: '404' },
       title: 'ບໍ່ພົບໜ້ານີ້',
       desc: 'ບໍ່ພົບໜ້າທີ່ຕ້ອງການ',
       body: `<div class="hero"><h1>ບໍ່ພົບໜ້ານີ້</h1><p class="hero-desc">ລິ້ງອາດຜິດ ຫຼື ໜ້ານີ້ຖືກຍ້າຍແລ້ວ</p><p><a class="btn btn-primary" href="/">ກັບໜ້າຫຼັກ</a></p></div>`,
-      data: { slug: '404', offline },
+      data: { slug: '404', type: '404', offline },
       buildId,
     }),
   );
 
   writeOut('assets/app.css', css);
   writeOut('assets/app.js', js.replace(/__STORE_PREFIX__/g, STORE_PREFIX));
-  writeOut('search-index.json', JSON.stringify(searchIndex));
+  writeOut('search-index.json', JSON.stringify({ n: pageNames, i: searchIndex }));
+  writeOut('_redirects', `# ລິ້ງເກົ່າ (ກ່ອນແຍກວິຊາ) → ລິ້ງໃໝ່\n${redirects.join('\n')}\n`);
   writeOut('_headers', HEADERS_FILE);
   for (const f of ['icon.svg', 'icon-192.png', 'icon-512.png']) {
     const src = join(SRC, 'assets', f);
     if (existsSync(src)) copyFileSync(src, join(OUT, 'assets', f));
+  }
+  for (const a of COURSE_ASSETS) {
+    mkdirSync(dirname(join(OUT, a.url)), { recursive: true });
+    copyFileSync(a.src, join(OUT, a.url));
   }
 
   writeOut(
@@ -888,7 +1096,7 @@ function main() {
         id: '/',
         name: SITE_NAME,
         short_name: SITE_NAME,
-        description: 'ສະຫຼຸບບົດທີ 1–6, ອະທິບາຍໂຄ້ດ Login ແລະ PanelProduct, ຄຳຖາມສອບເສັງ 15 ຂໍ້',
+        description: `ບົດຮຽນ ແລະ ຂໍ້ສອບ: ${COURSES.map((c) => c.short).join(', ')}`,
         lang: 'lo',
         start_url: '/',
         scope: '/',
@@ -908,7 +1116,7 @@ function main() {
 
   writeOut('sw.js', readFileSync(join(SRC, 'sw.js'), 'utf8').replace('__BUILD_ID__', buildId).replace('__PRECACHE__', JSON.stringify(precache)));
 
-  console.log(`✔ build ${buildId} → dist/ (${pages.length + 2} ໜ້າ, ${searchIndex.length} ລາຍການຄົ້ນຫາ)`);
+  console.log(`✔ build ${buildId} → dist/ (${CATEGORIES.length} ໝວດ, ${COURSES.length} ວິຊາ, ${pages.length} ບົດ, ${LEGACY.length} ລິ້ງເກົ່າ, ${searchIndex.length} ລາຍການຄົ້ນຫາ)`);
 }
 
 main();

@@ -2,7 +2,65 @@
 // [ແຖວເລີ່ມ, ແຖວສຸດທ້າຍ, id] — ຖ້າຊ່ວງຊ້ອນກັນ ຈະໃຊ້ຊ່ວງທີ່ແຄບທີ່ສຸດ
 // fold = ຊ່ວງແຖວທີ່ພັບໄວ້ຕອນເລີ່ມຕົ້ນ
 
+// ໂປຣເຈັກ Flutter: ອ່ານໄຟລ໌ຈາກ flutter/student_app ໂດຍກົງ (path ນັບຈາກ root ຂອງ repo) — ບໍ່ມີສຳເນົາຊ້ຳ
+const FL = 'flutter/student_app/';
+const fl = (file, ranges, folds = []) => ({ file: `lib/${file}`, path: `${FL}lib/${file}`, ranges, folds });
+
 export const codeMaps = {
+  flutter: {
+    files: [
+      fl('main.dart', [
+        [1, 31, 'sec-8'],
+        [15, 18, 'sec-2-1'],
+      ]),
+      fl('models/student_model.dart', [
+        [1, 1, 'sec-6-4'],
+        [3, 26, 'sec-6-1'],
+        [28, 33, 'sec-6-2'],
+        [35, 59, 'sec-6-3'],
+        [61, 92, 'sec-6-4'],
+      ]),
+      fl(
+        'providers/student_provider.dart',
+        [
+          [1, 4, 'sec-7'],
+          [6, 13, 'sec-7-1'],
+          [15, 30, 'sec-7-2'],
+          [32, 55, 'sec-7-3'],
+          [57, 123, 'sec-7-4'],
+          [125, 132, 'sec-7-5'],
+          [134, 147, 'sec-7-6'],
+          [149, 168, 'sec-7-7'],
+        ],
+        [[68, 115, 'ຂໍ້ມູນຕົວຢ່າງ 4 ຄົນ']],
+      ),
+      fl('screens/student_list_screen.dart', [
+        [1, 8, 'sec-9'],
+        [10, 40, 'sec-9-1'],
+        [41, 58, 'sec-9-2'],
+        [59, 79, 'sec-9-3'],
+        [80, 83, 'sec-9-2'],
+        [84, 94, 'sec-9-4'],
+      ]),
+      fl('screens/student_form_screen.dart', [
+        [1, 4, 'sec-10'],
+        [6, 36, 'sec-10-1'],
+        [38, 63, 'sec-10-2'],
+        [65, 74, 'sec-10-3'],
+        [76, 113, 'sec-10-4'],
+        [115, 262, 'sec-10-5'],
+      ]),
+      fl('widgets/dashboard_header.dart', [[1, 66, 'sec-11-1']]),
+      fl('widgets/search_bar_widget.dart', [
+        [1, 88, 'sec-11-2'],
+      ]),
+      fl('widgets/student_card.dart', [
+        [1, 187, 'sec-11-3'],
+      ]),
+      fl('widgets/empty_state_widget.dart', [[1, 37, 'sec-11-4']]),
+      { file: 'pubspec.yaml', path: `${FL}pubspec.yaml`, ranges: [[1, 23, 'sec-5-2']], folds: [] },
+    ],
+  },
   login: {
     file: 'Login.java',
     ranges: [
