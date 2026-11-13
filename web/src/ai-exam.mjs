@@ -1,9 +1,7 @@
 // ຊຸດຂໍ້ສອບລອງທຳ Adobe Illustrator 2025
 // a = ດັດຊະນີຄຳຕອບທີ່ຖືກ (ເລີ່ມຈາກ 0) · ref = ຫົວຂໍ້ໃນບົດຮຽນ /illustrator/ ທີ່ອະທິບາຍເລື່ອງນີ້
 import { aiIcon } from './illustrator.mjs';
-
-const esc = (s) =>
-  String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+import { makeExam } from './exam-kit.mjs';
 
 export const MCQ = [
   { q: 'Adobe Illustrator ເປັນໂປຣແກຣມອອກແບບປະເພດໃດ?', o: ['ກຣາບຟິກແບບ Vector', 'ແຕ່ງຮູບແບບ Raster (Pixel)', 'ຕັດຕໍ່ວິດີໂອ', 'ຈັດການຖານຂໍ້ມູນ'], a: 0, e: 'Illustrator ເປັນໂປຣແກຣມ Vector — ຮູບສ້າງຈາກ path ແລະ anchor point ຂະຫຍາຍບໍ່ແຕກ', ref: 'sec-6-1' },
@@ -89,67 +87,26 @@ export const TOTAL_AUTO = MCQ.length + ICONQ.length;
 // ---------------------------------------------------------------- HTML
 
 // ສັບລຳດັບຕົວເລືອກແບບຄົງທີ່ຕອນ build (browser ຈະສັບໃໝ່ອີກຄັ້ງຕອນເປີດໜ້າ)
-function permute(n, seed) {
-  const idx = [...Array(n).keys()];
-  let s = (seed * 9301 + 49297) % 233280;
-  for (let i = n - 1; i > 0; i--) {
-    s = (s * 9301 + 49297) % 233280;
-    const j = Math.floor((s / 233280) * (i + 1));
-    [idx[i], idx[j]] = [idx[j], idx[i]];
-  }
-  return idx;
-}
-
-let seedCounter = 7;
-
-function mcqCard(id, num, qHtml, opts, a, explain, ref) {
-  const letters = ['ກ', 'ຂ', 'ຄ', 'ງ'];
-  const order = permute(opts.length, seedCounter++);
-  return `<div class="mq" id="q-${id}" data-q="${id}" data-ref="${ref || ''}">
-  <div class="mq-h"><span class="mq-n">${num}</span><div class="mq-q">${qHtml}</div></div>
-  <div class="mq-opts" role="group">${order
-    .map((i, pos) => `<button class="mq-o" type="button" data-i="${i}"${i === a ? ' data-ok="1"' : ''}><span class="mq-l">${letters[pos]}</span><span class="mq-t">${esc(opts[i])}</span></button>`)
-    .join('')}</div>
-  <div class="mq-ex" hidden><b class="mq-res"></b>${explain ? `<span>${esc(explain)}</span>` : ''}${ref ? ` <a href="/illustrator/#${ref}">ອ່ານບົດຮຽນ →</a>` : ''}</div>
-</div>`;
-}
+const exam = makeExam({ key: 'aimock', lesson: '/illustrator/' });
 
 export function mcqHtml() {
-  return `<div class="mq-list" data-part="A">${MCQ.map((m, i) => mcqCard(`A${i + 1}`, i + 1, esc(m.q), m.o, m.a, m.e, m.ref)).join('')}</div>`;
+  return exam.list(MCQ, 'A');
 }
 
 export function iconQHtml() {
-  return `<div class="mq-list mq-icons" data-part="B">${ICONQ.map((m, i) =>
-    mcqCard(`B${i + 1}`, i + 1, `<span class="mq-icq">${aiIcon(m.icon)}</span><span>ໄອຄອນນີ້ແມ່ນເຄື່ອງມືໃດ?</span>`, m.o, m.a, '', m.ref),
-  ).join('')}</div>`;
+  return `<div class="mq-icons">${exam.list(ICONQ, 'B', (m) => `<span class="mq-icq">${aiIcon(m.icon)}</span><span>ໄອຄອນນີ້ແມ່ນເຄື່ອງມືໃດ?</span>`)}</div>`;
 }
 
 export function writtenHtml() {
-  return `<div class="wq-list">${WRITTEN.map(
-    (w, i) => `<div class="wq" id="w-${i + 1}" data-w="${i + 1}">
-  <div class="mq-h"><span class="mq-n">${i + 1}</span><div class="mq-q">${esc(w.q)}</div></div>
-  <textarea class="wq-in" rows="4" placeholder="ພິມຄຳຕອບຂອງເຈົ້າບ່ອນນີ້ (ບັນທຶກໄວ້ໃນເຄື່ອງອັດຕະໂນມັດ)" aria-label="ຄຳຕອບຂໍ້ ${i + 1}"></textarea>
-  <div class="wq-actions"><button class="btn btn-sm wq-show" type="button">ເບິ່ງຄຳຕອບຕົວຢ່າງ</button><span class="wq-grade" hidden><button class="btn btn-sm wq-g" type="button" data-g="ok">✅ ຕອບໄດ້</button><button class="btn btn-sm wq-g" type="button" data-g="part">🟡 ໄດ້ບາງສ່ວນ</button><button class="btn btn-sm wq-g" type="button" data-g="no">❌ ຕອບບໍ່ໄດ້</button></span></div>
-  <div class="wq-ans" hidden><b>ຄຳຕອບຕົວຢ່າງ (ຄວນມີຈຸດເຫຼົ່ານີ້):</b><ul>${w.a.map((x) => `<li>${esc(x)}</li>`).join('')}</ul><a href="/illustrator/#${w.ref}">ອ່ານບົດຮຽນ →</a></div>
-</div>`,
-  ).join('')}</div>`;
+  return exam.written(WRITTEN);
 }
 
 export function scoreHtml() {
-  return `<div class="mx-panel">
-  <div class="mx-row"><span>ຄະແນນ (ພາກ ກ + ຂ)</span><b><span class="mx-ok">0</span> / ${TOTAL_AUTO}</b></div>
-  <div class="bar big"><span class="mx-bar"></span></div>
-  <div class="mx-row small"><span>ຕອບແລ້ວ <span class="mx-done">0</span> / ${TOTAL_AUTO} · ຜິດ <span class="mx-bad">0</span></span><span class="mx-pct">0%</span></div>
-  <div class="mx-btns"><button class="btn btn-primary btn-sm mx-reset" type="button">🔀 ເລີ່ມໃໝ່ (ສັບຂໍ້)</button><button class="btn btn-sm mx-wrong" type="button" aria-pressed="false">ສະແດງສະເພາະຂໍ້ທີ່ຜິດ</button></div>
-</div>`;
+  return exam.score(TOTAL_AUTO);
 }
 
 export function resultHtml() {
-  return `<div class="mx-result">
-  <div class="mx-grade"><span class="mx-grade-ic">📝</span><div><b class="mx-grade-t">ຍັງບໍ່ໄດ້ເລີ່ມ</b><span class="mx-grade-d">ຕອບພາກ ກ ແລະ ຂ ໃຫ້ຄົບ ເພື່ອເບິ່ງຜົນ</span></div></div>
-  <div class="mx-wrong-list"></div>
-  <div class="mx-written-sum"></div>
-</div>`;
+  return exam.result();
 }
 
 export function aiExamInclude(name) {

@@ -9,19 +9,26 @@ import hljs from 'highlight.js/lib/core';
 import java from 'highlight.js/lib/languages/java';
 import bash from 'highlight.js/lib/languages/bash';
 import sql from 'highlight.js/lib/languages/sql';
+import dart from 'highlight.js/lib/languages/dart';
+import yaml from 'highlight.js/lib/languages/yaml';
 import { codeMaps } from './src/code-map.mjs';
 import { aiInclude } from './src/illustrator.mjs';
 import { aiExamInclude } from './src/ai-exam.mjs';
+import { flutterInclude } from './src/flutter.mjs';
 
 hljs.registerLanguage('java', java);
 hljs.registerLanguage('bash', bash);
 hljs.registerLanguage('sql', sql);
+hljs.registerLanguage('dart', dart);
+hljs.registerLanguage('yaml', yaml);
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SRC = join(ROOT, 'web', 'src');
 const OUT = join(ROOT, 'dist');
 
 const SITE_NAME = 'ທົບທວນ Java';
+// ຮູບໃນບົດຮຽນ (copy ໄປ dist ແລະ ເກັບ cache ໃຫ້ໃຊ້ offline)
+const IMAGES = ['/assets/flutter/app-list.webp', '/assets/flutter/app-form.webp'];
 const STORE_PREFIX = 'ljr:v1:';
 
 const pages = [
@@ -74,6 +81,49 @@ const pages = [
     navParent: 'illustrator',
   },
   {
+    slug: 'flutter',
+    file: 'review/06_FLUTTER.md',
+    nav: 'Flutter',
+    icon: 'phone',
+    title: 'ບົດຮຽນ Flutter: ແອັບຈັດການນັກສຶກສາ',
+    desc: 'ພື້ນຖານ Dart ແລະ Flutter, ທິດສະດີ 4 ຂໍ້, ອະທິບາຍໂຄ້ດ 9 ໄຟລ໌ຈາກສະໄລ ແຕະທີລະແຖວ ແລະ ຈຸດທີ່ຄວນລະວັງ',
+    quiz: true,
+    code: 'flutter',
+  },
+  {
+    slug: 'firebase',
+    file: 'review/07_FIREBASE.md',
+    nav: 'Firebase',
+    icon: 'cloud',
+    title: 'Flutter + Firebase',
+    desc: 'ຕັ້ງຄ່າ FlutterFire, Authentication, Cloud Firestore, Storage, StreamBuilder ແລະ ປ່ຽນແອັບນັກສຶກສາໃຫ້ໃຊ້ Firestore',
+    quiz: true,
+    inNav: false,
+    navParent: 'flutter',
+  },
+  {
+    slug: 'flutter-qa',
+    file: 'review/08_FLUTTER_EXAM_QA.md',
+    nav: 'ຄຳຖາມກາງພາກ',
+    icon: 'quiz',
+    title: 'ຄຳຖາມຄົ້ນຄວ້າສອບເສັງກາງພາກ Flutter (50 ຂໍ້)',
+    desc: 'ຄຳຖາມ 50 ຂໍ້ 5 ໝວດ ພ້ອມຄຳຕອບ ແລະ ຄຳອະທິບາຍເພີ່ມ — ໂຄ້ດທຸກຂໍ້ກວດແລ້ວດ້ວຍ Flutter 3.50 · ມີໂໝດຝຶກຕອບ',
+    quiz: true,
+    qa: true,
+    inNav: false,
+    navParent: 'flutter',
+  },
+  {
+    slug: 'flutter-exam',
+    file: 'review/09_FLUTTER_MOCK_EXAM.md',
+    nav: 'ລອງສອບ Flutter',
+    icon: 'quiz',
+    title: 'ຂໍ້ສອບລອງທຳ Flutter',
+    desc: 'ປາລະໄນ 41 ຂໍ້ + ອ່ານໂຄ້ດ 10 ຂໍ້ ກວດໃຫ້ທັນທີ ພ້ອມຄະແນນ · ອັດຕະໄນ 8 ຂໍ້ ພ້ອມຄຳຕອບຕົວຢ່າງ',
+    inNav: false,
+    navParent: 'flutter',
+  },
+  {
     slug: 'exam',
     file: 'review/03_EXAM_QA.md',
     nav: 'ຂໍ້ສອບ',
@@ -81,6 +131,7 @@ const pages = [
     title: 'ຄຳຖາມສອບເສັງ 15 ຂໍ້',
     desc: 'ຄຳຖາມທີ່ອາຈານໃຫ້ ພ້ອມຄຳຕອບ ແລະ ຕົວຢ່າງໂຄ້ດທີ່ທົດສອບແລ້ວ — ມີໂໝດຝຶກຕອບ',
     quiz: true,
+    qa: true,
   },
 ];
 
@@ -139,6 +190,8 @@ const icon = (name, cls = 'ic') => {
     wifiOff: '<path d="M2 2l20 20"/><path d="M8.5 16.5a5 5 0 0 1 7 0"/><path d="M5 12.9a10 10 0 0 1 5.2-2.8M19 12.9a10 10 0 0 0-2.4-1.7"/><path d="M2 8.8a15 15 0 0 1 4.2-2.6M22 8.8A15 15 0 0 0 10.7 5"/><circle cx="12" cy="20" r="1"/>',
     download: '<path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/>',
     share: '<path d="M12 3v12M8 7l4-4 4 4"/><path d="M6 11H5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-1"/>',
+    phone: '<rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10.5 18.5h3"/><path d="m9.5 9.5 2.5 2.5-2.5 2.5M13.5 14.5h2"/>',
+    cloud: '<path d="M7 18a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 8.5a4.5 4.5 0 0 1-.5 9.5z"/>',
     plusSquare: '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v8M8 12h8"/>',
   };
   return `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name]}</svg>`;
@@ -300,7 +353,7 @@ function includeHtml(text) {
   const m = /include:([\w:-]+)/.exec(text || '');
   if (!m) return null;
   if (m[1] === 'exercises') return exercisesHtml();
-  const html = aiExamInclude(m[1]) ?? aiInclude(m[1]);
+  const html = aiExamInclude(m[1]) ?? flutterInclude(m[1]) ?? aiInclude(m[1]);
   if (html == null) throw new Error(`ບໍ່ຮູ້ຈັກ include: ${m[1]}`);
   return html;
 }
@@ -443,7 +496,7 @@ function renderPage(page) {
       const id = heading._id;
       const titleHtml = marked.parser([heading]).replace(/^<h2>|<\/h2>$/g, '');
       let bodyHtml = marked.parser(body);
-      const isQ = page.slug === 'exam' && id.startsWith('q-');
+      const isQ = !!page.qa && id.startsWith('q-');
       const isRefs = id === 'refs';
       const isIssues = (page.slug === 'login' || page.slug === 'product') && heading._plain.includes('⚠️');
       const collapsible = isRefs || isIssues;
@@ -511,12 +564,26 @@ function splitHighlighted(html) {
   return lines;
 }
 
-function buildCodeViewer(key, headingIds) {
-  const { file, ranges, folds } = codeMaps[key];
-  const src = readFileSync(join(SRC, 'code', file), 'utf8').replace(/\n$/, '');
-  const lines = splitHighlighted(hljs.highlight(src, { language: 'java' }).value);
+// ໄຟລ໌ໂຄ້ດຂອງແຕ່ລະ code map (ຮອງຮັບທັງແບບໄຟລ໌ດຽວ ແລະ ຫຼາຍໄຟລ໌)
+function codeFiles(key) {
+  const map = codeMaps[key];
+  return (map.files || [{ file: map.file, ranges: map.ranges, folds: map.folds }]).map((f) => ({
+    ...f,
+    folds: f.folds || [],
+    abs: f.path ? join(ROOT, f.path) : join(SRC, 'code', f.file),
+    lang: f.lang || (/\.dart$/.test(f.file) ? 'dart' : /\.ya?ml$/.test(f.file) ? 'yaml' : 'java'),
+  }));
+}
+
+function codePaneHtml(key, f, idx, multi, headingIds) {
+  const { ranges, folds } = f;
+  const src = readFileSync(f.abs, 'utf8').replace(/\n$/, '');
+  const lines = splitHighlighted(hljs.highlight(src, { language: f.lang }).value);
   for (const [, , id] of ranges) {
-    if (!headingIds.has(id)) throw new Error(`code-map ${key}: ບໍ່ພົບຫົວຂໍ້ id "${id}"`);
+    if (!headingIds.has(id)) throw new Error(`code-map ${key} (${f.file}): ບໍ່ພົບຫົວຂໍ້ id "${id}"`);
+  }
+  for (const [a, b] of ranges) {
+    if (a < 1 || b > lines.length || a > b) throw new Error(`code-map ${key} (${f.file}): ຊ່ວງແຖວ ${a}–${b} ຜິດ (ໄຟລ໌ມີ ${lines.length} ແຖວ)`);
   }
   const rangeOf = (n) => {
     let best = -1;
@@ -534,26 +601,45 @@ function buildCodeViewer(key, headingIds) {
   let i = 0;
   while (i < lines.length) {
     const n = i + 1;
-    const f = folds.find((x) => x[0] === n);
-    if (f) {
+    const fd = folds.find((x) => x[0] === n);
+    if (fd) {
       const chunk = [];
-      for (let k = f[0]; k <= f[1]; k++) chunk.push(row(lines[k - 1], k));
-      out += `<details class="fold"><summary><span class="fold-l">${f[0]}–${f[1]}</span><span>${esc(f[2])} · ${f[1] - f[0] + 1} ແຖວ</span><span class="fold-hint">ແຕະເພື່ອເປີດ</span></summary>${chunk.join('')}</details>`;
-      i = f[1];
+      for (let k = fd[0]; k <= fd[1]; k++) chunk.push(row(lines[k - 1], k));
+      out += `<details class="fold"><summary><span class="fold-l">${fd[0]}–${fd[1]}</span><span>${esc(fd[2])} · ${fd[1] - fd[0] + 1} ແຖວ</span><span class="fold-hint">ແຕະເພື່ອເປີດ</span></summary>${chunk.join('')}</details>`;
+      i = fd[1];
     } else {
       out += row(lines[i], n);
       i++;
     }
   }
+  const label = f.label || f.file;
+  return `<div class="code-pane" data-file="${idx}"${multi && idx ? ' hidden' : ''}>
+  <div class="code-file">${icon('code')} <span>${esc(label)}</span> · ${lines.length} ແຖວ</div>
+  <div class="viewer wrap" data-code="${key}">${out}</div>
+</div>`;
+}
+
+function buildCodeViewer(key, headingIds) {
+  const files = codeFiles(key);
+  const multi = files.length > 1;
+  const switcher = multi
+    ? `<div class="code-files" role="tablist" aria-label="ເລືອກໄຟລ໌">${files
+        .map((f, i) => {
+          const name = (f.label || f.file).split('/').pop();
+          const dir = (f.label || f.file).split('/').slice(0, -1).join('/');
+          return `<button class="cf-btn" type="button" role="tab" data-file="${i}" aria-selected="${i === 0}">${esc(name)}${dir ? `<small>${esc(dir)}/</small>` : ''}</button>`;
+        })
+        .join('')}</div>`
+    : '';
   return `
 <div class="code-intro">
-  <p>ແຕະ <b>ແຖວໃດກໍໄດ້</b> ເພື່ອເບິ່ງຄຳອະທິບາຍຂອງແຖວນັ້ນ — ແຖວທີ່ຢູ່ໃນກຸ່ມດຽວກັນຈະຖືກໄຮໄລທ໌ພ້ອມກັນ</p>
+  <p>ແຕະ <b>ແຖວໃດກໍໄດ້</b> ເພື່ອເບິ່ງຄຳອະທິບາຍຂອງແຖວນັ້ນ — ແຖວທີ່ຢູ່ໃນກຸ່ມດຽວກັນຈະຖືກໄຮໄລທ໌ພ້ອມກັນ${multi ? ` · ໂປຣເຈັກນີ້ມີ ${files.length} ໄຟລ໌ ເລືອກໄຟລ໌ຂ້າງລຸ່ມ` : ''}</p>
   <div class="code-tools">
-    <span class="code-file">${icon('code')} ${esc(file)} · ${lines.length} ແຖວ</span>
     <button class="btn btn-sm wrap-btn" type="button" aria-pressed="true">${icon('wrap')} ຕັດແຖວ</button>
   </div>
 </div>
-<div class="viewer wrap" data-code="${key}">${out}</div>`;
+${switcher}
+${files.map((f, i) => codePaneHtml(key, f, i, multi, headingIds)).join('\n')}`;
 }
 
 // ---------------------------------------------------------------- layout
@@ -572,7 +658,7 @@ function navItems(active) {
 }
 
 function layout({ slug, title, desc, body, data = {}, buildId }) {
-  const fullTitle = slug ? `${title} · ${SITE_NAME}` : `${SITE_NAME} — ບົດທີ 1–6, ອະທິບາຍໂຄ້ດ ແລະ ຂໍ້ສອບ`;
+  const fullTitle = slug ? `${title} · ${SITE_NAME}` : `${SITE_NAME} — Java, Flutter, Illustrator`;
   return `<!doctype html>
 <html lang="lo">
 <head>
@@ -609,7 +695,7 @@ ${PRELOAD_FONTS.map((f) => `<link rel="preload" href="/assets/fonts/${f}" as="fo
 <main id="main" class="main">
 ${body}
 <footer class="foot">
-  <p>ສ້າງຈາກເອກະສານປະກອບການສອນ ບົດທີ 1–6 ແລະ ໂຄ້ດໂປຣເຈັກຂາຍເຄື່ອງໜ້າຮ້ານ · ໂຄ້ດຕົວຢ່າງທົດສອບດ້ວຍ JDK 21</p>
+  <p>ສ້າງຈາກເອກະສານປະກອບການສອນ ແລະ ໂຄ້ດໂປຣເຈັກ · ໂຄ້ດ Java ທົດສອບດ້ວຍ JDK 21 · ໂຄ້ດ Flutter ກວດດ້ວຍ Flutter 3.50</p>
   <p>ອັບເດດລ່າສຸດ ${today}</p>
   <p class="foot-offline"><span class="oc-dot" aria-hidden="true"></span><span class="oc-status">ກຳລັງກວດສອບການໃຊ້ offline…</span></p>
   <p><button class="btn btn-sm install-btn" type="button" hidden>${icon('download')} ຕິດຕັ້ງໃສ່ໜ້າຈໍ</button></p>
@@ -663,13 +749,13 @@ function pageBody(page, r) {
   <button class="mode-btn" type="button" data-mode="quiz">${icon('pen')} ຝຶກຕອບ</button>
 </div>
 <p class="mode-hint">${
-        page.slug === 'exam'
+        page.qa
           ? 'ໂໝດ <b>ຝຶກຕອບ</b> ຈະເຊື່ອງຄຳຕອບ — ລອງຕອບເອງກ່ອນ ແລ້ວປະເມີນວ່າຈື່ໄດ້ ຫຼື ຕ້ອງທວນອີກ'
           : 'ໂໝດ <b>ຝຶກຕອບ</b> ຈະເຊື່ອງຄຳຕອບໃນຕາຕະລາງຄຳຖາມ — ແຕະເພື່ອເປີດເບິ່ງ'
       }</p>`
     : '';
   const score =
-    page.slug === 'exam'
+    page.qa
       ? `<div class="score" aria-live="polite"><span class="score-ok">0</span> ຈື່ໄດ້ · <span class="score-again">0</span> ທວນອີກ · ຈາກ ${r.sectionIds.filter((x) => x.startsWith('q-')).length} ຂໍ້ <button class="btn btn-sm btn-ghost score-reset" type="button">ລ້າງຄະແນນ</button></div>`
       : '';
   const hero = `
@@ -711,10 +797,10 @@ function homeBody(results) {
     .join('');
   return `
 <div class="hero home-hero">
-  <p class="hero-kicker">ກຽມສອບ Java</p>
-  <h1>ທົບທວນ Java ໃຫ້ພ້ອມສອບ</h1>
-  <p class="hero-desc">ສະຫຼຸບບົດທີ 1–6, ອະທິບາຍໂຄ້ດ Login ແລະ PanelProduct ທີລະບັນທັດ, ຄຳຖາມສອບເສັງ 15 ຂໍ້ ແລະ ບົດຮຽນ Adobe Illustrator</p>
-  <button class="search-fake search-open" type="button">${icon('search')}<span>ຄົ້ນຫາທຸກຫົວຂໍ້ ເຊັ່ນ JDBC, Pen Tool…</span></button>
+  <p class="hero-kicker">ກຽມສອບ Java · Flutter · Illustrator</p>
+  <h1>ທົບທວນໃຫ້ພ້ອມສອບ</h1>
+  <p class="hero-desc">ສະຫຼຸບ Java ບົດທີ 1–6, ອະທິບາຍໂຄ້ດ Login ແລະ PanelProduct ທີລະບັນທັດ, ຄຳຖາມສອບເສັງ 15 ຂໍ້, ບົດຮຽນ Flutter + Firebase ພ້ອມຄຳຖາມກາງພາກ 50 ຂໍ້ ແລະ ບົດຮຽນ Adobe Illustrator</p>
+  <button class="search-fake search-open" type="button">${icon('search')}<span>ຄົ້ນຫາທຸກຫົວຂໍ້ ເຊັ່ນ JDBC, Provider, Pen Tool…</span></button>
   <div class="overall">
     <div class="overall-top"><span>ຄວາມຄືບໜ້າທັງໝົດ</span><b class="overall-pct">0%</b></div>
     <div class="bar big"><span></span></div>
@@ -737,6 +823,7 @@ function homeBody(results) {
   <li><b>ອ່ານ ຂໍ້ສອບ 15 ຂໍ້ ໃນໂໝດອ່ານ</b><span>ເຂົ້າໃຈຄຳຕອບ ແລະ ຕົວຢ່າງໂຄ້ດ</span></li>
   <li><b>ຮຽນ Login ແລ້ວ PanelProduct</b><span>ເປີດແຖບ "ໂຄ້ດເຕັມ" ແລ້ວແຕະທີລະແຖວ</span></li>
   <li><b>ຝຶກຕອບ ຂໍ້ສອບ 15 ຂໍ້</b><span>ເປີດໂໝດຝຶກຕອບ ແລ້ວທວນຂໍ້ທີ່ຍັງຈື່ບໍ່ໄດ້ຈົນຄົບ</span></li>
+  <li><b>Flutter: ຮຽນບົດຮຽນ Flutter → Firebase → ຄຳຖາມກາງພາກ 50 ຂໍ້</b><span>ເປີດແຖບ "ໂຄ້ດເຕັມ" ອ່ານໂຄ້ດທີລະໄຟລ໌ ແລ້ວທຳຂໍ້ສອບລອງທຳ Flutter ຈົນໄດ້ 80% ຂຶ້ນໄປ</span></li>
   <li><b>Illustrator: ຮຽນບົດ 1–3 ແລ້ວຝຶກບົດ 7–8</b><span>ແຕະໜ້າຈໍຈຳລອງ ແລະ Toolbar ທີລະອັນ ຈາກນັ້ນເປີດໂໝດຝຶກຕອບ ທາຍຊື່ເຄື່ອງມືຈາກໄອຄອນ</span></li>
 </ol>
 
@@ -824,13 +911,14 @@ function main() {
   const hash = createHash('sha256');
   hash.update(css).update(js).update(JSON.stringify(searchIndex));
   for (const p of pages) hash.update(results[p.slug].html);
-  hash.update(readFileSync(join(SRC, 'code', 'Login.java'))).update(readFileSync(join(SRC, 'code', 'PanelProduct.java')));
+  for (const key of Object.keys(codeMaps)) for (const f of codeFiles(key)) hash.update(readFileSync(f.abs));
+  for (const f of IMAGES) hash.update(readFileSync(join(SRC, f.replace(/^\//, ''))));
   // ລວມໄຟລ໌ build ແລະ service worker ເພື່ອໃຫ້ cache offline ອັບເດດເມື່ອແມ່ແບບປ່ຽນ
   hash.update(readFileSync(fileURLToPath(import.meta.url))).update(readFileSync(join(SRC, 'sw.js')));
   const buildId = hash.digest('hex').slice(0, 10);
 
   const manifest = Object.fromEntries(pages.map((p) => [p.slug, results[p.slug].sectionIds]));
-  const precache = ['/', ...pages.map((p) => `/${p.slug}/`), `/assets/app.css?v=${buildId}`, `/assets/app.js?v=${buildId}`, '/search-index.json', '/assets/icon.svg', ...fonts.files];
+  const precache = ['/', ...pages.map((p) => `/${p.slug}/`), `/assets/app.css?v=${buildId}`, `/assets/app.js?v=${buildId}`, '/search-index.json', '/assets/icon.svg', ...IMAGES, ...fonts.files];
   const offline = { cache: `ljr-${buildId}`, urls: precache };
 
   writeOut(
@@ -838,7 +926,7 @@ function main() {
     layout({
       slug: '',
       title: SITE_NAME,
-      desc: 'ເວັບທົບທວນ Java: ສະຫຼຸບບົດທີ 1–6, ອະທິບາຍໂຄ້ດ Login ແລະ PanelProduct ທີລະບັນທັດ, ຄຳຖາມສອບເສັງ 15 ຂໍ້ ພ້ອມຄຳຕອບ',
+      desc: 'ເວັບທົບທວນ: Java ບົດທີ 1–6, ອະທິບາຍໂຄ້ດ Login ແລະ PanelProduct, ຄຳຖາມສອບເສັງ, ບົດຮຽນ Flutter + Firebase ແລະ Adobe Illustrator',
       body: homeBody(results),
       data: { slug: 'home', manifest, offline },
       buildId,
@@ -880,6 +968,10 @@ function main() {
     const src = join(SRC, 'assets', f);
     if (existsSync(src)) copyFileSync(src, join(OUT, 'assets', f));
   }
+  for (const f of IMAGES) {
+    mkdirSync(dirname(join(OUT, f)), { recursive: true });
+    copyFileSync(join(SRC, f.replace(/^\//, '')), join(OUT, f));
+  }
 
   writeOut(
     'manifest.webmanifest',
@@ -888,7 +980,7 @@ function main() {
         id: '/',
         name: SITE_NAME,
         short_name: SITE_NAME,
-        description: 'ສະຫຼຸບບົດທີ 1–6, ອະທິບາຍໂຄ້ດ Login ແລະ PanelProduct, ຄຳຖາມສອບເສັງ 15 ຂໍ້',
+        description: 'ສະຫຼຸບ Java ບົດທີ 1–6, ອະທິບາຍໂຄ້ດ, ຄຳຖາມສອບເສັງ, ບົດຮຽນ Flutter + Firebase ແລະ Illustrator',
         lang: 'lo',
         start_url: '/',
         scope: '/',

@@ -162,11 +162,12 @@
   });
 
   // ---------------------------------------------------------------- self grading (ໜ້າຂໍ້ສອບ)
+  function gk(id) { return slug === 'exam' ? id : slug + '/' + id; }
   function renderGrades() {
     var ok = 0;
     var again = 0;
     $$('.sec.is-q').forEach(function (sec) {
-      var g = gradeState[sec.id];
+      var g = gradeState[gk(sec.id)];
       if (g) sec.setAttribute('data-grade', g); else sec.removeAttribute('data-grade');
       $$('.grade-btn', sec).forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.grade === g)); });
       if (g === 'ok') ok++;
@@ -181,17 +182,18 @@
     var b = e.target.closest('.grade-btn');
     if (!b) return;
     var sec = b.closest('.sec');
-    gradeState[sec.id] = gradeState[sec.id] === b.dataset.grade ? undefined : b.dataset.grade;
-    if (!gradeState[sec.id]) delete gradeState[sec.id];
+    var k = gk(sec.id);
+    gradeState[k] = gradeState[k] === b.dataset.grade ? undefined : b.dataset.grade;
+    if (!gradeState[k]) delete gradeState[k];
     save('grade', gradeState);
     renderGrades();
-    if (gradeState[sec.id] === 'ok') markRead(sec.id, true);
+    if (gradeState[k] === 'ok') markRead(sec.id, true);
   });
   var resetBtn = $('.score-reset');
   if (resetBtn) {
     resetBtn.addEventListener('click', function () {
       if (!window.confirm('ລ້າງຄະແນນການຝຶກຕອບທັງໝົດ?')) return;
-      gradeState = {};
+      $$('.sec.is-q').forEach(function (q) { delete gradeState[gk(q.id)]; });
       save('grade', gradeState);
       $$('.is-q.revealed').forEach(function (s) { s.classList.remove('revealed'); });
       renderGrades();
@@ -381,12 +383,12 @@
     return { title: (prefixText ? prefixText + ' › ' : '') + clean(el), node: frag };
   }
 
-  var viewer = $('.viewer');
-  if (viewer) {
+  var viewers = $$('.viewer');
+  if (viewers.length) {
     var wrapBtn = $('.wrap-btn');
     var wrapOn = load('wrap', true);
     var applyWrap = function () {
-      viewer.classList.toggle('wrap', wrapOn);
+      viewers.forEach(function (v) { v.classList.toggle('wrap', wrapOn); });
       if (wrapBtn) wrapBtn.setAttribute('aria-pressed', String(wrapOn));
     };
     applyWrap();
@@ -396,7 +398,7 @@
       var r = ln.dataset.r;
       var id = ln.dataset.sec;
       $$('.ln.hl').forEach(function (l) { l.classList.remove('hl'); });
-      var group = $$('.ln[data-r="' + r + '"]');
+      var group = $$('.ln[data-r="' + r + '"]', ln.closest('.viewer'));
       group.forEach(function (l) { l.classList.add('hl'); });
       var nums = group.map(function (l) { return parseInt(l.dataset.l, 10); });
       var info = sectionFragment(id);
@@ -429,18 +431,39 @@
       // ໄຮໄລທ໌ຍັງຢູ່ຫຼັງປິດ sheet ຈົນກວ່າຈະແຕະແຖວໃໝ່
       openSheet(info.title, body, foot);
     };
-    viewer.addEventListener('click', function (e) {
-      var ln = e.target.closest('.ln.has');
-      if (!ln) return;
-      if (window.getSelection && String(window.getSelection()).length > 0) return;
-      openLine(ln);
+    viewers.forEach(function (viewer) {
+      viewer.addEventListener('click', function (e) {
+        var ln = e.target.closest('.ln.has');
+        if (!ln) return;
+        if (window.getSelection && String(window.getSelection()).length > 0) return;
+        openLine(ln);
+      });
+      viewer.addEventListener('keydown', function (e) {
+        if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('has')) {
+          e.preventDefault();
+          openLine(e.target);
+        }
+      });
     });
-    viewer.addEventListener('keydown', function (e) {
-      if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('has')) {
-        e.preventDefault();
-        openLine(e.target);
-      }
-    });
+
+    // ເລືອກໄຟລ໌ (ໂປຣເຈັກທີ່ມີຫຼາຍໄຟລ໌) — ຈື່ໄຟລ໌ລ່າສຸດໄວ້ຕໍ່ໜ້າ
+    var cfBtns = $$('.cf-btn');
+    var showFile = function (i, scroll) {
+      cfBtns.forEach(function (b) { b.setAttribute('aria-selected', String(b.dataset.file === String(i))); });
+      $$('.code-pane').forEach(function (p) { p.hidden = p.dataset.file !== String(i); });
+      var on = $('.cf-btn[aria-selected="true"]');
+      var bar = $('.code-files');
+      if (on && bar) bar.scrollLeft = Math.max(0, on.offsetLeft - bar.clientWidth / 2 + on.offsetWidth / 2);
+      if (scroll && bar && bar.getBoundingClientRect().top < 0) bar.scrollIntoView({ block: 'start' });
+    };
+    if (cfBtns.length) {
+      var lastFile = load('cfile:' + slug, 0);
+      if (!$('.code-pane[data-file="' + lastFile + '"]')) lastFile = 0;
+      showFile(lastFile, false);
+      cfBtns.forEach(function (b) {
+        b.addEventListener('click', function () { save('cfile:' + slug, Number(b.dataset.file)); showFile(b.dataset.file, true); });
+      });
+    }
   }
 
   // ---------------------------------------------------------------- Illustrator: ແຕະໝາຍເລກເທິງໜ້າຈໍຈຳລອງ
@@ -517,12 +540,14 @@
     toast('ສັບລຳດັບແລ້ວ');
   });
 
-  // ---------------------------------------------------------------- ຂໍ້ສອບລອງທຳ Illustrator
+  // ---------------------------------------------------------------- ຂໍ້ສອບລອງທຳ (Illustrator, Flutter)
   if ($('.mq-list')) {
     var LETTERS = ['ກ', 'ຂ', 'ຄ', 'ງ'];
-    var mx = load('aimock', { a: {}, w: {}, g: {} });
+    var examEl = $('[data-exam]');
+    var examKey = (examEl && examEl.dataset.exam) || 'aimock';
+    var mx = load(examKey, { a: {}, w: {}, g: {} });
     mx.a = mx.a || {}; mx.w = mx.w || {}; mx.g = mx.g || {};
-    var saveMx = function () { save('aimock', mx); };
+    var saveMx = function () { save(examKey, mx); };
     var shuffleArr = function (arr) {
       for (var i = arr.length - 1; i > 0; i--) {
         var j = Math.floor(Math.random() * (i + 1));
@@ -632,7 +657,7 @@
             li.appendChild(a);
             if (c.dataset.ref) {
               var r = document.createElement('a');
-              r.href = '/illustrator/#' + c.dataset.ref;
+              r.href = c.dataset.ref.charAt(0) === '/' ? c.dataset.ref : '/illustrator/#' + c.dataset.ref;
               r.className = 'mx-ref';
               r.textContent = 'ບົດຮຽນ →';
               li.appendChild(r);

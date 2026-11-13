@@ -1,0 +1,12 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // ຮູບນັກສຶກສາ: Login ແລ້ວຈຶ່ງອ່ານໄດ້ · ອັບໂຫຼດໄດ້ສະເພາະຮູບ ຂະໜາດບໍ່ເກີນ 2 MB
+    match /students/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null
+                   && request.resource.size < 2 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*');
+    }
+  }
+}

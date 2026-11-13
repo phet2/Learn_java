@@ -1,0 +1,13 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ນັກສຶກສາ: ອ່ານ ແລະ ຂຽນໄດ້ສະເພາະຜູ້ທີ່ Login ແລ້ວ
+    match /students/{studentId} {
+      allow read, write: if request.auth != null;
+    }
+    // ຂໍ້ມູນຜູ້ໃຊ້: ແຕ່ລະຄົນອ່ານ/ຂຽນໄດ້ສະເພາະ Document ຂອງຕົນເອງ (Document ID = UID)
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}

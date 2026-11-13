@@ -1,0 +1,23 @@
+name: student_app
+description: "ລະບົບຈັດການນັກສຶກສາ — ບົດຮຽນ Flutter (Provider + SharedPreferences)"
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.8.0
+
+dependencies:
+  cupertino_icons: ^1.0.8
+  flutter:
+    sdk: flutter
+  image_picker: ^1.0.7
+  provider: ^6.1.5+1
+  shared_preferences: ^2.2.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
